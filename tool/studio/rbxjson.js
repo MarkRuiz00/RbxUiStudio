@@ -299,9 +299,28 @@
     const cb = contentBox(n, w, h);
     n.children = kidsIn.filter((c) => GUI.has(c.ClassName)).map((c) => importNode(c, cb));
     const lay = modOf(n, 'UIGridLayout') || modOf(n, 'UIListLayout');
-    if (lay) layoutKids(n.children, lay, cb);
+    if (lay) {
+      const before = n.children.map((k) => [k.w, k.h]);
+      layoutKids(n.children, lay, cb);
+      // el layout cambió el tamaño (celdas de UIGridLayout, flex): los nietos se recolocan con su Size/Position originales
+      n.children.forEach((k, i) => { if (Math.abs(k.w - before[i][0]) > 0.01 || Math.abs(k.h - before[i][1]) > 0.01) refit(k); });
+    }
     for (const k of n.children) { k.x = r2(k.x); k.y = r2(k.y); k.geo0 = { x: k.x, y: k.y, w: k.w, h: k.h, pw: cb.w, ph: cb.h }; }
     return n;
+  }
+  // recalcula la geometría de los descendientes de n a partir de sus UDim2 originales (n cambió de tamaño)
+  function refit(n) {
+    const cb = contentBox(n, n.w, n.h);
+    for (const k of n.children || []) {
+      const { w, h } = sizeFor({ props: { Size: (k.orig && k.orig.Size) || undefined } }, k.mods || [], cb);
+      const A = prop(k, 'AnchorPoint') || [0, 0], P = (k.orig && k.orig.Position) || [0, 0, 0, 0];
+      k.w = r2(w); k.h = r2(h);
+      k.x = r2(cb.x + udim([P[0], P[1]], cb.w) - A[0] * w); k.y = r2(cb.y + udim([P[2], P[3]], cb.h) - A[1] * h);
+      refit(k);
+    }
+    const lay = modOf(n, 'UIGridLayout') || modOf(n, 'UIListLayout');
+    if (lay) layoutKids(n.children || [], lay, cb);
+    for (const k of n.children || []) { k.x = r2(k.x); k.y = r2(k.y); k.geo0 = { x: k.x, y: k.y, w: k.w, h: k.h, pw: cb.w, ph: cb.h }; }
   }
 
   function screenToScene(sg) {
