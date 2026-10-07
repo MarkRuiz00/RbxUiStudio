@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds tools/roblox-api.json (UI classes, their writable properties with types, and enums) from the official
+// Builds tool/studio/roblox-api.json (UI classes, their writable properties with types, and enums) from the official
 // Roblox Creator Docs source (https://github.com/Roblox/creator-docs, content licensed CC BY 4.0 by Roblox).
 //
 //   git clone --depth 1 --filter=blob:none --sparse https://github.com/Roblox/creator-docs.git /tmp/creator-docs
@@ -60,5 +60,5 @@ for (const e of Object.keys(enums)) {
 let commit = '';
 try { commit = execSync('git rev-parse HEAD', { cwd: src }).toString().trim(); } catch { /* not a git clone */ }
 const out = { source: 'https://github.com/Roblox/creator-docs (CC BY 4.0, Roblox Corporation)', commit, generated: new Date().toISOString().slice(0, 10), classes, enums };
-fs.writeFileSync(path.join(REPO, 'tools', 'roblox-api.json'), JSON.stringify(out));
-console.log('classes', Object.keys(classes).length, 'enums', Object.keys(enums).length, '->', 'tools/roblox-api.json');
+fs.writeFileSync(path.join(REPO, 'tool', 'studio', 'roblox-api.json'), JSON.stringify(out));
+console.log('classes', Object.keys(classes).length, 'enums', Object.keys(enums).length, '->', 'tool/studio/roblox-api.json');

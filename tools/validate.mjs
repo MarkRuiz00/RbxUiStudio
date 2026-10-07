@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Validates rbxui JSON against the official Roblox API (tools/roblox-api.json) and, if RbxUI Studio is running, imports + renders it.
+// Validates rbxui JSON against the official Roblox API (tool/studio/roblox-api.json, shared checks in tool/studio/rbxcheck.js) and, if RbxUI Studio is running, imports + renders it.
 //
 //   node tools/validate.mjs examples            -> every ejemplos/*.rbxui.json (+ renders to ejemplos/renders/<name>.png)
 //   node tools/validate.mjs docs                -> every complete JSON snippet in roblox-ui/, rbxui/, estilos/ (*.md)
@@ -12,78 +12,22 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const API = JSON.parse(fs.readFileSync(path.join(REPO, 'tools', 'roblox-api.json'), 'utf8'));
+const API = JSON.parse(fs.readFileSync(path.join(REPO, 'tool', 'studio', 'roblox-api.json'), 'utf8'));
+const DATA = createRequire(import.meta.url)(path.join(REPO, 'tool', 'studio', 'paths.cjs')).DATA;
 const URL0 = process.env.RBXUI_URL || 'http://127.0.0.1:5170';
 const argv = process.argv.slice(2), flag = (f) => argv.includes(f);
 const MOD = /^UI/;
-const DESIGN_KEYS = new Set(['device', 'width', 'height', 'autoScale', 'background']);
-
-function propsOf(cls) {
-  const out = {};
-  for (let c = cls; c && API.classes[c]; c = API.classes[c].inherits[0]) for (const [k, t] of Object.entries(API.classes[c].props)) if (!(k in out)) out[k] = t;
-  return out;
-}
-const num = (v) => typeof v === 'number' && Number.isFinite(v);
-const nums = (v, n) => Array.isArray(v) && v.length === n && v.every(num);
-const hex = (v) => typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v);
-function checkValue(type, v) {
-  const t = type.replace(/ \(deprecated\)$/, '');
-  if (API.enums[t]) return typeof v === 'string' && API.enums[t].includes(v) ? null : `expected Enum.${t} item (${API.enums[t].slice(0, 6).join(', ')}…)`;
-  switch (t) {
-    case 'Color3': return hex(v) ? null : 'expected "#RRGGBB"';
-    case 'UDim2': return nums(v, 4) ? null : 'expected UDim2 [xScale, xOffset, yScale, yOffset]';
-    case 'UDim': return nums(v, 2) ? null : 'expected UDim [scale, offset]';
-    case 'Vector2': return nums(v, 2) ? null : 'expected Vector2 [x, y]';
-    case 'Rect': return nums(v, 4) ? null : 'expected Rect [minX, minY, maxX, maxY]';
-    case 'ColorSequence': return hex(v) || (Array.isArray(v) && v.length >= 1 && v.every((k) => Array.isArray(k) && num(k[0]) && hex(k[1])) && v[0][0] === 0 && v[v.length - 1][0] === 1) ? null : 'expected "#hex" or [[0,"#hex"],…,[1,"#hex"]] (first t=0, last t=1)';
-    case 'NumberSequence': return num(v) || (Array.isArray(v) && v.every((k) => Array.isArray(k) && num(k[0]) && num(k[1])) && v[0][0] === 0 && v[v.length - 1][0] === 1) ? null : 'expected number or [[0,v],…,[1,v]]';
-    case 'NumberRange': return num(v) || nums(v, 2) ? null : 'expected number or [min, max]';
-    case 'Font': return v && typeof v === 'object' && typeof v.family === 'string' ? null : 'expected { family, weight, style }';
-    case 'bool': case 'boolean': return typeof v === 'boolean' ? null : 'expected boolean';
-    case 'float': case 'double': case 'int': case 'int64': case 'number': return num(v) ? null : 'expected number';
-    case 'string': case 'ContentId': case 'Content': return typeof v === 'string' ? null : 'expected string';
-    default: return null;                                    // types the format doesn't model (Instance refs…): skip
-  }
-}
-
+const CHECK = createRequire(import.meta.url)(path.join(REPO, 'tool', 'studio', 'rbxcheck.js'));
+// same checks the editor runs live (tool/studio/rbxcheck.js) + local image files exist under the data folder
 function validateDoc(doc, label, { snippet = false } = {}) {
-  const errs = [], warns = [], names = new Set(), targets = [], images = [];
-  if (doc.ClassName === 'ScreenGui') doc = { format: 'rbxui', version: 1, screens: [doc] };
-  if (!Array.isArray(doc.screens) || !doc.screens.length) return { errs: [`${label}: no "screens"`], warns };
-  const walk = (n, p, parent) => {
-    const at = `${p}.${n.Name || n.ClassName}`;
-    if (!n.ClassName) { errs.push(`${at}: missing ClassName`); return; }
-    if (!API.classes[n.ClassName]) warns.push(`${at}: class ${n.ClassName} not in the UI API subset (check spelling)`);
-    names.add(n.Name);
-    const P = propsOf(n.ClassName);
-    for (const [k, v] of Object.entries(n.props || {})) {
-      if (!(k in P)) { if (API.classes[n.ClassName]) errs.push(`${at}.${k}: not a writable property of ${n.ClassName}`); continue; }
-      if (/deprecated/.test(P[k])) warns.push(`${at}.${k}: deprecated (use the modern property)`);
-      const e = checkValue(P[k], v); if (e) errs.push(`${at}.${k} = ${JSON.stringify(v)}: ${e}`);
-    }
-    if (MOD.test(n.ClassName) && parent && MOD.test(parent.ClassName) && !(parent.ClassName === 'UIStroke' && n.ClassName === 'UIGradient')) warns.push(`${at}: modifier inside another modifier`);
-    if (n.ClassName === 'ScreenGui' && n.design) for (const k of Object.keys(n.design)) if (!DESIGN_KEYS.has(k)) warns.push(`${at}.design.${k}: unknown design key`);
-    for (const it of n.interactions || []) {
-      if (!['open', 'close', 'toggle'].includes(it.action)) errs.push(`${at}: interaction action "${it.action}" (open|close|toggle)`);
-      if (it.target) targets.push([at, it.target]);
-    }
-    for (const k of ['Image', 'HoverImage', 'PressedImage']) {
-      const v = n.props && n.props[k];
-      if (typeof v === 'string' && v && !/^(rbxasset|rbxthumb|https?:)/.test(v)) images.push([at, v]);
-    }
-    const seen = new Set();
-    for (const c of n.children || []) {
-      const nm = c.Name || c.ClassName;
-      if (seen.has(nm)) errs.push(`${at}.${nm}: duplicate sibling name`);
-      seen.add(nm); walk(c, at, n);
-    }
-  };
-  for (const s of doc.screens) { if (s.ClassName !== 'ScreenGui') errs.push(`${label}: root must be ScreenGui`); walk(s, label, null); }
-  for (const [at, t] of targets) if (!names.has(t)) (snippet ? warns : errs).push(`${at}: interaction target "${t}" not found${snippet ? ' (fine for a fragment)' : ''}`);
-  for (const [at, img] of images) if (!fs.existsSync(path.join(REPO, 'tool', img))) warns.push(`${at}: local image ${img} missing (node tools/ui-resources.mjs fetch --examples)`);
-  return { errs, warns, doc };
+  const r = CHECK.checkDoc(doc, API, { snippet });
+  const fmt = (x) => `${label}${x.path ? '.' + x.path : ''}: ${x.msg}`;
+  const errs = r.errs.map(fmt), warns = r.warns.map(fmt);
+  for (const [at, img] of r.images) if (!fs.existsSync(path.join(DATA, img))) warns.push(`${label}.${at}: local image ${img} missing (node tools/ui-resources.mjs fetch --examples)`);
+  return { errs, warns, doc: r.doc };
 }
 
 async function server() { try { return (await fetch(URL0 + '/api/scenes')).ok; } catch { return false; } }

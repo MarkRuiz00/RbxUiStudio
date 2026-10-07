@@ -116,6 +116,7 @@
   function refresh(keepProps) {
     if (isNative()) walk((n) => { if (n.rbxClass) R.relayout(n); });
     renderCanvas();
+    scheduleCheck(); refreshDevices();
     S.sel = S.sel.filter((id) => S.map[id]);
     drawOverlay(); renderLayers();
     if (!keepProps) renderProps();
@@ -123,7 +124,7 @@
     if (S.scene && !em.hidden && em.style.pointerEvents === 'none' && S.scene.nodes.length) showEmpty(null);
     else if (S.scene && em.hidden && !S.scene.nodes.length && !S.play) showEmpty('scene');
   }
-  const update = () => { refresh(true); refreshDevices(); };   // tras editar una propiedad (no rehace el panel para no perder el foco)
+  const update = () => refresh(true);   // tras editar una propiedad (no rehace el panel para no perder el foco)
   function applyGeom(n) {
     const el = S.map[n.id]; if (!el) return;
     const off = el.parentElement && el.parentElement.classList.contains('fxclip') ? 1 : 0;
@@ -239,6 +240,41 @@
     const cell = (lab, v, ok) => h('span', { class: 'st-mcell' + (ok ? '' : ' warn'), title: ok ? '' : 'No coincide con el lado opuesto' }, h('b', {}, lab), String(v));
     return h('div', { class: 'st-row st-margins', title: 'Distancia a los bordes del contenedor (Alt + ratón para medir a otras capas)' },
       h('span', { class: 'st-l' }, 'Márgenes'), cell('I', m[0], eqH), cell('A', m[1], eqV), cell('D', m[2], eqH), cell('B', m[3], eqV));
+  }
+
+  // ---------------------------------------------------------------- comprobación contra la API oficial de Roblox (rbxcheck.js)
+  let API = null, checkTimer = 0, lastCheck = { errs: [], warns: [] };
+  fetch('roblox-api.json').then((r) => r.json()).then((j) => { API = j; scheduleCheck(); }).catch(() => {});
+  function scheduleCheck() { clearTimeout(checkTimer); checkTimer = setTimeout(runCheck, 500); }
+  function runCheck() {
+    const b = $('#st-check');
+    if (!API || !S.scene || !isNative() || !window.RBXCheck) { b.hidden = true; return; }
+    b.hidden = false;
+    try { lastCheck = window.RBXCheck.checkDoc({ format: 'rbxui', version: 1, screens: [R.sceneToScreen(S.scene)] }, API); }
+    catch (e) { lastCheck = { errs: [{ path: '', msg: String(e.message || e) }], warns: [] }; }
+    const ne = lastCheck.errs.length, nw = lastCheck.warns.length;
+    b.textContent = ne ? `✕ ${ne}` : nw ? `⚠ ${nw}` : '✓';
+    b.className = 'st-check' + (ne ? ' err' : nw ? ' warn' : ' ok');
+    b.title = ne || nw ? `${ne} error(es), ${nw} aviso(s) contra la API de Roblox — clic para verlos` : 'Todo válido según la API oficial de Roblox';
+    if (winById('check')) renderCheck();
+  }
+  // ruta "Pantalla.A.B" del exportado -> nodo de la escena (por nombres)
+  function nodeByPath(path) {
+    const parts = path.split('.').slice(1); let list = S.scene.nodes, hit = null;
+    for (const p of parts) { hit = (list || []).find((n) => (n.name || n.rbxClass) === p); if (!hit) return null; list = hit.children; }
+    return hit;
+  }
+  function renderCheck() {
+    const w = winById('check'); if (!w) return;
+    const item = (kind, x) => { const n = nodeByPath(x.path); return h('button', { class: 'st-dev-issue', onclick: () => n && setSel([n.id]) },
+      h('b', {}, kind === 'e' ? '✕' : '⚠'), h('span', {}, h('strong', {}, (x.path.split('.').pop() || 'Pantalla') + ' '), x.msg)); };
+    const all = [...lastCheck.errs.map((x) => item('e', x)), ...lastCheck.warns.map((x) => item('w', x))];
+    w.set([h('p', { class: 'st-note' }, 'Propiedades, enums y tipos comprobados contra la API oficial de Roblox (Roblox/creator-docs). Clic = seleccionar la capa.'),
+      ...(all.length ? all : [stateBox('ok', 'Todo válido', 'Ninguna propiedad desconocida, enum inválido ni nombre repetido.', [], 'sm')])]);
+  }
+  function openCheck() {
+    const w = openWin({ id: 'check', modal: false, width: 440, icon: 'check', title: 'Comprobación', sub: 'API oficial de Roblox' });
+    renderCheck(); return w;
   }
 
   // ---------------------------------------------------------------- vista por dispositivo
@@ -2637,6 +2673,7 @@
   $('#st-mcp').addEventListener('click', () => { const w = winById('mcp'); if (w) closeWin(w); else openMcp(); });
   $('#st-studio').addEventListener('click', () => { const w = winById('studio'); if (w) closeWin(w); else openStudio(); });
   $('#st-phone').addEventListener('click', () => { const w = winById('phone'); if (w) closeWin(w); else openPhone(); });
+  $('#st-check').addEventListener('click', () => { const w = winById('check'); if (w) closeWin(w); else { runCheck(); openCheck(); } });
   $('#st-devices').addEventListener('click', () => { const w = winById('devices'); if (w) closeWin(w); else openDevices(); });
   $('#st-play').addEventListener('click', () => setPlay(!S.play));
   $('#st-iconq').addEventListener('input', renderIcons);

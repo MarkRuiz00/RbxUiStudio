@@ -589,3 +589,9 @@ body.st #st-icongrid button:hover { background: #4a4e58; }
 .st-dev-issue { display: flex; gap: 8px; align-items: center; text-align: left; background: var(--st-input); border: 0; border-radius: 6px; padding: 6px 8px; color: var(--st-text); font: inherit; cursor: pointer; }
 .st-dev-issue:hover { box-shadow: inset 0 0 0 1px var(--st-accent); }
 .st-dev-issue b { width: 22px; text-align: center; color: var(--st-warn); }
+
+/* comprobación contra la API de Roblox */
+.st-check { height: 28px; min-width: 34px; padding: 0 9px; border-radius: 7px; border: 1px solid var(--st-line); background: var(--st-input); color: var(--st-text-2); font: 600 12px Inter, sans-serif; cursor: pointer; }
+.st-check.ok { color: var(--st-success); }
+.st-check.warn { color: var(--st-warn); border-color: rgba(255,196,112,.4); }
+.st-check.err { color: #fff; background: var(--st-danger); border-color: transparent; }
