@@ -18,4 +18,7 @@
 | 9-slice looks wrong only in the editor | Preview doesn't render Slice | Check in Studio; the build is correct |
 | Content under the Roblox top bar | Placed in the top 58 px of the canvas | Keep that band empty; leave `ScreenInsets` at `CoreUISafeInsets` |
 | Stroke cut off at the edges | `Outer`/`Center` stroke inside a clipping parent | `BorderStrokePosition: "Inner"` or add padding |
+| Icon outline follows the box, not the icon | `UIStroke` can't outline image pixels | Bake the outline into the PNG |
+| Want a text drop shadow | No such property | Black copy of the label 3–4 px lower behind it ([recipe](recipes.md#3d-text-hard-drop-shadow)) |
+| 3D stud button outline only around the top face | Stroke placed on the face | Outer `UIStroke` on the **base** (lip color) Frame; inner rim stroke on the face |
 | Everything is huge on TV / tiny on phone | Pure Offset with `autoScale: false`, or pure Scale without caps | Keep `autoScale: true`, or add `UISizeConstraint` / `UIScale` per display size |

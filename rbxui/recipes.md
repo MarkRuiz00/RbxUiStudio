@@ -130,6 +130,41 @@ In-game, a script clones `Slot1` per item; ship one or two template slots, not 5
 
 Animate `Fill.Size` X scale with TweenService (0.4 s Quad Out).
 
+## 3D stud block
+
+The modern stud button/panel ([estilos/stud.md](../estilos/stud.md#modern-stud-3d-blocks)): lip + outer stroke on the base, gradient face with an inner rim and studs.
+
+```json
+{ "ClassName": "Frame", "Name": "BaseButton", "props": { "Size": [0, 150, 0, 58], "BackgroundColor3": "#1F7A16" },
+  "buttonFx": { "hover": 1.05, "press": 0.92 },
+  "children": [
+    { "ClassName": "UIStroke", "Name": "Outline", "props": { "Thickness": 4, "Color": "#000000", "BorderStrokePosition": "Outer", "LineJoinMode": "Miter" } },
+    { "ClassName": "Frame", "Name": "Face", "props": { "Size": [1, 0, 1, -6], "BackgroundColor3": "#FFFFFF", "ClipsDescendants": true },
+      "children": [
+        { "ClassName": "UIGradient", "Name": "Gradient", "props": { "Color": [[0, "#8BF25C"], [1, "#3FBF2A"]], "Rotation": 90 } },
+        { "ClassName": "UIStroke", "Name": "Rim", "props": { "Thickness": 3, "Color": "#B8FF8F", "BorderStrokePosition": "Inner", "LineJoinMode": "Miter" } },
+        { "ClassName": "ImageLabel", "Name": "Studs", "props": { "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png", "ScaleType": "Tile",
+          "TileSize": [0, 48, 0, 48], "ImageTransparency": 0.78, "BackgroundTransparency": 1, "Size": [1, 0, 1, 0] } }
+      ] }
+  ] }
+```
+
+## 3D text (hard drop shadow)
+
+Roblox text has no drop shadow: stack a black copy a few pixels lower behind the real label.
+
+```json
+{ "ClassName": "Frame", "Name": "Title", "props": { "Size": [0, 300, 0, 50], "BackgroundTransparency": 1 },
+  "children": [
+    { "ClassName": "TextLabel", "Name": "Shadow", "props": { "Size": [1, 0, 1, 0], "Position": [0, 0, 0, 4], "BackgroundTransparency": 1, "Text": "SHOP", "TextSize": 40,
+      "TextColor3": "#000000", "FontFace": { "family": "FredokaOne", "weight": "Regular", "style": "Normal" } },
+      "children": [ { "ClassName": "UIStroke", "Name": "Stroke", "props": { "Thickness": 3.5, "Color": "#000000" } } ] },
+    { "ClassName": "TextLabel", "Name": "Text", "props": { "Size": [1, 0, 1, 0], "BackgroundTransparency": 1, "Text": "SHOP", "TextSize": 40,
+      "TextColor3": "#FFFFFF", "FontFace": { "family": "FredokaOne", "weight": "Regular", "style": "Normal" } },
+      "children": [ { "ClassName": "UIStroke", "Name": "Stroke", "props": { "Thickness": 3.5, "Color": "#000000" } } ] }
+  ] }
+```
+
 ## Stud texture overlay
 
 ```json

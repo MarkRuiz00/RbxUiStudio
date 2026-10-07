@@ -1,0 +1,4517 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "StudShop",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "StudShopScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "grass"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling"
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "TeleportButtons",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0
+      ],
+      "Position": [
+       0.5,
+       0,
+       0,
+       66
+      ],
+      "Size": [
+       0,
+       478,
+       0,
+       58
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "UIListLayout",
+       "Name": "List",
+       "props": {
+        "FillDirection": "Horizontal",
+        "SortOrder": "LayoutOrder",
+        "Padding": [
+         0,
+         14
+        ]
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "SellButton",
+       "props": {
+        "Size": [
+         0,
+         150,
+         0,
+         58
+        ],
+        "BackgroundColor3": "#7A0F14",
+        "LayoutOrder": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FF6B6B"
+             ],
+             [
+              1,
+              "#D9262E"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#FF9A9A",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.78,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               3
+              ],
+              "Text": "SELL",
+              "TextSize": 30,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "SELL",
+              "TextSize": 30,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "BaseButton",
+       "props": {
+        "Size": [
+         0,
+         150,
+         0,
+         58
+        ],
+        "BackgroundColor3": "#1F7A16",
+        "LayoutOrder": 2
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#8BF25C"
+             ],
+             [
+              1,
+              "#3FBF2A"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#B8FF8F",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.78,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               3
+              ],
+              "Text": "BASE",
+              "TextSize": 30,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "BASE",
+              "TextSize": 30,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "ShopTpButton",
+       "props": {
+        "Size": [
+         0,
+         150,
+         0,
+         58
+        ],
+        "BackgroundColor3": "#0F3E85",
+        "LayoutOrder": 3
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#5FC8FF"
+             ],
+             [
+              1,
+              "#1E7BE8"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#9BDCFF",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.78,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               3
+              ],
+              "Text": "SHOP",
+              "TextSize": 30,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "SHOP",
+              "TextSize": 30,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "LeftSideButtons",
+     "props": {
+      "AnchorPoint": [
+       0,
+       0.5
+      ],
+      "Position": [
+       0,
+       18,
+       0.52,
+       0
+      ],
+      "Size": [
+       0,
+       172,
+       0,
+       240
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "UIListLayout",
+       "Name": "List",
+       "props": {
+        "FillDirection": "Vertical",
+        "SortOrder": "LayoutOrder",
+        "Padding": [
+         0,
+         14
+        ]
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "SlowMode",
+       "props": {
+        "Size": [
+         0,
+         170,
+         0,
+         44
+        ],
+        "BackgroundColor3": "#1F7A16",
+        "LayoutOrder": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#8BF25C"
+             ],
+             [
+              1,
+              "#3FBF2A"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#B8FF8F",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               2
+              ],
+              "Text": "SLOW MODE: ON",
+              "TextSize": 18,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "SLOW MODE: ON",
+              "TextSize": 18,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Grid",
+       "props": {
+        "LayoutOrder": 2,
+        "Size": [
+         0,
+         172,
+         0,
+         182
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIGridLayout",
+         "Name": "Layout",
+         "props": {
+          "CellSize": [
+           0,
+           78,
+           0,
+           84
+          ],
+          "CellPadding": [
+           0,
+           14,
+           0,
+           14
+          ],
+          "SortOrder": "LayoutOrder"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "ShopButton",
+         "props": {
+          "Size": [
+           0,
+           78,
+           0,
+           84
+          ],
+          "BackgroundColor3": "#0F3E85",
+          "LayoutOrder": 1
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#5FC8FF"
+               ],
+               [
+                1,
+                "#1E7BE8"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#9BDCFF",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               39,
+               0,
+               39
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Sunburst",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0.42,
+               0
+              ],
+              "Size": [
+               0,
+               150,
+               0,
+               150
+              ],
+              "BackgroundTransparency": 1,
+              "Image": "assets/ui-resources/Effects/Sunbursts/0034_Sunburst.png",
+              "ImageColor3": "#FFFFFF",
+              "ImageTransparency": 0.55
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Icon",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0.42,
+               0
+              ],
+              "Size": [
+               0,
+               50,
+               0,
+               44
+              ],
+              "BackgroundTransparency": 1,
+              "Text": "🛒",
+              "TextSize": 36,
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              }
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Label",
+             "props": {
+              "BackgroundTransparency": 1,
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -2
+              ],
+              "Size": [
+               1,
+               4,
+               0,
+               22
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 2
+                ],
+                "Text": "SHOP",
+                "TextSize": 17,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "SHOP",
+                "TextSize": 17,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         },
+         "interactions": [
+          {
+           "trigger": "click",
+           "action": "toggle",
+           "target": "ShopFrame",
+           "animation": "pop"
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "RebirthButton",
+         "props": {
+          "Size": [
+           0,
+           78,
+           0,
+           84
+          ],
+          "BackgroundColor3": "#5E1478",
+          "LayoutOrder": 2
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#FF8BE0"
+               ],
+               [
+                1,
+                "#C23CF0"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#FFB8EE",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               39,
+               0,
+               39
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Icon",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0.42,
+               0
+              ],
+              "Size": [
+               0,
+               50,
+               0,
+               44
+              ],
+              "BackgroundTransparency": 1,
+              "Text": "🔄",
+              "TextSize": 36,
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              }
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Label",
+             "props": {
+              "BackgroundTransparency": 1,
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -2
+              ],
+              "Size": [
+               1,
+               4,
+               0,
+               22
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 2
+                ],
+                "Text": "REBIRTH",
+                "TextSize": 17,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "REBIRTH",
+                "TextSize": 17,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "IndexButton",
+         "props": {
+          "Size": [
+           0,
+           78,
+           0,
+           84
+          ],
+          "BackgroundColor3": "#1F7A16",
+          "LayoutOrder": 3
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#8BF25C"
+               ],
+               [
+                1,
+                "#3FBF2A"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#B8FF8F",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               39,
+               0,
+               39
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Icon",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0.42,
+               0
+              ],
+              "Size": [
+               0,
+               50,
+               0,
+               44
+              ],
+              "BackgroundTransparency": 1,
+              "Text": "📖",
+              "TextSize": 36,
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              }
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Label",
+             "props": {
+              "BackgroundTransparency": 1,
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -2
+              ],
+              "Size": [
+               1,
+               4,
+               0,
+               22
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 2
+                ],
+                "Text": "INDEX",
+                "TextSize": 17,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "INDEX",
+                "TextSize": 17,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "SettingsButton",
+         "props": {
+          "Size": [
+           0,
+           78,
+           0,
+           84
+          ],
+          "BackgroundColor3": "#5A6170",
+          "LayoutOrder": 4
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#FFFFFF"
+               ],
+               [
+                1,
+                "#AEB5C2"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#FFFFFF",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               39,
+               0,
+               39
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Icon",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0.42,
+               0
+              ],
+              "Size": [
+               0,
+               50,
+               0,
+               44
+              ],
+              "BackgroundTransparency": 1,
+              "Text": "⚙️",
+              "TextSize": 36,
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              }
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Label",
+             "props": {
+              "BackgroundTransparency": 1,
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -2
+              ],
+              "Size": [
+               1,
+               4,
+               0,
+               22
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 2
+                ],
+                "Text": "SETTINGS",
+                "TextSize": 17,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "SETTINGS",
+                "TextSize": 17,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 2.5,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "Currency",
+     "props": {
+      "AnchorPoint": [
+       0,
+       1
+      ],
+      "Position": [
+       0,
+       18,
+       1,
+       -18
+      ],
+      "Size": [
+       0,
+       260,
+       0,
+       44
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "Frame",
+       "Name": "Cash",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Size": [
+         0,
+         200,
+         1,
+         0
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "TextLabel",
+         "Name": "Shadow",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ],
+          "Position": [
+           0,
+           0,
+           0,
+           3
+          ],
+          "Text": "$999,999",
+          "TextSize": 34,
+          "TextColor3": "#000000",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextXAlignment": "Left"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#000000"
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Text",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ],
+          "Position": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "Text": "$999,999",
+          "TextSize": 34,
+          "TextColor3": "#7CF05A",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextXAlignment": "Left"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#000000"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "PlusButton",
+       "props": {
+        "Size": [
+         0,
+         38,
+         0,
+         40
+        ],
+        "BackgroundColor3": "#1F7A16",
+        "AnchorPoint": [
+         0,
+         0.5
+        ],
+        "Position": [
+         0,
+         158,
+         0.5,
+         0
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#8BF25C"
+             ],
+             [
+              1,
+              "#3FBF2A"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#B8FF8F",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Plus",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               2
+              ],
+              "Text": "+",
+              "TextSize": 28,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "+",
+              "TextSize": 28,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "ShopFrame",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.55,
+       0
+      ],
+      "Size": [
+       0,
+       640,
+       0,
+       508
+      ],
+      "BackgroundColor3": "#000000",
+      "BackgroundTransparency": 0.45
+     },
+     "children": [
+      {
+       "ClassName": "UIStroke",
+       "Name": "Outline",
+       "props": {
+        "Thickness": 5,
+        "Color": "#000000",
+        "BorderStrokePosition": "Outer",
+        "LineJoinMode": "Miter"
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Header",
+       "props": {
+        "Size": [
+         0,
+         528,
+         0,
+         62
+        ],
+        "BackgroundColor3": "#1F7A16",
+        "Position": [
+         0,
+         20,
+         0,
+         20
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#8BF25C"
+             ],
+             [
+              1,
+              "#3FBF2A"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#B8FF8F",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.78,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Title",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Position": [
+             0,
+             18,
+             0,
+             0
+            ],
+            "Size": [
+             1,
+             -36,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               4
+              ],
+              "Text": "SHOP",
+              "TextSize": 40,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "SHOP",
+              "TextSize": 40,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "ExitButton",
+       "props": {
+        "Size": [
+         0,
+         62,
+         0,
+         62
+        ],
+        "BackgroundColor3": "#7A0F14",
+        "Position": [
+         1,
+         -82,
+         0,
+         20
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FF6B6B"
+             ],
+             [
+              1,
+              "#D9262E"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#FF9A9A",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             62,
+             0,
+             62
+            ],
+            "ImageTransparency": 0.78,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "X",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               4
+              ],
+              "Text": "X",
+              "TextSize": 38,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "X",
+              "TextSize": 38,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Center"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       },
+       "interactions": [
+        {
+         "trigger": "click",
+         "action": "close",
+         "target": "ShopFrame"
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "HeroFrame",
+       "props": {
+        "Size": [
+         0,
+         600,
+         0,
+         168
+        ],
+        "BackgroundColor3": "#99400A",
+        "Position": [
+         0,
+         20,
+         0,
+         102
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#000000",
+          "BorderStrokePosition": "Outer",
+          "LineJoinMode": "Miter"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Face",
+         "props": {
+          "Size": [
+           1,
+           0,
+           1,
+           -6
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "ClipsDescendants": true
+         },
+         "children": [
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FFC14D"
+             ],
+             [
+              1,
+              "#FF7A1A"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Rim",
+           "props": {
+            "Thickness": 3,
+            "Color": "#FFDB8F",
+            "BorderStrokePosition": "Inner",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.78,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Sunburst",
+           "props": {
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.78,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             300,
+             0,
+             300
+            ],
+            "BackgroundTransparency": 1,
+            "Image": "assets/ui-resources/Effects/Sunbursts/0034_Sunburst.png",
+            "ImageColor3": "#FFF3C4",
+            "ImageTransparency": 0.55
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "GemBack",
+           "props": {
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.7,
+             0,
+             0.62,
+             0
+            ],
+            "Size": [
+             0,
+             70,
+             0,
+             84
+            ],
+            "Rotation": -18,
+            "BackgroundTransparency": 1,
+            "Image": "assets/ui-resources/Icons/Crystal/0076_Crystal_icon.png",
+            "ScaleType": "Fit",
+            "ImageTransparency": 0.45
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Gem",
+           "props": {
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.8,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             104,
+             0,
+             124
+            ],
+            "BackgroundTransparency": 1,
+            "Image": "assets/ui-resources/Icons/Crystal/0076_Crystal_icon.png",
+            "ScaleType": "Fit"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Title",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Position": [
+             0,
+             20,
+             0,
+             8
+            ],
+            "Size": [
+             0.6,
+             0,
+             0,
+             40
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               3
+              ],
+              "Text": "STARTER PACK",
+              "TextSize": 34,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "STARTER PACK",
+              "TextSize": 34,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 3.5,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Line1",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Position": [
+             0,
+             20,
+             0,
+             46
+            ],
+            "Size": [
+             0.6,
+             0,
+             0,
+             24
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               2
+              ],
+              "Text": "+ 5,000 Cash",
+              "TextSize": 20,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "+ 5,000 Cash",
+              "TextSize": 20,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Line2",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Position": [
+             0,
+             20,
+             0,
+             68
+            ],
+            "Size": [
+             0.6,
+             0,
+             0,
+             24
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "TextLabel",
+             "Name": "Shadow",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               2
+              ],
+              "Text": "+ Exclusive Pet",
+              "TextSize": 20,
+              "TextColor3": "#000000",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2,
+                "Color": "#000000"
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Text",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "Position": [
+               0,
+               0,
+               0,
+               0
+              ],
+              "Text": "+ Exclusive Pet",
+              "TextSize": 20,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "TextXAlignment": "Left"
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Stroke",
+               "props": {
+                "Thickness": 2,
+                "Color": "#000000"
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Buy",
+           "props": {
+            "Size": [
+             0,
+             176,
+             0,
+             46
+            ],
+            "BackgroundColor3": "#1F7A16",
+            "Position": [
+             0,
+             20,
+             1,
+             -54
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 4,
+              "Color": "#000000",
+              "BorderStrokePosition": "Outer",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Face",
+             "props": {
+              "Size": [
+               1,
+               0,
+               1,
+               -6
+              ],
+              "BackgroundColor3": "#FFFFFF",
+              "ClipsDescendants": true
+             },
+             "children": [
+              {
+               "ClassName": "UIGradient",
+               "Name": "Gradient",
+               "props": {
+                "Color": [
+                 [
+                  0,
+                  "#8BF25C"
+                 ],
+                 [
+                  1,
+                  "#3FBF2A"
+                 ]
+                ],
+                "Rotation": 90
+               }
+              },
+              {
+               "ClassName": "UIStroke",
+               "Name": "Rim",
+               "props": {
+                "Thickness": 3,
+                "Color": "#B8FF8F",
+                "BorderStrokePosition": "Inner",
+                "LineJoinMode": "Miter"
+               }
+              },
+              {
+               "ClassName": "Frame",
+               "Name": "Price",
+               "props": {
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "BackgroundTransparency": 1
+               },
+               "children": [
+                {
+                 "ClassName": "UIListLayout",
+                 "Name": "List",
+                 "props": {
+                  "FillDirection": "Horizontal",
+                  "SortOrder": "LayoutOrder",
+                  "HorizontalAlignment": "Center",
+                  "VerticalAlignment": "Center",
+                  "Padding": [
+                   0,
+                   6
+                  ]
+                 }
+                },
+                {
+                 "ClassName": "ImageLabel",
+                 "Name": "Robux",
+                 "props": {
+                  "LayoutOrder": 1,
+                  "Size": [
+                   0,
+                   24,
+                   0,
+                   24
+                  ],
+                  "BackgroundTransparency": 1,
+                  "Image": "assets/ui-resources/Icons/Roblox/0075_RobuxIcon.png",
+                  "ScaleType": "Fit"
+                 }
+                },
+                {
+                 "ClassName": "Frame",
+                 "Name": "Amount",
+                 "props": {
+                  "BackgroundTransparency": 1,
+                  "LayoutOrder": 2,
+                  "Size": [
+                   0,
+                   48,
+                   0,
+                   30
+                  ]
+                 },
+                 "children": [
+                  {
+                   "ClassName": "TextLabel",
+                   "Name": "Shadow",
+                   "props": {
+                    "BackgroundTransparency": 1,
+                    "Size": [
+                     1,
+                     0,
+                     1,
+                     0
+                    ],
+                    "Position": [
+                     0,
+                     0,
+                     0,
+                     2
+                    ],
+                    "Text": "199",
+                    "TextSize": 24,
+                    "TextColor3": "#000000",
+                    "FontFace": {
+                     "family": "FredokaOne",
+                     "weight": "Regular",
+                     "style": "Normal"
+                    },
+                    "TextXAlignment": "Center"
+                   },
+                   "children": [
+                    {
+                     "ClassName": "UIStroke",
+                     "Name": "Stroke",
+                     "props": {
+                      "Thickness": 2.5,
+                      "Color": "#000000"
+                     }
+                    }
+                   ]
+                  },
+                  {
+                   "ClassName": "TextLabel",
+                   "Name": "Text",
+                   "props": {
+                    "BackgroundTransparency": 1,
+                    "Size": [
+                     1,
+                     0,
+                     1,
+                     0
+                    ],
+                    "Position": [
+                     0,
+                     0,
+                     0,
+                     0
+                    ],
+                    "Text": "199",
+                    "TextSize": 24,
+                    "TextColor3": "#FFFFFF",
+                    "FontFace": {
+                     "family": "FredokaOne",
+                     "weight": "Regular",
+                     "style": "Normal"
+                    },
+                    "TextXAlignment": "Center"
+                   },
+                   "children": [
+                    {
+                     "ClassName": "UIStroke",
+                     "Name": "Stroke",
+                     "props": {
+                      "Thickness": 2.5,
+                      "Color": "#000000"
+                     }
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ],
+           "buttonFx": {
+            "hover": 1.05,
+            "press": 0.92
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "DevProducts",
+       "props": {
+        "Position": [
+         0,
+         20,
+         0,
+         290
+        ],
+        "Size": [
+         0,
+         600,
+         0,
+         196
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Horizontal",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           24
+          ]
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Product1",
+         "props": {
+          "Size": [
+           0,
+           184,
+           0,
+           196
+          ],
+          "BackgroundColor3": "#0F3E85",
+          "LayoutOrder": 1
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#5FC8FF"
+               ],
+               [
+                1,
+                "#1E7BE8"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#9BDCFF",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               48,
+               0,
+               48
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Title",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Position": [
+               0,
+               0,
+               0,
+               10
+              ],
+              "Size": [
+               1,
+               0,
+               0,
+               34
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 3
+                ],
+                "Text": "+50 Cash",
+                "TextSize": 28,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "+50 Cash",
+                "TextSize": 28,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Gem",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0,
+               86
+              ],
+              "Size": [
+               0,
+               60,
+               0,
+               72
+              ],
+              "BackgroundTransparency": 1,
+              "Image": "assets/ui-resources/Icons/Crystal/0076_Crystal_icon.png",
+              "ScaleType": "Fit"
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Buy",
+             "props": {
+              "Size": [
+               1,
+               -28,
+               0,
+               44
+              ],
+              "BackgroundColor3": "#1F7A16",
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -12
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Outline",
+               "props": {
+                "Thickness": 4,
+                "Color": "#000000",
+                "BorderStrokePosition": "Outer",
+                "LineJoinMode": "Miter"
+               }
+              },
+              {
+               "ClassName": "Frame",
+               "Name": "Face",
+               "props": {
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 -6
+                ],
+                "BackgroundColor3": "#FFFFFF",
+                "ClipsDescendants": true
+               },
+               "children": [
+                {
+                 "ClassName": "UIGradient",
+                 "Name": "Gradient",
+                 "props": {
+                  "Color": [
+                   [
+                    0,
+                    "#8BF25C"
+                   ],
+                   [
+                    1,
+                    "#3FBF2A"
+                   ]
+                  ],
+                  "Rotation": 90
+                 }
+                },
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Rim",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#B8FF8F",
+                  "BorderStrokePosition": "Inner",
+                  "LineJoinMode": "Miter"
+                 }
+                },
+                {
+                 "ClassName": "Frame",
+                 "Name": "Price",
+                 "props": {
+                  "Size": [
+                   1,
+                   0,
+                   1,
+                   0
+                  ],
+                  "BackgroundTransparency": 1
+                 },
+                 "children": [
+                  {
+                   "ClassName": "UIListLayout",
+                   "Name": "List",
+                   "props": {
+                    "FillDirection": "Horizontal",
+                    "SortOrder": "LayoutOrder",
+                    "HorizontalAlignment": "Center",
+                    "VerticalAlignment": "Center",
+                    "Padding": [
+                     0,
+                     6
+                    ]
+                   }
+                  },
+                  {
+                   "ClassName": "ImageLabel",
+                   "Name": "Robux",
+                   "props": {
+                    "LayoutOrder": 1,
+                    "Size": [
+                     0,
+                     22,
+                     0,
+                     22
+                    ],
+                    "BackgroundTransparency": 1,
+                    "Image": "assets/ui-resources/Icons/Roblox/0075_RobuxIcon.png",
+                    "ScaleType": "Fit"
+                   }
+                  },
+                  {
+                   "ClassName": "Frame",
+                   "Name": "Amount",
+                   "props": {
+                    "BackgroundTransparency": 1,
+                    "LayoutOrder": 2,
+                    "Size": [
+                     0,
+                     32,
+                     0,
+                     28
+                    ]
+                   },
+                   "children": [
+                    {
+                     "ClassName": "TextLabel",
+                     "Name": "Shadow",
+                     "props": {
+                      "BackgroundTransparency": 1,
+                      "Size": [
+                       1,
+                       0,
+                       1,
+                       0
+                      ],
+                      "Position": [
+                       0,
+                       0,
+                       0,
+                       2
+                      ],
+                      "Text": "25",
+                      "TextSize": 22,
+                      "TextColor3": "#000000",
+                      "FontFace": {
+                       "family": "FredokaOne",
+                       "weight": "Regular",
+                       "style": "Normal"
+                      },
+                      "TextXAlignment": "Center"
+                     },
+                     "children": [
+                      {
+                       "ClassName": "UIStroke",
+                       "Name": "Stroke",
+                       "props": {
+                        "Thickness": 2.5,
+                        "Color": "#000000"
+                       }
+                      }
+                     ]
+                    },
+                    {
+                     "ClassName": "TextLabel",
+                     "Name": "Text",
+                     "props": {
+                      "BackgroundTransparency": 1,
+                      "Size": [
+                       1,
+                       0,
+                       1,
+                       0
+                      ],
+                      "Position": [
+                       0,
+                       0,
+                       0,
+                       0
+                      ],
+                      "Text": "25",
+                      "TextSize": 22,
+                      "TextColor3": "#FFFFFF",
+                      "FontFace": {
+                       "family": "FredokaOne",
+                       "weight": "Regular",
+                       "style": "Normal"
+                      },
+                      "TextXAlignment": "Center"
+                     },
+                     "children": [
+                      {
+                       "ClassName": "UIStroke",
+                       "Name": "Stroke",
+                       "props": {
+                        "Thickness": 2.5,
+                        "Color": "#000000"
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ],
+             "buttonFx": {
+              "hover": 1.05,
+              "press": 0.92
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Product2",
+         "props": {
+          "Size": [
+           0,
+           184,
+           0,
+           196
+          ],
+          "BackgroundColor3": "#0F3E85",
+          "LayoutOrder": 2
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#5FC8FF"
+               ],
+               [
+                1,
+                "#1E7BE8"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#9BDCFF",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               48,
+               0,
+               48
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Title",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Position": [
+               0,
+               0,
+               0,
+               10
+              ],
+              "Size": [
+               1,
+               0,
+               0,
+               34
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 3
+                ],
+                "Text": "+500 Cash",
+                "TextSize": 28,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "+500 Cash",
+                "TextSize": 28,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Gem",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0,
+               86
+              ],
+              "Size": [
+               0,
+               60,
+               0,
+               72
+              ],
+              "BackgroundTransparency": 1,
+              "Image": "assets/ui-resources/Icons/Crystal/0076_Crystal_icon.png",
+              "ScaleType": "Fit"
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Buy",
+             "props": {
+              "Size": [
+               1,
+               -28,
+               0,
+               44
+              ],
+              "BackgroundColor3": "#1F7A16",
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -12
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Outline",
+               "props": {
+                "Thickness": 4,
+                "Color": "#000000",
+                "BorderStrokePosition": "Outer",
+                "LineJoinMode": "Miter"
+               }
+              },
+              {
+               "ClassName": "Frame",
+               "Name": "Face",
+               "props": {
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 -6
+                ],
+                "BackgroundColor3": "#FFFFFF",
+                "ClipsDescendants": true
+               },
+               "children": [
+                {
+                 "ClassName": "UIGradient",
+                 "Name": "Gradient",
+                 "props": {
+                  "Color": [
+                   [
+                    0,
+                    "#8BF25C"
+                   ],
+                   [
+                    1,
+                    "#3FBF2A"
+                   ]
+                  ],
+                  "Rotation": 90
+                 }
+                },
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Rim",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#B8FF8F",
+                  "BorderStrokePosition": "Inner",
+                  "LineJoinMode": "Miter"
+                 }
+                },
+                {
+                 "ClassName": "Frame",
+                 "Name": "Price",
+                 "props": {
+                  "Size": [
+                   1,
+                   0,
+                   1,
+                   0
+                  ],
+                  "BackgroundTransparency": 1
+                 },
+                 "children": [
+                  {
+                   "ClassName": "UIListLayout",
+                   "Name": "List",
+                   "props": {
+                    "FillDirection": "Horizontal",
+                    "SortOrder": "LayoutOrder",
+                    "HorizontalAlignment": "Center",
+                    "VerticalAlignment": "Center",
+                    "Padding": [
+                     0,
+                     6
+                    ]
+                   }
+                  },
+                  {
+                   "ClassName": "ImageLabel",
+                   "Name": "Robux",
+                   "props": {
+                    "LayoutOrder": 1,
+                    "Size": [
+                     0,
+                     22,
+                     0,
+                     22
+                    ],
+                    "BackgroundTransparency": 1,
+                    "Image": "assets/ui-resources/Icons/Roblox/0075_RobuxIcon.png",
+                    "ScaleType": "Fit"
+                   }
+                  },
+                  {
+                   "ClassName": "Frame",
+                   "Name": "Amount",
+                   "props": {
+                    "BackgroundTransparency": 1,
+                    "LayoutOrder": 2,
+                    "Size": [
+                     0,
+                     32,
+                     0,
+                     28
+                    ]
+                   },
+                   "children": [
+                    {
+                     "ClassName": "TextLabel",
+                     "Name": "Shadow",
+                     "props": {
+                      "BackgroundTransparency": 1,
+                      "Size": [
+                       1,
+                       0,
+                       1,
+                       0
+                      ],
+                      "Position": [
+                       0,
+                       0,
+                       0,
+                       2
+                      ],
+                      "Text": "99",
+                      "TextSize": 22,
+                      "TextColor3": "#000000",
+                      "FontFace": {
+                       "family": "FredokaOne",
+                       "weight": "Regular",
+                       "style": "Normal"
+                      },
+                      "TextXAlignment": "Center"
+                     },
+                     "children": [
+                      {
+                       "ClassName": "UIStroke",
+                       "Name": "Stroke",
+                       "props": {
+                        "Thickness": 2.5,
+                        "Color": "#000000"
+                       }
+                      }
+                     ]
+                    },
+                    {
+                     "ClassName": "TextLabel",
+                     "Name": "Text",
+                     "props": {
+                      "BackgroundTransparency": 1,
+                      "Size": [
+                       1,
+                       0,
+                       1,
+                       0
+                      ],
+                      "Position": [
+                       0,
+                       0,
+                       0,
+                       0
+                      ],
+                      "Text": "99",
+                      "TextSize": 22,
+                      "TextColor3": "#FFFFFF",
+                      "FontFace": {
+                       "family": "FredokaOne",
+                       "weight": "Regular",
+                       "style": "Normal"
+                      },
+                      "TextXAlignment": "Center"
+                     },
+                     "children": [
+                      {
+                       "ClassName": "UIStroke",
+                       "Name": "Stroke",
+                       "props": {
+                        "Thickness": 2.5,
+                        "Color": "#000000"
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ],
+             "buttonFx": {
+              "hover": 1.05,
+              "press": 0.92
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Product3",
+         "props": {
+          "Size": [
+           0,
+           184,
+           0,
+           196
+          ],
+          "BackgroundColor3": "#0F3E85",
+          "LayoutOrder": 3
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 4,
+            "Color": "#000000",
+            "BorderStrokePosition": "Outer",
+            "LineJoinMode": "Miter"
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Face",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             -6
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "ClipsDescendants": true
+           },
+           "children": [
+            {
+             "ClassName": "UIGradient",
+             "Name": "Gradient",
+             "props": {
+              "Color": [
+               [
+                0,
+                "#5FC8FF"
+               ],
+               [
+                1,
+                "#1E7BE8"
+               ]
+              ],
+              "Rotation": 90
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Rim",
+             "props": {
+              "Thickness": 3,
+              "Color": "#9BDCFF",
+              "BorderStrokePosition": "Inner",
+              "LineJoinMode": "Miter"
+             }
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Studs",
+             "props": {
+              "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+              "ScaleType": "Tile",
+              "TileSize": [
+               0,
+               48,
+               0,
+               48
+              ],
+              "ImageTransparency": 0.78,
+              "BackgroundTransparency": 1,
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Title",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Position": [
+               0,
+               0,
+               0,
+               10
+              ],
+              "Size": [
+               1,
+               0,
+               0,
+               34
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "TextLabel",
+               "Name": "Shadow",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 3
+                ],
+                "Text": "+5K Cash",
+                "TextSize": 28,
+                "TextColor3": "#000000",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              },
+              {
+               "ClassName": "TextLabel",
+               "Name": "Text",
+               "props": {
+                "BackgroundTransparency": 1,
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 0
+                ],
+                "Position": [
+                 0,
+                 0,
+                 0,
+                 0
+                ],
+                "Text": "+5K Cash",
+                "TextSize": 28,
+                "TextColor3": "#FFFFFF",
+                "FontFace": {
+                 "family": "FredokaOne",
+                 "weight": "Regular",
+                 "style": "Normal"
+                },
+                "TextXAlignment": "Center"
+               },
+               "children": [
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Stroke",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#000000"
+                 }
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "ClassName": "ImageLabel",
+             "Name": "Gem",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.5,
+               0,
+               0,
+               86
+              ],
+              "Size": [
+               0,
+               60,
+               0,
+               72
+              ],
+              "BackgroundTransparency": 1,
+              "Image": "assets/ui-resources/Icons/Crystal/0076_Crystal_icon.png",
+              "ScaleType": "Fit"
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Buy",
+             "props": {
+              "Size": [
+               1,
+               -28,
+               0,
+               44
+              ],
+              "BackgroundColor3": "#1F7A16",
+              "AnchorPoint": [
+               0.5,
+               1
+              ],
+              "Position": [
+               0.5,
+               0,
+               1,
+               -12
+              ]
+             },
+             "children": [
+              {
+               "ClassName": "UIStroke",
+               "Name": "Outline",
+               "props": {
+                "Thickness": 4,
+                "Color": "#000000",
+                "BorderStrokePosition": "Outer",
+                "LineJoinMode": "Miter"
+               }
+              },
+              {
+               "ClassName": "Frame",
+               "Name": "Face",
+               "props": {
+                "Size": [
+                 1,
+                 0,
+                 1,
+                 -6
+                ],
+                "BackgroundColor3": "#FFFFFF",
+                "ClipsDescendants": true
+               },
+               "children": [
+                {
+                 "ClassName": "UIGradient",
+                 "Name": "Gradient",
+                 "props": {
+                  "Color": [
+                   [
+                    0,
+                    "#8BF25C"
+                   ],
+                   [
+                    1,
+                    "#3FBF2A"
+                   ]
+                  ],
+                  "Rotation": 90
+                 }
+                },
+                {
+                 "ClassName": "UIStroke",
+                 "Name": "Rim",
+                 "props": {
+                  "Thickness": 3,
+                  "Color": "#B8FF8F",
+                  "BorderStrokePosition": "Inner",
+                  "LineJoinMode": "Miter"
+                 }
+                },
+                {
+                 "ClassName": "Frame",
+                 "Name": "Price",
+                 "props": {
+                  "Size": [
+                   1,
+                   0,
+                   1,
+                   0
+                  ],
+                  "BackgroundTransparency": 1
+                 },
+                 "children": [
+                  {
+                   "ClassName": "UIListLayout",
+                   "Name": "List",
+                   "props": {
+                    "FillDirection": "Horizontal",
+                    "SortOrder": "LayoutOrder",
+                    "HorizontalAlignment": "Center",
+                    "VerticalAlignment": "Center",
+                    "Padding": [
+                     0,
+                     6
+                    ]
+                   }
+                  },
+                  {
+                   "ClassName": "ImageLabel",
+                   "Name": "Robux",
+                   "props": {
+                    "LayoutOrder": 1,
+                    "Size": [
+                     0,
+                     22,
+                     0,
+                     22
+                    ],
+                    "BackgroundTransparency": 1,
+                    "Image": "assets/ui-resources/Icons/Roblox/0075_RobuxIcon.png",
+                    "ScaleType": "Fit"
+                   }
+                  },
+                  {
+                   "ClassName": "Frame",
+                   "Name": "Amount",
+                   "props": {
+                    "BackgroundTransparency": 1,
+                    "LayoutOrder": 2,
+                    "Size": [
+                     0,
+                     45,
+                     0,
+                     28
+                    ]
+                   },
+                   "children": [
+                    {
+                     "ClassName": "TextLabel",
+                     "Name": "Shadow",
+                     "props": {
+                      "BackgroundTransparency": 1,
+                      "Size": [
+                       1,
+                       0,
+                       1,
+                       0
+                      ],
+                      "Position": [
+                       0,
+                       0,
+                       0,
+                       2
+                      ],
+                      "Text": "399",
+                      "TextSize": 22,
+                      "TextColor3": "#000000",
+                      "FontFace": {
+                       "family": "FredokaOne",
+                       "weight": "Regular",
+                       "style": "Normal"
+                      },
+                      "TextXAlignment": "Center"
+                     },
+                     "children": [
+                      {
+                       "ClassName": "UIStroke",
+                       "Name": "Stroke",
+                       "props": {
+                        "Thickness": 2.5,
+                        "Color": "#000000"
+                       }
+                      }
+                     ]
+                    },
+                    {
+                     "ClassName": "TextLabel",
+                     "Name": "Text",
+                     "props": {
+                      "BackgroundTransparency": 1,
+                      "Size": [
+                       1,
+                       0,
+                       1,
+                       0
+                      ],
+                      "Position": [
+                       0,
+                       0,
+                       0,
+                       0
+                      ],
+                      "Text": "399",
+                      "TextSize": 22,
+                      "TextColor3": "#FFFFFF",
+                      "FontFace": {
+                       "family": "FredokaOne",
+                       "weight": "Regular",
+                       "style": "Normal"
+                      },
+                      "TextXAlignment": "Center"
+                     },
+                     "children": [
+                      {
+                       "ClassName": "UIStroke",
+                       "Name": "Stroke",
+                       "props": {
+                        "Thickness": 2.5,
+                        "Color": "#000000"
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ],
+             "buttonFx": {
+              "hover": 1.05,
+              "press": 0.92
+             }
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

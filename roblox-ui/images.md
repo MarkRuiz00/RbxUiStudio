@@ -42,6 +42,11 @@ Roblox UI has **no Overlay/Multiply/Screen** blending. Effects designed in Figma
 - a texture with light and dark detail → a white-alpha "highlights" image + a black-alpha "shadows" image, each tinted;
 - RbxUI Studio does this automatically when importing from Figma ([../rbxui/figma-import.md](../rbxui/figma-import.md)).
 
+## Outlines on images
+
+`UIStroke` outlines a `GuiObject`'s box (or text glyphs), **not the opaque pixels of an image**. For outlined icons, bake the outline into the PNG
+(Photopea/Photoshop "Stroke", or Figma after vectorizing) — keep it white so it can still be tinted.
+
 ## Spritesheets
 
 `ImageRectOffset` / `ImageRectSize` show a region of one image — fewer uploads for icon sets and frame animations.

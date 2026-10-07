@@ -14,6 +14,7 @@ run `node tools/ui-resources.mjs fetch --examples` once so the editor can show t
 | [Daily reward](daily-reward.md) | cartoony | 7-day grid, claimed/today/locked states, ribbon title | ![](renders/daily-reward.png) |
 | [Rebirth popup](rebirth-popup.md) | simulator | confirmation popup, before → after stats, flex buttons | ![](renders/rebirth-popup.png) |
 | [Codes](codes.md) | simulator | TextBox input, redeem button, status message | ![](renders/codes.png) |
+| [Stud shop + HUD](stud-shop-hud.md) | stud (3D blocks) | 3D stud blocks (face + lip + outer stroke), 3D text, teleport buttons, hero offer + dev products — from a Figma tutorial | ![](renders/stud-shop-hud.png) |
 
 **Icons:** the emoji glyphs (🛒 🐾 🪙…) are placeholders so the examples work without third-party art. Replace them with
 `ImageLabel`s of your own icon set (editor → Iconos → Online, or the packs in [../estilos/resources.md](../estilos/resources.md)).

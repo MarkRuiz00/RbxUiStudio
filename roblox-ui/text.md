@@ -50,6 +50,11 @@ Gotham (`Gotham`, `GothamBold`, `GothamBlack`) still exists in `Enum.Font`; Buil
 2. Or a solid/semi-opaque plate behind the text.
 3. Contrast: aim for WCAG 4.5:1 for small text, 3:1 for large/bold display text (WCAG guideline, not a Roblox rule).
 
+## Text shadows
+
+There's no drop-shadow property for text (the legacy `TextStrokeColor3`/`TextStrokeTransparency` is a thin outline, not a shadow).
+For the popular hard "3D" shadow, put a dark copy of the label a few pixels lower behind it ([recipe](../rbxui/recipes.md#3d-text-hard-drop-shadow)).
+
 ## RichText
 
 `RichText = true` enables tags: `<b>`, `<i>`, `<u>`, `<s>`, `<font color="#FF0000" size="20" face="..." weight="heavy">`, `<stroke color="#000" thickness="2">`, `<br/>`.
