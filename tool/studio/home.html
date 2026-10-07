@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Proyectos · RbxUI Studio</title>
+<link rel="icon" type="image/png" href="brand/favicon.png">
+<meta name="theme-color" content="#5b3cff">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&family=Fredoka:wght@300..700&family=Luckiest+Guy&family=Bangers&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Roboto:wght@100..900&family=Oswald:wght@200..700&family=Nunito:wght@200..1000&family=Arimo:wght@400..700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../ds/ds.css">
+<link rel="stylesheet" href="studio.css">
+<link rel="stylesheet" href="home.css">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('st-theme') || 'dark'; } catch { document.documentElement.dataset.theme = 'dark'; }</script>
+</head><body class="hm">
+<header class="hm-top">
+  <a class="hm-brand" href="home.html" title="Proyectos"><img src="brand/logo-128.png" alt=""><span>RbxUI <b>Studio</b></span></a>
+  <label class="hm-search"><span data-icon="search"></span><input id="hm-q" placeholder="Buscar proyectos y pantallas…" autocomplete="off"></label>
+  <div class="hm-tr">
+    <button class="hm-ib" id="hm-theme" title="Tema claro / oscuro"></button>
+    <button class="hm-btn primary" id="hm-new" data-icon="plus"><span>Nuevo proyecto</span></button>
+  </div>
+</header>
+<aside class="hm-side" id="hm-side"></aside>
+<main class="hm-main">
+  <div class="hm-head" id="hm-head"></div>
+  <div class="hm-grid" id="hm-grid"></div>
+</main>
+<div id="hm-layer"></div>
+<div id="st-toasts"></div>
+<script src="icons.js"></script>
+<script src="rbxjson.js"></script>
+<script src="render.js"></script>
+<script src="home.js"></script>
+</body></html>

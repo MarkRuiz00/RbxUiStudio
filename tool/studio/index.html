@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>RbxUI Studio</title>
+<link rel="icon" type="image/png" href="brand/favicon.png">
+<meta name="theme-color" content="#5b3cff">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="brand/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&family=Fredoka:wght@300..700&family=Luckiest+Guy&family=Bangers&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Roboto:wght@100..900&family=Roboto+Mono&family=Oswald:wght@200..700&family=Nunito:wght@200..1000&family=Arimo:wght@400..700&family=Press+Start+2P&family=Creepster&family=Denk+One&family=Permanent+Marker&family=Titillium+Web:wght@200..900&family=Ubuntu:wght@300..700&family=Amatic+SC:wght@400;700&family=Jura:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../ds/ds.css">
+<link rel="stylesheet" href="studio.css">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem('st-theme') || 'dark'; } catch { document.documentElement.dataset.theme = 'dark'; }</script>
+</head><body class="st">
+<div id="st-splash"><div class="st-splash-in">
+  <div class="st-splash-logo"><img src="brand/logo.png" alt=""></div>
+  <div class="st-splash-name">RbxUI <b>Studio</b></div>
+  <div class="st-splash-bar"><i></i></div>
+</div></div>
+<header id="st-top">
+  <div class="st-tl">
+    <a class="st-brand" href="home.html" title="Proyectos (inicio)"><img src="brand/logo-128.png" alt="RbxUI Studio"><span class="st-bname">RbxUI <b>Studio</b></span></a>
+    <div class="st-toolgrp" id="st-tools">
+      <button data-tool="move" data-icon="move" title="Mover (V)" class="on"></button>
+      <button data-tool="frame" data-icon="frame" title="Frame (F) · arrastra en el lienzo"></button>
+      <button data-tool="text" data-icon="text" title="Texto (T)"></button>
+      <button data-tool="image" data-icon="image" title="Imagen (I)"></button>
+      <button data-tool="button" data-icon="button" title="Botón (B)"></button>
+      <button data-tool="hand" data-icon="hand" title="Mano (H · o mantén Espacio)"></button>
+    </div>
+    <span class="st-sep"></span>
+    <button id="st-undo" class="st-ib" data-icon="undo" title="Deshacer (Ctrl+Z)"></button>
+    <button id="st-redo" class="st-ib" data-icon="redo" title="Rehacer (Ctrl+Y)"></button>
+  </div>
+  <div class="st-tc">
+    <a id="st-proj" class="st-crumb" href="home.html" hidden><span></span><i>/</i></a>
+    <select id="st-scene" title="Pantalla (ScreenGui)"></select>
+    <button id="st-new" class="st-ib" data-icon="plus" title="Nueva escena"></button>
+    <button id="st-import" class="st-ib" data-icon="import" title="Importar pantalla DS"></button>
+    <button id="st-rbxui" class="st-ib" data-icon="code" title="JSON rbxui · prompt para IAs"></button>
+    <span class="st-sep"></span>
+    <button id="st-examples" class="st-pill" data-icon="book" title="Ejemplos para la IA: tus UIs de Figma como referencia"><span>Ejemplos IA</span><b class="st-count" id="st-excount"></b></button>
+    <button id="st-mcp" class="st-pill" data-icon="plug" title="MCP: conecta Claude u otra IA al editor"><span>MCP</span><i class="st-dot" id="st-mcpdot"></i></button>
+    <button id="st-studio" class="st-pill" data-icon="roblox" title="Roblox Studio: plugin RbxUI Connect"><span>Studio</span><i class="st-dot" id="st-studiodot"></i></button>
+  </div>
+  <div class="st-tr">
+    <span id="st-status"></span>
+    <button id="st-phone" class="st-ib" data-icon="phone" title="Ver en el móvil (QR)"></button>
+    <button id="st-theme" class="st-ib" data-icon="moon" title="Tema claro / oscuro"></button>
+    <button id="st-fit" class="st-ib" data-icon="fit" title="Ver todo (Shift+1) · selección (Shift+2)"></button>
+    <button id="st-zoom" class="st-zoom" title="Zoom al 100% (Ctrl+0)">100%</button>
+    <button id="st-play" class="st-ib" data-icon="play" title="Probar botones y ventanas (P)"></button>
+    <button id="st-save" class="st-btn" title="Guardar (Ctrl+S)">Guardar</button>
+    <button id="st-export" class="st-btn st-primary">Construir en Roblox</button>
+  </div>
+</header>
+<aside id="st-left">
+  <nav class="st-tabs">
+    <button data-tab="layers" class="on" data-icon="layers">Capas</button><button data-tab="insert" data-icon="shapes">Insertar</button><button data-tab="icons" data-icon="sparkle">Iconos</button>
+  </nav>
+  <div id="st-layers" class="st-pane on"></div>
+  <div id="st-insert" class="st-pane"></div>
+  <div id="st-icons" class="st-pane">
+    <div class="st-seg" id="st-iconsrc">
+      <button data-src="studs" class="on">Juego</button><button data-src="logos">Logos</button><button data-src="fx">Efectos</button><button data-src="web">Online</button>
+    </div>
+    <div class="st-logobar" id="st-logobar" hidden>
+      <select id="st-logofolder" title="Carpeta"></select>
+      <button class="st-ib" id="st-logoup-dir" data-icon="folderUp" title="Subir una carpeta de logos"></button>
+      <button class="st-ib" id="st-logoup-files" data-icon="upload" title="Subir imágenes a esta carpeta"></button>
+      <button class="st-ib" id="st-logodel" data-icon="trash" title="Borrar esta carpeta"></button>
+      <input type="file" id="st-logoin-dir" webkitdirectory multiple hidden>
+      <input type="file" id="st-logoin-files" accept=".png,.jpg,.jpeg,.webp,.svg,image/*" multiple hidden>
+    </div>
+    <label class="st-search"><span data-icon="search"></span><input id="st-iconq" placeholder="Buscar iconos…" autocomplete="off"></label>
+    <div class="st-webopts" id="st-webopts" hidden>
+      <select id="st-iconset" title="Colección">
+        <option value="">Todas las colecciones</option>
+        <option value="fluent-emoji-flat,noto,twemoji,openmoji">Emojis a color</option>
+        <option value="game-icons">Game Icons (juego)</option>
+        <option value="material-symbols">Material Symbols</option>
+        <option value="lucide">Lucide</option>
+        <option value="ph">Phosphor</option>
+        <option value="tabler">Tabler</option>
+        <option value="mdi">Material Design</option>
+        <option value="solar">Solar</option>
+      </select>
+      <label class="st-color" title="Color de los iconos de un solo color"><input type="color" id="st-iconcolor" value="#ffffff"></label>
+    </div>
+    <p class="st-note" id="st-iconhint">Clic: insertar · con una imagen seleccionada: reemplazarla.</p>
+    <div id="st-icongrid"></div>
+  </div>
+</aside>
+<main id="st-canvas"><div id="st-world"><div class="stage" id="st-stage"></div><div id="st-overlay"></div></div><div id="st-empty" hidden></div></main>
+<aside id="st-right"><div id="st-props"></div></aside>
+<nav id="st-mnav">
+  <button data-m="layers" data-icon="layers"><span>Capas</span></button>
+  <button data-m="insert" data-icon="shapes"><span>Insertar</span></button>
+  <button data-m="icons" data-icon="sparkle"><span>Iconos</span></button>
+  <button data-m="props" data-icon="sliders"><span>Propiedades</span></button>
+  <button data-m="play" data-icon="play"><span>Probar</span></button>
+</nav>
+<div id="st-wins"></div>
+<div id="st-offline" hidden></div>
+<div id="st-toasts"></div>
+<script src="icons.js"></script>
+<script src="rbxjson.js"></script>
+<script src="fills.js"></script>
+<script src="studkit.js"></script>
+<script src="render.js"></script>
+<script src="editor.js"></script>
+</body></html>

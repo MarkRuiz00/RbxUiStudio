@@ -1,0 +1,16 @@
+{
+  "name": "rbxuistudio",
+  "version": "0.1.0",
+  "description": "RbxUI Studio — a Figma-like editor where AIs and people design Roblox UI as real Instances (JSON rbxui), with an MCP server and a Roblox Studio plugin.",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node studio/server.mjs",
+    "mcp": "node studio/mcp.mjs",
+    "browser": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

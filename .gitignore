@@ -11,3 +11,8 @@ tool/assets/rbx_assets.json
 tool/projects.json
 tool/examples/
 tool/.secrets/
+tool/node_modules/
+tool/assets/studs/
+tool/assets/logos/
+tool/assets/backgrounds/
+tool/assets/roblox/
