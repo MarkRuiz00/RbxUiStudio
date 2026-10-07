@@ -49,7 +49,7 @@ to `~/Documents/Roblox/Plugins/` as `.lua`). Open a place, allow HTTP to `localh
 | `plugin/`, `runtime/` | Roblox Studio plugin and in-game LocalScript | ✅ |
 | `site/` | product landing page (`/landing`) | ✅ |
 | `ds/`, `export.mjs` | legacy HTML design-system → PNG pipeline | ✅ |
-| `assets/brand/` | RbxUI logo and mascots | ✅ |
+| `studio/brand/`, `assets/brand/` | RbxUI logo, mascots, Robux icons | ✅ |
 | `screens/` | your scenes (`<Name>.scene.json`) | ❌ (local) |
 | `examples/` | your "AI study notes" (reference UIs for the AI) | ❌ |
 | `assets/figma/`, `assets/logos/`, `assets/ui-resources/` | imported/uploaded images | ❌ |

@@ -4,7 +4,7 @@ Pipeline: **HTML/CSS/SVG** (se ve y se itera rápido) → **export.mjs** (Playwr
 
 ## ⭐⭐ RbxUI Studio — editor visual tipo Figma (flujo principal)
 Abrir: doble clic en `rbxui/RbxUI Studio.bat` (o `node rbxui/studio/server.mjs` → http://localhost:5170/studio/). En Claude Code: `preview_start rbxui-studio`.
-- **Pegar de Figma**: capas editables (fusiones → capas Luz/Sombra teñidas, texturas en mosaico, máscaras = recorte). Qué se importa y cómo: [`docs/figma-cobertura.md`](docs/figma-cobertura.md).
+- **Pegar de Figma**: capas editables (fusiones → capas Luz/Sombra teñidas, texturas en mosaico, máscaras = recorte). Qué se importa y cómo: [`docs/figma-cobertura.md`](figma-cobertura.md).
 - **Escenas** = `screens/<Name>.scene.json` (Name = nombre del ScreenGui). Árbol de nodos con posición absoluta y clases del design system.
 - **Capas** (arrastrar para reordenar/anidar, ocultar, bloquear, renombrar con doble clic) · **Insertar** (ventanas, botones, comprar con Robux, HUD, tarjeta, slot, caja, sección, moneda, barra, flecha, textos, iconos, efectos, grupo) · **Iconos** (Studs + Robux; con una imagen seleccionada la reemplaza).
 - **Lienzo**: clic selecciona como Figma (primero el grupo de arriba; doble clic entra; Ctrl+clic profundo; Esc sube), arrastrar con imán a bordes/centros (guías rosas), asas de tamaño, zoom/paneo.
