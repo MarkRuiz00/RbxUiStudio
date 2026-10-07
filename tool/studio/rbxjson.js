@@ -276,6 +276,67 @@
     for (const k of n.children || []) { k.x = r2(k.x); k.y = r2(k.y); }
   }
 
+  // ---------------------------------------------------------------- AutomaticSize (solo para pintar)
+  // Mide textos (canvas, misma fuente/tamaño que textLayer) y contenidos; deja el tamaño mostrado en n.disp {x,y,w,h}
+  // sin tocar n.w/n.h (el Size guardado sigue siendo el mínimo, como en Roblox). Las listas se recolocan con esos tamaños.
+  const plain = (t) => String(t).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  function makeMeasure(doc) {
+    const cv = doc && doc.createElement && doc.createElement('canvas'), cx = cv && cv.getContext && cv.getContext('2d');
+    return (n, maxW) => {
+      const size = +prop(n, 'TextSize') || 14, f = fontOf(n), px = size * TEXT_K;
+      const fam = (/font-family:([^;]+);/.exec(cssFont(f)) || [])[1] || 'sans-serif', wt = WEIGHTS[f.weight] || 400;
+      const lineH = px * 1.12 * (+prop(n, 'LineHeight') || 1);
+      const txt = String(prop(n, 'RichText') ? plain(prop(n, 'Text') ?? '') : prop(n, 'Text') ?? '');
+      const width = (s2) => (cx ? (cx.font = `${f.style === 'Italic' ? 'italic ' : ''}${wt} ${px}px ${fam}`, cx.measureText(s2).width) : s2.length * px * 0.55);
+      const wrap = !!prop(n, 'TextWrapped') && maxW > 0;
+      let w = 0, lines = 0;
+      for (const para of txt.split('\n')) {
+        if (!wrap) { w = Math.max(w, width(para)); lines++; continue; }
+        let cur = '';
+        for (const word of para.split(/(\s+)/)) {
+          const tryS = cur + word;
+          if (cur && width(tryS.trimEnd()) > maxW) { w = Math.max(w, width(cur.trimEnd())); lines++; cur = word.trimStart(); } else cur = tryS;
+        }
+        w = Math.max(w, width(cur.trimEnd())); lines++;
+      }
+      const st = modsOf(n, 'UIStroke').find((x) => mp(x, 'ApplyStrokeMode') !== 'Border'), sw = st ? 2 * (+mp(st, 'Thickness') || 0) : 0;
+      return { w: Math.ceil(w + sw), h: Math.ceil(Math.max(1, lines) * lineH + sw) };
+    };
+  }
+  function autoSizePass(nodes, doc) {
+    const measure = makeMeasure(doc);
+    const visit = (n) => {
+      if (!n.rbxClass) return;
+      for (const k of n.children || []) visit(k);
+      const lay = modOf(n, 'UIGridLayout') || modOf(n, 'UIListLayout');
+      const kids = n.children || [];
+      if (lay && kids.some((k) => k.disp)) {
+        const saved = kids.map((k) => [k.w, k.h]);
+        kids.forEach((k) => { if (k.disp) { k.w = k.disp.w; k.h = k.disp.h; } });
+        layoutKids(kids, lay, contentBox(n, n.w, n.h));
+        kids.forEach((k, i) => { if (k.disp) { k.disp.x = r2(k.x); k.disp.y = r2(k.y); } k.w = saved[i][0]; k.h = saved[i][1]; });
+      }
+      const as = prop(n, 'AutomaticSize');
+      if (!as || as === 'None') { delete n.disp; return; }
+      const pad = paddingOf(n, n.w, n.h);
+      let cw = 0, ch = 0;
+      if (TEXT.has(n.rbxClass)) {
+        const m = measure(n, /X/.test(as) ? 0 : n.w - pad.l - pad.r);
+        cw = m.w + pad.l + pad.r; ch = m.h + pad.t + pad.b;
+      }
+      for (const k of kids) {
+        if (prop(k, 'Visible') === false) continue;
+        const g = k.disp || k;
+        cw = Math.max(cw, g.x + g.w + pad.r); ch = Math.max(ch, g.y + g.h + pad.b);
+      }
+      const w = /X/.test(as) ? Math.max(n.w, cw) : n.w, h = /Y/.test(as) ? Math.max(n.h, ch) : n.h;
+      if (Math.abs(w - n.w) < 0.5 && Math.abs(h - n.h) < 0.5) { delete n.disp; return; }
+      const A = prop(n, 'AnchorPoint') || [0, 0];
+      n.disp = { x: r2(n.x - (w - n.w) * A[0]), y: r2(n.y - (h - n.h) * A[1]), w: r2(w), h: r2(h) };
+    };
+    nodes.forEach(visit);
+  }
+
   // ---------------------------------------------------------------- importar (rbxui -> escena)
   let seq = 0;
   const nid = () => 'r' + (Date.now() % 1e6).toString(36) + (seq++).toString(36);
@@ -575,7 +636,34 @@
     const cr = modOf(n, 'UICorner'); if (cr) css += 'border-radius:inherit;';
     lay.style.cssText = css;
     if (!url && prop(n, 'Image')) lay.title = String(prop(n, 'Image'));
+    if (url && st === 'Slice') slice9(lay, n, doc, url, tint);
     return lay;
+  }
+  // 9-slice (ScaleType Slice): SliceCenter = Rect en píxeles de la imagen; las esquinas no se escalan (× SliceScale).
+  // Hace falta el tamaño real de la imagen para los bordes derecho/inferior: se mide una vez y se cachea.
+  const IMG_SIZE = new Map();
+  function slice9(lay, n, doc, url, tint) {
+    const sc = prop(n, 'SliceCenter') || [0, 0, 0, 0], k = +prop(n, 'SliceScale') || 1;
+    const g = modOf(n, 'UIGradient'), tinted = tint !== '#FFFFFF' || !!g;
+    const apply = (W, H) => {
+      const t = Math.max(0, sc[1]), l = Math.max(0, sc[0]), r = Math.max(0, W - sc[2]), b = Math.max(0, H - sc[3]);
+      const sl = `${t} ${r} ${b} ${l}`, wd = `${r2(t * k)}px ${r2(r * k)}px ${r2(b * k)}px ${r2(l * k)}px`;
+      const keep = lay.style.cssText.replace(/background[^;]*;|-webkit-mask[^;]*;|mask[^;]*;/g, '');
+      lay.style.cssText = keep + `border-style:solid;border-color:transparent;border-width:${wd};box-sizing:border-box;border-image:url("${url}") ${sl} fill / ${wd} stretch;isolation:isolate;`;
+      if (tinted) {   // ImageColor3 / UIGradient multiplican el color: capa multiply recortada a la propia imagen
+        const m = doc.createElement('div');
+        m.style.cssText = `position:absolute;top:${-r2(t * k)}px;right:${-r2(r * k)}px;bottom:${-r2(b * k)}px;left:${-r2(l * k)}px;`
+          + `background:${g ? gradCss(g, hex(tint), 1) : tint};mix-blend-mode:multiply;-webkit-mask-box-image:url("${url}") ${sl} / ${wd} stretch;`;
+        lay.append(m);
+      }
+    };
+    const known = IMG_SIZE.get(url);
+    if (known) return apply(known[0], known[1]);
+    const Img = doc.defaultView && doc.defaultView.Image;
+    if (!Img) return;
+    const im = new Img();
+    im.onload = () => { IMG_SIZE.set(url, [im.naturalWidth, im.naturalHeight]); apply(im.naturalWidth, im.naturalHeight); };
+    im.src = url;
   }
 
   // UIStroke de borde con un UIGradient dentro (bordes con degradado o luces/sombras): anillo con el degradado, recortado con máscara
@@ -594,6 +682,7 @@
   }
   // crea el elemento de un nodo nativo (sin hijos ni posición: eso lo hace render.js)
   function nativeEl(n, doc, opts = {}) {
+    if (n.disp) n = { ...n, w: n.disp.w, h: n.disp.h };   // pintar con el tamaño de AutomaticSize (esquinas, mosaicos, degradados…)
     const el = doc.createElement('div');
     el.className = 'rbx rbx-' + n.rbxClass;
     el.dataset.cssBox = boxCss(n);
@@ -657,6 +746,6 @@ the 50 px header, white Montserrat Heavy text with a black Contextual UIStroke, 
 Robux, red = close, no pastels or white backgrounds, little text.`;
 
   return { ASSET_FONTS, ensureFont, GUI, TEXT, IMAGE, BUTTON, DEFAULTS, FORCED, DESIGN_DEF, TOPBAR, FONT_URL, AI_PROMPT, isMod, typeOf, prop, mp, modOf,
-    validate, docToScenes, screenToScene, relayout, sceneToScreen, scenesToDoc, importInto, makeNode, contentBox,
+    validate, docToScenes, screenToScene, relayout, autoSizePass, sceneToScreen, scenesToDoc, importInto, makeNode, contentBox,
     setAssets, imageUrl, assetIdFor, nativeEl, fitScaled, hex };
 });

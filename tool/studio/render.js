@@ -14,7 +14,8 @@
     if (opts.play && R.prop(n, 'Visible') === false) return null;
     const el = R.nativeEl(n, document, opts);
     let css = el.dataset.cssBox; delete el.dataset.cssBox;
-    css += `position:absolute;left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px;`;
+    const g = n.disp || n;                       // n.disp = tamaño mostrado con AutomaticSize (ver RBXJson.autoSizePass)
+    css += `position:absolute;left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px;`;
     if (n.rot) css += `transform:rotate(${n.rot}deg);`;
     if (n.hidden) css += 'visibility:hidden;';
     el.style.cssText = css;
@@ -114,6 +115,7 @@
       stage.style.background = !bg || bg === 'baseplate' ? '' : stageBg(bg);
       stage.style.width = scene.stage.w + 'px'; stage.style.height = scene.stage.h + 'px';
     } else { stage.classList.remove('native'); stage.style.background = bg && bg !== 'baseplate' ? stageBg(bg) : ''; }
+    if (scene.native && window.RBXJson.autoSizePass) window.RBXJson.autoSizePass(scene.nodes || [], document);
     for (const n of scene.nodes || []) {
       const el = renderNode(n, map, opts);
       if (el) stage.appendChild(el);
