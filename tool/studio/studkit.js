@@ -133,9 +133,51 @@
     text('Bottom', bottom, o.bottomSize || 18, { AnchorPoint: [0, 1], Position: U2(0, 6, 1, -3), Size: px(90, Math.ceil((o.bottomSize || 18) * 1.3)), TextXAlignment: 'Left' }),
   ], { studs: 0.74 });
 
+  // ---------------------------------------------------------------- stud moderno: bloques 3D (tutorial "Stud UI" de Hammoudi, UI Genesis)
+  // Base = color del labio + contorno exterior negro (rodea cara + labio); Face = degradado + reborde interior claro + studs.
+  const B3 = {
+    green: { top: '#8BF25C', bot: '#3FBF2A', rim: '#B8FF8F', lip: '#1F7A16' }, red: { top: '#FF6B6B', bot: '#D9262E', rim: '#FF9A9A', lip: '#7A0F14' },
+    blue: { top: '#5FC8FF', bot: '#1E7BE8', rim: '#9BDCFF', lip: '#0F3E85' }, orange: { top: '#FFC14D', bot: '#FF7A1A', rim: '#FFDB8F', lip: '#99400A' },
+    pink: { top: '#FF8BE0', bot: '#C23CF0', rim: '#FFB8EE', lip: '#5E1478' }, gray: { top: '#FFFFFF', bot: '#AEB5C2', rim: '#FFFFFF', lip: '#5A6170' },
+    yellow: { top: '#FFF06B', bot: '#FFC21A', rim: '#FFF7B0', lip: '#8A5A00' },
+  };
+  const STUD3 = 'assets/ui-resources/Textures/Stud/0090_Stud_texture.png';
+  const MITER = { LineJoinMode: 'Miter' };
+  // texto 3D: copia negra desplazada (sombra dura) + texto, ambos con contorno
+  function text3d(Name, t, size, props = {}, o = {}) {
+    const color = o.color || '#FFFFFF', st = o.stroke ?? 3, dy = o.depth ?? 3, fam = o.font || 'FredokaOne';
+    const lbl = (n, col, y) => node('TextLabel', n, { BackgroundTransparency: 1, Size: [1, 0, 1, 0], Position: [0, 0, 0, y], Text: t, TextSize: size, TextColor3: col,
+      FontFace: { family: fam, weight: 'Regular', style: 'Normal' }, TextXAlignment: o.align || 'Center' }, [node('UIStroke', 'Stroke', { Thickness: st, Color: INK })]);
+    return node('Frame', Name, { BackgroundTransparency: 1, Size: [1, 0, 1, 0], ...props }, [lbl('Shadow', INK, dy), lbl('Text', color, 0)]);
+  }
+  function block3d(Name, color = 'green', w = 160, h = 58, o = {}) {
+    const c = B3[color] || B3.green, lip = o.lip ?? 6;
+    const face = node('Frame', 'Face', { Size: [1, 0, 1, -lip], BackgroundColor3: '#FFFFFF', ClipsDescendants: true }, [
+      node('UIGradient', 'Gradient', { Color: [[0, c.top], [1, c.bot]], Rotation: 90 }),
+      node('UIStroke', 'Rim', { ApplyStrokeMode: 'Border', Thickness: 3, Color: c.rim, BorderStrokePosition: 'Inner', ...MITER }),
+      ...(o.studs === false ? [] : [node('ImageLabel', 'Studs', { Image: STUD3, ScaleType: 'Tile', TileSize: [0, o.tile || 48, 0, o.tile || 48], ImageTransparency: 0.78,
+        BackgroundTransparency: 1, Size: [1, 0, 1, 0] })]),
+      ...(o.label != null ? [text3d('Label', o.label, o.textSize || Math.round((h - lip) * 0.55))] : []),
+      ...(o.face || []),
+    ]);
+    return node('Frame', Name, { Size: [0, w, 0, h], BackgroundColor3: c.lip, ...(o.props || {}) },
+      [node('UIStroke', 'Outline', { ApplyStrokeMode: 'Border', Thickness: o.outline || 4, Color: INK, BorderStrokePosition: 'Outer', ...MITER }), face, ...(o.children || [])],
+      o.button ? { buttonFx: FX, ...(o.extra || {}) } : (o.extra || {}));
+  }
+  const button3d = (Name, label, color = 'green', w = 160, h = 58, o = {}) => block3d(Name, color, w, h, { ...o, label, button: true });
+  // ventana: fondo negro translúcido + contorno 5 px, cabecera y botón de salir como bloques, padding 20
+  function window3d(Name, title = 'SHOP', color = 'green', w = 640, h = 460) {
+    return node('Frame', Name, { AnchorPoint: [0.5, 0.5], Position: [0.5, 0, 0.55, 0], Size: [0, w, 0, h], BackgroundColor3: INK, BackgroundTransparency: 0.45 }, [
+      node('UIStroke', 'Outline', { ApplyStrokeMode: 'Border', Thickness: 5, Color: INK, BorderStrokePosition: 'Outer', ...MITER }),
+      block3d('Header', color, w - 112, 62, { props: { Position: [0, 20, 0, 20] }, face: [text3d('Title', title, 40, { Position: [0, 18, 0, 0], Size: [1, -36, 1, 0] }, { align: 'Left', stroke: 3.5, depth: 4 })] }),
+      block3d('ExitButton', 'red', 62, 62, { props: { Position: [1, -82, 0, 20] }, tile: 62, button: true, label: 'X', textSize: 38,
+        extra: { interactions: [{ trigger: 'click', action: 'close', target: Name }] } }),
+    ]);
+  }
+
   const design = (o = {}) => ({ device: 'studio', width: 1280, height: 720, autoScale: true, background: 'baseplate', ...o });
   const screen = (Name, children, o = {}) => ({ ClassName: 'ScreenGui', Name, props: { ResetOnSpawn: false, ...(o.props || {}) }, design: design(o.design), children, ...(o.attributes ? { attributes: o.attributes } : {}) });
 
   return { IMG, THEME, FX, U2, px, node, grad, stroke, corner, studs, gloss, bevel, rim, text, piece, icon, click, button, buyButton, priceBadge,
-    closeButton, win, section, box, coin, hudSquare, hudWide, currency, tile, screen, design };
+    closeButton, win, section, box, coin, hudSquare, hudWide, currency, tile, screen, design, B3, text3d, block3d, button3d, window3d };
 });

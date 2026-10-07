@@ -80,6 +80,7 @@
     pulse: '<path d="M3 12h4l2.5-6 5 12 2.5-6h4"/>',
     roblox: '<path d="M6.3 2.8l14.9 3.5-3.5 14.9-14.9-3.5z"/><path d="M10.6 9.3l4.1 1-1 4.1-4.1-1z" fill="currentColor" stroke="none"/>',
     send: '<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/>',
+    devices: '<rect x="2" y="4" width="14" height="10" rx="1.5"/><path d="M6 18h6M9 14v4"/><rect x="16" y="9" width="6" height="11" rx="1.5"/>',
     phone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
     pull: '<path d="M12 3v12M7.5 10.5L12 15l4.5-4.5"/><rect x="3" y="17" width="18" height="4" rx="1.5"/>',
   };

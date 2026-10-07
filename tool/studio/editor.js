@@ -123,7 +123,7 @@
     if (S.scene && !em.hidden && em.style.pointerEvents === 'none' && S.scene.nodes.length) showEmpty(null);
     else if (S.scene && em.hidden && !S.scene.nodes.length && !S.play) showEmpty('scene');
   }
-  const update = () => refresh(true);   // tras editar una propiedad (no rehace el panel para no perder el foco)
+  const update = () => { refresh(true); refreshDevices(); };   // tras editar una propiedad (no rehace el panel para no perder el foco)
   function applyGeom(n) {
     const el = S.map[n.id]; if (!el) return;
     const off = el.parentElement && el.parentElement.classList.contains('fxclip') ? 1 : 0;
@@ -188,11 +188,125 @@
           `${Math.round(n.w)} × ${Math.round(n.h)}`));
       }
     }
+    if (S.alt && S.sel.length === 1) drawMeasures(ov, z, px);
     for (const g of guides) {
       ov.append(h('div', { class: 'st-ov-guide', style: g.axis === 'x'
         ? `left:${px(g.v - .5 / z)};top:-20000px;width:${px(1 / z)};height:40000px`
         : `top:${px(g.v - .5 / z)};left:-20000px;height:${px(1 / z)};width:40000px` }));
     }
+  }
+
+  // medir como en Figma: con Alt, distancias de la selección a la capa bajo el ratón (o a su contenedor / la pantalla)
+  function measureTarget() {
+    const id = S.sel[0];
+    if (S.hover && S.hover !== id) return boxOf(S.hover);
+    const p = parentOf(id);
+    if (p) return boxOf(p.id);
+    return { x: 0, y: 0, w: S.scene.stage.w, h: S.scene.stage.h };
+  }
+  function drawMeasures(ov, z, px) {
+    const A = boxOf(S.sel[0]), B = measureTarget();
+    if (!A || !B) return;
+    const line = (x, y, w, hh, v, lx, ly) => {
+      if (Math.round(v) === 0) return;
+      ov.append(h('div', { class: 'st-ov-measure', style: `left:${px(x)};top:${px(y)};width:${px(Math.max(w, 1 / z))};height:${px(Math.max(hh, 1 / z))}` }));
+      ov.append(h('div', { class: 'st-ov-mlabel', style: `left:${px(lx)};top:${px(ly)};transform:translate(-50%,-50%) scale(${1 / z})` }, String(Math.round(v))));
+    };
+    const ax2 = A.x + A.w, ay2 = A.y + A.h, bx2 = B.x + B.w, by2 = B.y + B.h, cx = A.x + A.w / 2, cy = A.y + A.h / 2;
+    const inside = A.x >= B.x - 0.5 && A.y >= B.y - 0.5 && ax2 <= bx2 + 0.5 && ay2 <= by2 + 0.5;
+    if (inside) {                                // dentro: los cuatro márgenes hasta los bordes del contenedor
+      line(B.x, cy, A.x - B.x, 0, A.x - B.x, (B.x + A.x) / 2, cy);
+      line(ax2, cy, bx2 - ax2, 0, bx2 - ax2, (ax2 + bx2) / 2, cy);
+      line(cx, B.y, 0, A.y - B.y, A.y - B.y, cx, (B.y + A.y) / 2);
+      line(cx, ay2, 0, by2 - ay2, by2 - ay2, cx, (ay2 + by2) / 2);
+      return;
+    }
+    // separadas: hueco horizontal y/o vertical entre las cajas
+    const my = (Math.max(A.y, B.y) + Math.min(ay2, by2)) / 2, mx = (Math.max(A.x, B.x) + Math.min(ax2, bx2)) / 2;
+    const yy = Math.max(A.y, B.y) < Math.min(ay2, by2) ? my : cy, xx = Math.max(A.x, B.x) < Math.min(ax2, bx2) ? mx : cx;
+    if (B.x >= ax2) line(ax2, yy, B.x - ax2, 0, B.x - ax2, (ax2 + B.x) / 2, yy);
+    else if (bx2 <= A.x) line(bx2, yy, A.x - bx2, 0, A.x - bx2, (bx2 + A.x) / 2, yy);
+    if (B.y >= ay2) line(xx, ay2, 0, B.y - ay2, B.y - ay2, xx, (ay2 + B.y) / 2);
+    else if (by2 <= A.y) line(xx, by2, 0, A.y - by2, A.y - by2, xx, (by2 + A.y) / 2);
+  }
+  // márgenes de la capa a su contenedor (para comprobar que el padding es igual en todos los lados)
+  function marginsRow(n) {
+    const A = boxOf(n.id); if (!A) return null;
+    const p = parentOf(n.id), B = p ? boxOf(p.id) : { x: 0, y: 0, w: S.scene.stage.w, h: S.scene.stage.h };
+    if (!B) return null;
+    const m = [A.x - B.x, A.y - B.y, B.x + B.w - A.x - A.w, B.y + B.h - A.y - A.h].map((v) => Math.round(v));
+    const eqH = Math.abs(m[0] - m[2]) <= 1, eqV = Math.abs(m[1] - m[3]) <= 1;
+    const cell = (lab, v, ok) => h('span', { class: 'st-mcell' + (ok ? '' : ' warn'), title: ok ? '' : 'No coincide con el lado opuesto' }, h('b', {}, lab), String(v));
+    return h('div', { class: 'st-row st-margins', title: 'Distancia a los bordes del contenedor (Alt + ratón para medir a otras capas)' },
+      h('span', { class: 'st-l' }, 'Márgenes'), cell('I', m[0], eqH), cell('A', m[1], eqV), cell('D', m[2], eqH), cell('B', m[3], eqV));
+  }
+
+  // ---------------------------------------------------------------- vista por dispositivo
+  // La escena se recalcula al tamaño del aparato (Scale/AnchorPoint como Roblox) y se aplica el auto-escalado de RbxUINative
+  // (UIScale = min(ancho/diseño, alto/diseño) en cada hijo directo, con origen en su AnchorPoint). Zonas de pulgar marcadas.
+  const DEVICES = [['phone', 'Móvil · 844×390', 844, 390, 'touch'], ['phone-s', 'Móvil pequeño · 667×375', 667, 375, 'touch'],
+    ['tablet', 'Tablet · 1024×768', 1024, 768, 'touch'], ['pc', 'PC · 1920×1080', 1920, 1080, 'pc'], ['tv', 'TV / consola · 3840×2160', 3840, 2160, 'pad']];
+  let devTimer = 0;
+  const refreshDevices = () => { if (!winById('devices')) return; clearTimeout(devTimer); devTimer = setTimeout(renderDevices, 250); };
+  function openDevices() {
+    if (!S.scene || !isNative()) { toast('La vista por dispositivo es para escenas nativas (rbxui)', 'warn'); return; }
+    S.devPick ||= 'phone';
+    const w = openWin({ id: 'devices', modal: false, width: 620, icon: 'devices', title: 'Vista por dispositivo', sub: 'Así se recoloca en cada pantalla',
+      onClose: () => $('#st-devices').classList.remove('on') });
+    $('#st-devices').classList.add('on');
+    const pick = h('div', { class: 'st-dev-pick' }, ...DEVICES.map(([id, label]) => h('button', { class: 'st-btn' + (S.devPick === id ? ' on' : ''), 'data-dev': id,
+      onclick: () => { S.devPick = id; pick.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.dev === id)); renderDevices(); } }, label)));
+    w.set([pick, h('div', { class: 'st-dev-box' }), h('div', { class: 'st-dev-issues' })]);
+    requestAnimationFrame(renderDevices);
+  }
+  function renderDevices() {
+    const w = winById('devices'); if (!w || !S.scene) return;
+    const dev = DEVICES.find((d) => d[0] === S.devPick) || DEVICES[0], [, , DW, DH, input] = dev;
+    const d0 = { ...R.DESIGN_DEF, ...(S.scene.design || {}) };
+    const sg = R.sceneToScreen(S.scene);
+    sg.design = { ...d0, width: DW, height: DH };
+    const sc = R.screenToScene(sg);
+    const f = d0.autoScale === false ? 1 : Math.min(DW / d0.width, DH / d0.height);
+    const box = w.body.querySelector('.st-dev-box'); box.innerHTML = '';
+    const k = Math.min((box.clientWidth || 580) / DW, 360 / DH);
+    const stage = h('div', { class: 'stage st-dev-stage', style: `width:${DW}px;height:${DH}px;transform:scale(${k});transform-origin:0 0` });
+    box.append(h('div', { class: 'st-dev-wrap', style: `width:${Math.round(DW * k)}px;height:${Math.round(DH * k)}px` }, stage));
+    const map = RBXRender.renderScene(sc, stage, { export: true, play: true });
+    if (f !== 1) for (const n of sc.nodes) {
+      const el = map[n.id]; if (!el) continue;
+      const A = R.prop(n, 'AnchorPoint') || [0, 0];
+      el.style.transformOrigin = `${A[0] * 100}% ${A[1] * 100}%`;
+      el.style.transform = `${el.style.transform || ''} scale(${f})`.trim();
+    }
+    // zonas
+    const zone = (cls, css, label) => stage.append(h('div', { class: 'st-dev-zone ' + cls, style: css }, h('span', { style: `transform:scale(${1 / k})` }, label)));
+    zone('top', `left:0;top:0;width:100%;height:${R.TOPBAR}px`, 'Barra de Roblox');
+    if (input === 'touch') {
+      zone('thumb', `left:0;bottom:0;width:${Math.min(DW * 0.4, 420)}px;height:${Math.min(DH * 0.45, 340)}px`, '≈ joystick');
+      zone('thumb', `right:0;bottom:0;width:${Math.min(DW * 0.24, 230)}px;height:${Math.min(DH * 0.42, 230)}px`, '≈ saltar');
+    }
+    if (input === 'pad') zone('tv', `left:5%;top:5%;width:90%;height:90%`, 'zona segura TV ≈ 90 %');
+    // problemas: botones pequeños para el dedo y textos ilegibles en este aparato
+    const issues = [], stageBox = stage.getBoundingClientRect();
+    const walk = (list) => { for (const n of list) {
+      const el = map[n.id];
+      if (el && R.prop(n, 'Visible') !== false) {
+        const r = el.getBoundingClientRect(), wpx = r.width / k, hpx = r.height / k;
+        const clickable = /Button/.test(n.rbxClass || '') || n.buttonFx || (n.interactions && n.interactions.length);
+        if (input === 'touch' && clickable && Math.min(wpx, hpx) < 44) { issues.push(['dedo', `${n.name}: ${Math.round(wpx)}×${Math.round(hpx)} px (mínimo 44)`, n.id]); el.classList.add('st-dev-bad'); }
+        if (R.TEXT.has(n.rbxClass) && !R.prop(n, 'TextScaled') && String(R.prop(n, 'Text') || '').trim()) {
+          const ts = (+R.prop(n, 'TextSize') || 14) * f;
+          if (ts < 9) { issues.push(['texto', `${n.name}: texto de ${ts.toFixed(1)} px (mínimo 9)`, n.id]); el.classList.add('st-dev-bad'); }
+        }
+      }
+      walk(n.children || []);
+    } };
+    walk(sc.nodes);
+    const ids = new Map(); (function idx(list) { for (const n of list) { ids.set(n.name, n.id); idx(n.children || []); } })(S.scene.nodes);
+    w.body.querySelector('.st-dev-issues').replaceChildren(
+      h('div', { class: 'st-note' }, `Escala RbxUI ${f.toFixed(2)}× · ${input === 'touch' ? 'táctil' : input === 'pad' ? 'mando' : 'ratón'}` + (issues.length ? ` · ${issues.length} aviso(s)` : ' · sin avisos')),
+      ...issues.slice(0, 12).map(([kind, msg]) => h('button', { class: 'st-dev-issue', onclick: () => { const id = ids.get(msg.split(':')[0]); if (id) setSel([id]); } },
+        h('b', {}, kind === 'dedo' ? '👆' : 'Aa'), msg)));
   }
 
   // ---------------------------------------------------------------- selección
@@ -655,6 +769,17 @@
       ['ImageLabel', 'Imagen', N('ImageLabel', { props: { BackgroundTransparency: 1, ScaleType: 'Fit', Image: 'assets/studs/Yellow_Star_Outline.png' } })],
       ['ImageButton', 'Botón de imagen', N('ImageButton', { props: { BackgroundTransparency: 1, ScaleType: 'Fit', Image: 'assets/studs/Settings_Outline.png' }, buttonFx: { hover: 1.06, press: 0.9 } })],
       ['ScrollingFrame', 'Lista con scroll', N('ScrollingFrame', { props: { BackgroundTransparency: 1, ScrollBarThickness: 6 } })],
+    ]],
+    ['Stud 3D · bloques (labio + contorno + studs)', [
+      ['Botón 3D verde', 'Comprar / Base / Index', K(() => KIT.button3d('Button', 'BUY', 'green', 160, 58))],
+      ['Botón 3D azul', 'Shop / productos', K(() => KIT.button3d('Button', 'SHOP', 'blue', 160, 58))],
+      ['Botón 3D rojo', 'Salir / Sell', K(() => KIT.button3d('Button', 'SELL', 'red', 160, 58))],
+      ['Botón 3D rosa', 'Rebirth', K(() => KIT.button3d('Button', 'REBIRTH', 'pink', 160, 58))],
+      ['Botón 3D cuadrado', 'Menú lateral 78×84', K(() => KIT.button3d('SideButton', 'SHOP', 'blue', 78, 84, { textSize: 17, tile: 39 }))],
+      ['Cabecera 3D', 'Barra de título', K(() => KIT.block3d('Header', 'green', 420, 62, { face: [KIT.text3d('Title', 'TITLE', 40, { Position: [0, 18, 0, 0], Size: [1, -36, 1, 0] }, { align: 'Left', stroke: 3.5, depth: 4 })] }))],
+      ['Tarjeta 3D', 'Producto / oferta', K(() => KIT.block3d('Card', 'orange', 184, 196, { face: [KIT.text3d('Title', '+50 Cash', 28, { Position: [0, 0, 0, 10], Size: [1, 0, 0, 34] })] }))],
+      ['Ventana 3D', 'Fondo translúcido + cabecera + X', K(() => KIT.window3d('Window', 'SHOP', 'green', 640, 460))],
+      ['Texto 3D', 'Contorno + sombra dura', K(() => KIT.node('Frame', 'Title', { Size: [0, 300, 0, 56], BackgroundTransparency: 1 }, [KIT.text3d('Text', 'TITLE', 44, {}, { stroke: 3.5, depth: 4 })]))],
     ]],
     ['Stud Style · ventanas', [
       ['Ventana amarilla', 'Cabecera de color + cuerpo carbón', K(() => KIT.win('Window', { title: 'Title', theme: 'yellow' }))],
@@ -1169,6 +1294,7 @@
         n.rbx || '', (v) => { n.rbx = v || null; renderLayers(); })),
       !n.rbxClass && n.rbx === 'image' ? row('Margen', numIn(n.pad ?? 0, (v) => { n.pad = v === '' ? undefined : v; }), h('span', { class: 'st-note', style: 'margin:0' }, 'px extra')) : null,
       h('div', { class: 'st-grid4' }, geo('x'), geo('y'), geo('w'), geo('h')),
+      marginsRow(n),
       n.rbxClass || n.type === 'text' || n.type === 'html' ? row('Rotación', numIn(n.rot || 0, (v) => { n.rot = +v || 0; update(); })) : null,
       h('div', { class: 'st-grid2', style: 'margin-top:6px' },
         h('label', {}, chkIn(n.hidden, (v) => { n.hidden = v; update(); }), 'Oculto'),
@@ -2435,6 +2561,10 @@
   }
 
   // ---------------------------------------------------------------- teclado
+  // Alt = medir distancias (como en Figma)
+  window.addEventListener('keydown', (e) => { if (e.key === 'Alt' && !S.alt) { S.alt = true; drawOverlay(); e.preventDefault(); } }, true);
+  window.addEventListener('keyup', (e) => { if (e.key === 'Alt') { S.alt = false; drawOverlay(); e.preventDefault(); } }, true);
+  window.addEventListener('blur', () => { if (S.alt) { S.alt = false; drawOverlay(); } });
   window.addEventListener('keydown', (e) => {
     if (e.target.closest('input, textarea, select')) { if (e.key === 'Escape') e.target.blur(); return; }
     const k = e.key, ctrl = e.ctrlKey || e.metaKey;
@@ -2507,6 +2637,7 @@
   $('#st-mcp').addEventListener('click', () => { const w = winById('mcp'); if (w) closeWin(w); else openMcp(); });
   $('#st-studio').addEventListener('click', () => { const w = winById('studio'); if (w) closeWin(w); else openStudio(); });
   $('#st-phone').addEventListener('click', () => { const w = winById('phone'); if (w) closeWin(w); else openPhone(); });
+  $('#st-devices').addEventListener('click', () => { const w = winById('devices'); if (w) closeWin(w); else openDevices(); });
   $('#st-play').addEventListener('click', () => setPlay(!S.play));
   $('#st-iconq').addEventListener('input', renderIcons);
   window.addEventListener('resize', () => drawOverlay());
