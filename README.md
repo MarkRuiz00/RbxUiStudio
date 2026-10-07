@@ -26,7 +26,7 @@ AIs write Roblox UI badly: pixel offsets that break on phones, flat colors, no h
 ### 1. The tool (RbxUI Studio)
 
 ```bash
-git clone https://github.com/<you>/RbxUiStudio.git
+git clone https://github.com/MarkRuiz00/RbxUiStudio.git
 cd RbxUiStudio/tool
 npm install
 npm start                      # editor at http://localhost:5170/
@@ -40,7 +40,7 @@ Node.js 20+ and Google Chrome (or `npm run browser` for Playwright's Chromium). 
 **Claude Code** — install the skill and the MCP server:
 
 ```bash
-git clone https://github.com/<you>/RbxUiStudio.git ~/.claude/skills/rbxui-studio
+git clone https://github.com/MarkRuiz00/RbxUiStudio.git ~/.claude/skills/rbxui-studio
 claude mcp add -s user rbxui -- node ~/.claude/skills/rbxui-studio/tool/studio/mcp.mjs
 ```
 
