@@ -28,7 +28,7 @@ const SECTIONS = [
   ['Tutorials & guides', 'Videos/articles about Roblox UI.', (r) => r.category === 'Tutorials' || (r.category === 'Websites' && has(r, 'Guides', 'UI', 'Roblox')), 12],
 ];
 const has = (r, ...tags) => (r.tags || []).some((t) => tags.some((x) => String(t).toLowerCase() === x.toLowerCase()));
-const author = (r) => String(r.description || '').replace(/^By\s+/i, '').trim() || 'unknown';
+const author = (r) => (/^By\s+/i.test(r.description || '') ? String(r.description).replace(/^By\s+/i, '').trim() : 'not credited on ui-resources');
 const slug = (s) => String(s).replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '');
 export const localPath = (r) => {
   const url = r.download_url || '';
