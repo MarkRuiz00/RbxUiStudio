@@ -21,4 +21,6 @@
 | Icon outline follows the box, not the icon | `UIStroke` can't outline image pixels | Bake the outline into the PNG |
 | Want a text drop shadow | No such property | Black copy of the label 3–4 px lower behind it ([recipe](recipes.md#3d-text-hard-drop-shadow)) |
 | 3D stud button outline only around the top face | Stroke placed on the face | Outer `UIStroke` on the **base** (lip color) Frame; inner rim stroke on the face |
+| Overlay texture looks wrong after changing the button color in another tool | Tints are computed from the layer's fill | Change colors in RbxUI (it re-tints) or re-open the fill panel |
+| Fill layers get arranged in a row | The layer has a `UIListLayout`/`UIGridLayout` | Put textures on a background Frame without a layout |
 | Everything is huge on TV / tiny on phone | Pure Offset with `autoScale: false`, or pure Scale without caps | Keep `autoScale: true`, or add `UISizeConstraint` / `UIScale` per display size |

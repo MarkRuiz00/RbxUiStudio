@@ -12,6 +12,7 @@ How an AI builds Roblox UI with RbxUI Studio. Install/run the tool first: [../to
 | [figma-import.md](figma-import.md) | Pasting designs from Figma and what they become |
 | [without-mcp.md](without-mcp.md) | Using rbxui from any chat AI (copy/paste) |
 | [mistakes.md](mistakes.md) | Common errors and how to fix them |
+| [editor.md](editor.md) | Editor tools for checking a design: device preview, Alt measuring, API check, fill stack with blend modes |
 
 ## The loop in one picture
 

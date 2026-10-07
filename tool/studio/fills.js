@@ -92,6 +92,7 @@
   // capas de una pintura. spec = receta de Figma; masks = { kind: ruta PNG }; corner = UICorner del nodo (o null)
   //   spec: { fill, paint, blend, src, srcW, srcH, mode:'Tile'|'Stretch'|'Crop'|'Fit', scale, k, crop:[x,y,w,h]|null, opacity, filter, mirror }
   function layersFor(spec, masks, base, corner) {
+    if (spec.type === 'solid') return [solidLayer(spec, base, corner)];
     const kinds = kindsOf(spec.blend);
     return kinds.map((kind) => {
       const t = tintFor(spec.blend, kind, base);
@@ -108,8 +109,27 @@
         attributes: { FigmaFill: spec.fill, FigmaPaint: spec.paint || 'Image', ...blend, FigmaPart: kind, FigmaSpec: JSON.stringify(spec) } };
     });
   }
+  // relleno de color con fusión (Overlay, Multiply…): un Frame con el color resultante sobre el fondo del nodo
+  // (UIGradient si el fondo es un degradado). Fondo desconocido: blanco/negro con alfa según la luminosidad (aprox.)
+  function solidLayer(spec, base, corner) {
+    const op = spec.opacity == null ? 1 : spec.opacity, g = groupOf(spec.blend);
+    let color = spec.color || '#FFFFFF', gradient = null, alpha = op;
+    if (g) {
+      const r = blendOver(spec.blend, base, color);
+      if (r) { color = r.color; gradient = r.gradient; }
+      else { const c = fromHex(color), l = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b; color = l >= 0.5 ? '#FFFFFF' : '#000000'; alpha = op * Math.min(1, Math.abs(l - 0.5) * 2); }
+    }
+    const props = { Size: [1, 0, 1, 0], BackgroundColor3: color, BorderSizePixel: 0 };
+    if (alpha < 0.999) props.BackgroundTransparency = r4(1 - alpha);
+    const children = [];
+    if (corner) children.push(JSON.parse(JSON.stringify(corner)));
+    if (gradient) children.push({ ClassName: 'UIGradient', Name: 'UIGradient', props: gradient });
+    const blend = spec.blend && spec.blend !== 'NORMAL' ? { FigmaBlend: spec.blend } : {};
+    return { ClassName: 'Frame', Name: 'Color', props, ...(children.length ? { children } : {}),
+      attributes: { FigmaFill: spec.fill, FigmaPaint: 'Solid', ...blend, FigmaPart: 'solid', FigmaSpec: JSON.stringify(spec) } };
+  }
   const specOf = (node) => { try { return JSON.parse((node.attributes || {}).FigmaSpec || 'null'); } catch { return null; } };
 
   const strokeOf = (st) => { try { return JSON.parse((st && st.attributes || {}).FigmaStroke || 'null'); } catch { return null; } };
-  return { GROUP, BLENDS, groupOf, kindsOf, blendRgb, filterCss, baseOf, tintFor, blendOver, layersFor, specOf, strokeOf, toHex, fromHex };
+  return { GROUP, BLENDS, groupOf, kindsOf, blendRgb, filterCss, baseOf, tintFor, blendOver, layersFor, solidLayer, specOf, strokeOf, toHex, fromHex };
 });

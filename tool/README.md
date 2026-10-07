@@ -7,6 +7,13 @@ A Figma-like editor where **AIs and people design Roblox UI as real Instances**.
 - **MCP server** (`studio/mcp.mjs`): lets Claude Code, Claude Desktop, Cursor or any MCP client design, render and install UIs.
 - **Roblox Studio plugin** (`plugin/RbxUIConnect.plugin.luau`): installs scenes into `StarterGui`, uploads local images (no API key), pulls existing ScreenGuis back into the editor.
 - **Figma import**: paste (Ctrl+V) frames copied from Figma → editable Instances (auto-layout → UIListLayout, textures → tinted shared images, masks, prototypes → interactions). Coverage: [docs/figma-cobertura.md](docs/figma-cobertura.md).
+- **Design helpers in the editor:**
+  - **Fill stack with blend modes** on any layer: *Relleno → add texture* (tiled studs in Overlay, or any ui-resources texture/effect) or *add color with blend* (Overlay, Soft light, Multiply, Screen…). Roblox has no blend modes, so RbxUI exports shared colorless masks tinted with `ImageColor3`/`UIGradient` (textures) or the exact resulting color (solid fills), and re-tints them when you change the layer's color.
+  - **Device preview** (toolbar): phone / small phone / tablet / PC / TV, laid out like Roblox with auto-scale, thumb & top-bar zones, and warnings for touch targets < 44 px and text < 9 px.
+  - **Alt to measure** distances (like Figma) + margins to the parent with a warning when opposite sides differ.
+  - **Live API check** (toolbar badge): every property, enum and value checked against the official Roblox API.
+  - **Stud 3D blocks** in *Insertar* (button, header, card, window, 3D text).
+  - Preview of **9-slice** and **AutomaticSize** (text measured with the real font).
 - **Runtime** (`runtime/RbxUINative.client.luau`): plays `interactions` (open/close/toggle windows with animations) and `buttonFx` (hover/press scale) in the game.
 
 ## Install
@@ -74,7 +81,7 @@ management endpoints only answer `localhost`. Don't expose the port to the inter
 
 ## Known limits
 
-- The preview doesn't draw 9-slice (`ScaleType: "Slice"`), `IgnoreGuiInset` or `SafeAreaCompatibility` — verify those in Studio.
+- The preview doesn't draw `IgnoreGuiInset` / `SafeAreaCompatibility` exactly — check those in Studio. Blend modes are approximated (exact over solid colors and linear gradients).
 - Only open/close/toggle interactions and button scale effects run without code; game logic (purchases, data) is your Luau.
 - The validator checks structure (ScreenGui root, ClassName, unique sibling names), not every property value.
 

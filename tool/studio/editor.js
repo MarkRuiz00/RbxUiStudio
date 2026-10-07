@@ -1098,6 +1098,14 @@
     }
     for (const k of n.children || []) {
       const spec = RF.specOf(k), part = k.attributes?.FigmaPart;
+      if (spec && part === 'solid') {
+        const L = RF.solidLayer(spec, base, null);
+        k.props = { ...(k.props || {}), BackgroundColor3: L.props.BackgroundColor3 };
+        if (L.props.BackgroundTransparency != null) k.props.BackgroundTransparency = L.props.BackgroundTransparency; else delete k.props.BackgroundTransparency;
+        k.mods = (k.mods || []).filter((m) => m.ClassName !== 'UIGradient');
+        const lg = (L.children || []).find((c) => c.ClassName === 'UIGradient'); if (lg) k.mods.push(lg);
+        continue;
+      }
       if (!spec || (part !== 'hi' && part !== 'lo')) continue;
       const t = RF.tintFor(spec.blend, part, base);
       k.props ||= {};
@@ -1108,9 +1116,11 @@
   }
   // receta cambiada -> el servidor da las máscaras (PNG sin color, compartidas) -> capas nuevas en el mismo sitio
   async function rebuildFill(n, fid, spec) {
-    let r;
-    try { r = await fetch('/api/fills/masks', { method: 'POST', body: JSON.stringify({ spec }) }).then((x) => x.json()); }
-    catch (e) { r = { error: String(e.message || e) }; }
+    let r = { masks: {} };
+    if (spec.type !== 'solid') {
+      try { r = await fetch('/api/fills/masks', { method: 'POST', body: JSON.stringify({ spec }) }).then((x) => x.json()); }
+      catch (e) { r = { error: String(e.message || e) }; }
+    }
     if (r.error) { toast('No se pudo rehacer la textura: ' + r.error, 'error'); return false; }
     const old = fillKids(n, fid);
     const base = RF.baseOf(n.props, n.mods), corner = (n.mods || []).find((m) => m.ClassName === 'UICorner') || null;
@@ -1131,6 +1141,25 @@
     return true;
   }
   const FILL_MODES = [['Crop', 'Rellenar'], ['Fit', 'Ajustar'], ['Stretch', 'Estirar'], ['Tile', 'Mosaico']];
+  // añadir un relleno nuevo (encima de los que haya) a cualquier capa: textura en Overlay o color con fusión
+  const STUD_TEX = 'assets/ui-resources/Textures/Stud/0090_Stud_texture.png';
+  async function addFill(n, kind) {
+    if (n.mods?.some((m) => m.ClassName === 'UIListLayout' || m.ClassName === 'UIGridLayout')) {
+      toast('Esta capa ordena a sus hijos con un layout: pon el relleno en un Frame de fondo (las capas de relleno también se ordenarían)', 'warn'); return;
+    }
+    const fid = Math.max(0, ...(n.children || []).filter(isFillLayer).map((k) => +k.attributes.FigmaFill || 0)) + 1;
+    if (kind === 'solid') {
+      const spec = { type: 'solid', fill: fid, paint: 'Solid', color: '#FFFFFF', blend: 'OVERLAY', opacity: 0.35 };
+      if (await rebuildFill(n, fid, spec)) openFillWin(n, fid);
+      return;
+    }
+    const src = (S.resources || []).some((r) => r.src.endsWith(STUD_TEX)) ? STUD_TEX : null;
+    if (!src) { toast('No hay texturas en local: node tools/ui-resources.mjs fetch 90 (o elige una imagen en el panel)', 'warn'); }
+    const dims = await new Promise((ok) => { if (!src) return ok([64, 64]); const im = new Image(); im.onload = () => ok([im.naturalWidth, im.naturalHeight]); im.onerror = () => ok([64, 64]); im.src = '../' + src; });
+    const spec = { fill: fid, paint: 'Texture', blend: 'OVERLAY', src: src || STUD_TEX, srcW: dims[0], srcH: dims[1], mode: 'Tile', scale: Math.round(48 / dims[0] * 1000) / 1000,
+      k: 1, crop: null, opacity: 1, filter: null, mirror: false };
+    if (await rebuildFill(n, fid, spec)) openFillWin(n, fid);
+  }
   const fillWins = new Map();
   const refreshFillWin = (n, fid) => { const f = fillWins.get(n.id + ':' + fid); if (f) f(); };
   // panel flotante de un relleno (como el de Figma): imagen, fusión, modo, escala, opacidad, ajustes
@@ -1143,13 +1172,30 @@
       if (w.closed) return;
       const ks = fillKids(n, fid), spec = ks[0] && RF.specOf(ks[0]);
       if (!spec) { closeWin(w); return; }
-      w.titleEl.textContent = (spec.paint || 'Image') + (spec.blend && spec.blend !== 'NORMAL' ? ' · ' + (RF.BLENDS.find((b) => b[0] === spec.blend)?.[1] || spec.blend) : '');
+      w.titleEl.textContent = (spec.type === 'solid' ? 'Color' : spec.paint || 'Image') + (spec.blend && spec.blend !== 'NORMAL' ? ' · ' + (RF.BLENDS.find((b) => b[0] === spec.blend)?.[1] || spec.blend) : '');
       const apply = async (patch) => {
         if (busy) return;
         busy = true; w.el.classList.add('busy');
         const ok = await rebuildFill(n, fid, { ...spec, ...patch });
         busy = false; w.el.classList.remove('busy');
         if (ok) render();
+      };
+      if (spec.type === 'solid') {
+        w.set([
+          row('Color', paintIn(spec.color || '#FFFFFF', 1, (v) => { clearTimeout(w.t); w.t = setTimeout(() => apply({ color: v }), 250); }, null)),
+          row('Fusión', selIn(RF.BLENDS, spec.blend || 'NORMAL', (v) => apply({ blend: v }))),
+          row('Opacidad', bind(h('input', { type: 'number', value: Math.round((spec.opacity ?? 1) * 100), min: 0, max: 100, step: 1 }),
+            (v) => { const x = parseFloat(v); if (isFinite(x)) apply({ opacity: clamp(x / 100, 0, 1) }); }, 'change'), note('%')),
+          note('Roblox no tiene modos de fusión: se pinta el color que da la fusión sobre el fondo de la capa (se recalcula si cambias el fondo).'),
+        ], [h('button', { class: 'st-btn', onclick: () => { pushUndo(); removeIds(fillKids(n, fid).map((k) => k.id)); update(); renderLayers(); renderProps(); closeWin(w); } }, 'Quitar')]);
+        return;
+      }
+      const texPick = () => {                     // texturas/efectos de ui-resources que hay en local
+        const list = (S.resources || []).filter((r) => /Textures|Effects/.test(r.cat));
+        const grid = h('div', { class: 'st-tex-grid' }, ...list.slice(0, 240).map((r) => h('button', { class: 'st-tex', title: r.title, style: `background-image:url("${r.src}")`,
+          onclick: () => { const src = r.src.replace(/^(\.\.\/)+/, ''); const im = new Image(); im.onload = () => apply({ src, srcW: im.naturalWidth, srcH: im.naturalHeight, crop: null, mirror: false }); im.src = r.src; } })));
+        return list.length ? h('details', { class: 'st-tex-pick' }, h('summary', {}, `Texturas y efectos (${list.length})`), grid)
+          : note('Sin texturas en local: node tools/ui-resources.mjs fetch <id> (ver estilos/resources.md).');
       };
       const file = h('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp', style: 'display:none', onchange: async () => {
         const f = file.files[0]; if (!f) return;
@@ -1170,6 +1216,7 @@
       w.set([
         h('div', { class: 'st-fw-prev' + (spec.mode === 'Tile' ? ' tile' : ''), style: `background-image:url("${R.imageUrl(spec.src)}");` + (spec.mode === 'Tile' ? `background-size:${Math.max(8, tilePx)}px` : '') },
           h('button', { class: 'st-btn st-fw-change', onclick: () => file.click() }, 'Cambiar imagen'), file),
+        texPick(),
         row('Modo', selIn(FILL_MODES, spec.mode, (v) => apply({ mode: v, paint: v === 'Tile' ? 'Texture' : 'Image' }))),
         spec.mode === 'Tile' ? row('Escala', bind(h('input', { type: 'number', value: Math.round((spec.scale || 1) * 1000) / 10, step: '1', min: '1' }),
           (v) => { const x = parseFloat(v); if (isFinite(x) && x > 0) apply({ scale: x / 100 }); }, 'change'), note(`% · tesela ${tilePx} px`)) : null,
@@ -1472,13 +1519,16 @@
         if (spec0) setSpec(ks, { ...spec0, opacity: clamp(x / 100, 0, 1) });
         update(); refreshFillWin(n, fid);
       });
-      const col = !isImg ? paintIn(R.prop(k0, 'BackgroundColor3'), alpha, (v) => { k0.props.BackgroundColor3 = v; update(); }, null) : null;
+      const col = spec0 ? (spec0.type === 'solid' ? h('span', { class: 'st-fill-thumb', style: `background:${spec0.color}` }) : null)
+        : !isImg ? paintIn(R.prop(k0, 'BackgroundColor3'), alpha, (v) => { k0.props.BackgroundColor3 = v; update(); }, null) : null;
       stack.push(h('div', { class: 'st-row st-fillrow' + (vis ? '' : ' dim') }, label, col, pct,
         actBtn(vis ? 'eye' : 'eyeOff', vis ? 'Ocultar relleno' : 'Mostrar relleno', () => setAll((k) => { (k.props ||= {}).Visible = vis ? false : undefined; if (vis === false) delete k.props.Visible; })),
         actBtn('minus', 'Quitar relleno', () => { pushUndo(); removeIds(ks.map((k) => k.id)); re(); renderLayers(); })));
     }
     fillRows.unshift(...stack);
     out.push(secH('Relleno', [
+      actBtn('image', 'Añadir textura (studs en Overlay)', () => addFill(n, 'texture')),
+      actBtn('plus', 'Añadir color con fusión (Overlay, Multiply…)', () => addFill(n, 'solid')),
       actBtn('gradient', gradM ? 'Quitar degradado' : 'Usar degradado', () => {
         pushUndo();
         if (gradM) mods0.splice(mods0.indexOf(gradM), 1);

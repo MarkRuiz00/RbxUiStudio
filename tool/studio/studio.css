@@ -595,3 +595,10 @@ body.st #st-icongrid button:hover { background: #4a4e58; }
 .st-check.ok { color: var(--st-success); }
 .st-check.warn { color: var(--st-warn); border-color: rgba(255,196,112,.4); }
 .st-check.err { color: #fff; background: var(--st-danger); border-color: transparent; }
+
+/* selector de texturas del panel de relleno */
+.st-tex-pick { margin: 4px 0 8px; }
+.st-tex-pick summary { cursor: pointer; color: var(--st-text-2); font-size: 12px; padding: 4px 0; }
+.st-tex-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-height: 170px; overflow: auto; padding: 4px 2px; }
+.st-tex { aspect-ratio: 1; border: 0; border-radius: 6px; background: #6f7686 center/cover no-repeat; cursor: pointer; box-shadow: inset 0 0 0 1px var(--st-line); }
+.st-tex:hover { box-shadow: inset 0 0 0 2px var(--st-accent); }
