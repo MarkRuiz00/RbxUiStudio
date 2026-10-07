@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const R = require('./rbxjson.js');
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { CODE, DATA: ROOT } = require('./paths.cjs');
 const OUT = path.join(ROOT, 'out', 'showcase');
 const readJson = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
 
@@ -38,7 +38,7 @@ const kb = [...files].reduce((t, f) => t + fs.statSync(path.join(ROOT, f)).size,
 
 // ---------------------------------------------------------------- página
 const inline = (src) => src.replace(/<\/script/gi, '<\\/script');
-const js = (f) => inline(fs.readFileSync(path.join(ROOT, 'studio', f), 'utf8'));
+const js = (f) => inline(fs.readFileSync(path.join(CODE, 'studio', f), 'utf8'));
 const data = JSON.stringify({ scenes, assets: usedMap, built: new Date().toISOString() }).replace(/</g, '\\u003c');
 const today = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 

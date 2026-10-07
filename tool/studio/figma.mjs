@@ -15,7 +15,7 @@ import { decodeFig, parseClipboardHtml } from './figkiwi.mjs';
 const require = createRequire(import.meta.url);
 const RJ = require('./rbxjson.js');
 const FL = require('./fills.js');
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { DATA: ROOT } = require('./paths.cjs');   // imágenes y caché van a los datos del usuario
 const IMG_DIR = path.join(ROOT, 'assets', 'figma');
 export const IMG_REL = 'assets/figma';
 

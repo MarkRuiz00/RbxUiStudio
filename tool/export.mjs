@@ -28,7 +28,7 @@ await page.evaluate(() => document.fonts.ready);
 await page.waitForTimeout(300);
 
 const rootName = await page.$eval('[data-rbx-root]', (e) => e.dataset.name || 'Screen');
-const outDir = path.join(__dirname, 'out', rootName);
+const outDir = path.join(require('./studio/paths.cjs').DATA, 'out', rootName);
 fs.rmSync(path.join(outDir, 'img'), { recursive: true, force: true });
 fs.mkdirSync(path.join(outDir, 'img'), { recursive: true });
 await page.locator('[data-rbx-root]').screenshot({ path: path.join(outDir, 'design.png') });

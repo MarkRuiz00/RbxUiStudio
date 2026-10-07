@@ -51,11 +51,11 @@ import { sceneHtml, safe } from './scenehtml.mjs';
 
 const require = createRequire(import.meta.url);
 const R = require('./rbxjson.js');
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { CODE, DATA: ROOT, resolveFile } = require('./paths.cjs');   // ROOT = datos del usuario, CODE = este código
 const SCREENS = path.join(ROOT, 'screens');
 const LOGOS = path.join(ROOT, 'assets', 'logos');
 const EXAMPLES = path.join(ROOT, 'examples');
-const MCP_JS = path.join(ROOT, 'studio', 'mcp.mjs');
+const MCP_JS = path.join(CODE, 'studio', 'mcp.mjs');
 const PORT = +(process.env.PORT || 5170);
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
@@ -337,7 +337,7 @@ async function imagePixels(rel) {
 }
 
 // ---------------------------------------------------------------- Roblox Studio: plugin RbxUI Connect (long-poll de trabajos)
-const PLUGIN_SRC = path.join(ROOT, 'plugin', 'RbxUIConnect.plugin.luau');
+const PLUGIN_SRC = path.join(CODE, 'plugin', 'RbxUIConnect.plugin.luau');
 const PLUGIN_DST = path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local'), 'Roblox', 'Plugins', 'RbxUIConnect.lua');
 const PLUGIN_VERSION = () => (/PLUGIN_VERSION\s*=\s*"([^"]+)"/.exec(fs.existsSync(PLUGIN_SRC) ? fs.readFileSync(PLUGIN_SRC, 'utf8') : '') || [])[1] || '?';
 const studios = new Map();                                // sid (sesión del plugin) -> { sid, place, placeId, user, userId, version, since, seen }
@@ -392,7 +392,7 @@ async function studioInstall(names, docName, upload = true) {
   if (upload) up = await studioUpload(list.join(','));
   const doc = R.scenesToDoc(scs, safe(docName) || scs[0].name);
   const { src, missing } = buildLuau(doc);
-  const runtime = fs.readFileSync(path.join(ROOT, 'runtime', 'RbxUINative.client.luau'), 'utf8');
+  const runtime = fs.readFileSync(path.join(CODE, 'runtime', 'RbxUINative.client.luau'), 'utf8');
   logStudio({ event: 'install', names: list });
   const r = await studioJob('install', { src, runtime, screens: doc.screens.map((x) => x.Name) }, { timeout: 90000 });
   return { message: r.message, missing, upload: up, screens: doc.screens.map((x) => x.Name) };
@@ -471,7 +471,7 @@ function imageSize(b) {
 }
 const readBody = (req) => new Promise((ok, ko) => { let b = ''; req.on('data', (c) => (b += c)); req.on('end', () => ok(b)); req.on('error', ko); });
 const runNode = (args) => new Promise((ok) =>
-  execFile(process.execPath, args, { cwd: ROOT, maxBuffer: 1 << 24 }, (err, out, errOut) => ok({ ok: !err, out: (out + errOut).trim() })));
+  execFile(process.execPath, [path.join(CODE, args[0]), ...args.slice(1)], { cwd: ROOT, maxBuffer: 1 << 24 }, (err, out, errOut) => ok({ ok: !err, out: (out + errOut).trim() })));
 
 // ---------------------------------------------------------------- acceso desde el móvil (misma Wi-Fi) con clave
 // El servidor escucha en toda la red local, pero fuera de este PC solo responde con la clave del enlace/QR (cookie rbxui_t).
@@ -515,7 +515,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (p === '/landing') {                              // página de producto (site/index.html es un fragmento: se envuelve aquí)
-      const body = fs.readFileSync(path.join(ROOT, 'site', 'index.html'), 'utf8').replace(/src="(?!https?:|data:|\/)/g, 'src="/site/');
+      const body = fs.readFileSync(path.join(CODE, 'site', 'index.html'), 'utf8').replace(/src="(?!https?:|data:|\/)/g, 'src="/site/');
       res.writeHead(200, { 'Content-Type': MIME['.html'], 'Cache-Control': 'no-store' });
       return res.end(`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="icon" href="/studio/brand/favicon.png"><style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${body}</body></html>`);
     }
@@ -692,7 +692,7 @@ const server = http.createServer(async (req, res) => {
       const studs = (fs.existsSync(path.join(ROOT, 'assets/studs')) ? fs.readdirSync(path.join(ROOT, 'assets/studs')) : []).filter((f) => f.endsWith('.png'))
         .sort((a, b) => (b.includes('Outline') - a.includes('Outline')) || a.localeCompare(b))
         .map((f) => `../assets/studs/${f}`);
-      const brand = fs.readdirSync(path.join(ROOT, 'assets/brand')).filter((f) => f.endsWith('.png')).map((f) => `../assets/brand/${f}`);
+      const brand = fs.readdirSync(path.join(CODE, 'assets/brand')).filter((f) => f.endsWith('.png')).map((f) => `../assets/brand/${f}`);
       return json(res, 200, [...brand, ...studs]);
     }
 
@@ -899,8 +899,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     // estáticos
-    let fp = path.join(ROOT, p);
-    if (!fp.startsWith(ROOT) || p.split('/').some((seg) => seg.startsWith('.'))) { res.writeHead(403); return res.end(); }
+    if (path.join(ROOT, p).indexOf(ROOT) !== 0 || path.join(CODE, p).indexOf(CODE) !== 0 || p.split('/').some((seg) => seg.startsWith('.'))) { res.writeHead(403); return res.end(); }
+    let fp = resolveFile(p);                      // primero los datos del usuario, luego el código (studio/, site/, ds/, assets/brand)
     if (fs.existsSync(fp) && fs.statSync(fp).isDirectory()) fp = path.join(fp, 'index.html');
     if (!fs.existsSync(fp)) { if (wantsHtml(req, p)) return errorPage(res, 404, 'Esta página no existe', p); res.writeHead(404); return res.end('404'); }
     res.writeHead(200, { 'Content-Type': MIME[path.extname(fp).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-store' });

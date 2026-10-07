@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const R = require('./rbxjson.js');
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { DATA: ROOT } = require('./paths.cjs');
 const MAP_FILE = path.join(ROOT, 'assets', 'rbx_assets.json');
 const BASE_URL = 'http://127.0.0.1:8765';
 

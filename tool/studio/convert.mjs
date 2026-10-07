@@ -9,7 +9,7 @@ import { sceneHtml, safe } from './scenehtml.mjs';
 
 const require = createRequire(import.meta.url);
 const BROWSER = require('./browser.cjs');
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const { DATA: ROOT } = require('./paths.cjs');
 const src = path.resolve(ROOT, process.argv[2] || '');
 if (!fs.existsSync(src)) { console.error('no existe: ' + src); process.exit(1); }
 

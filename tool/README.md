@@ -22,6 +22,12 @@ npm start            # -> http://localhost:5170/
 
 Windows: double-click `RbxUI Studio.bat`. Port: `PORT=5180 npm start`.
 
+## Your data folder
+
+By default scenes, projects and images live inside `tool/`. To keep them in your own folder (recommended: update the tool with `git pull` without touching your work):
+set `RBXUI_DATA=/path/to/my-ui-workspace` or write that path in `tool/.rbxui-data` (git-ignored). Code (`studio/`, `site/`, `plugin/`…) always comes from `tool/`;
+`screens/`, `projects.json`, `examples/`, `assets/` images, `out/` and `.secrets/` come from the data folder.
+
 ## Connect an AI (MCP)
 
 In the editor: **MCP** button (plug icon) → *Connect* to Claude Code / Claude Desktop / Cursor. Or manually:
