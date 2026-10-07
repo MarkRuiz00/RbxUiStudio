@@ -1,0 +1,384 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "LoadingScreen",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "LoadingScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "#000000"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling",
+    "DisplayOrder": 100,
+    "IgnoreGuiInset": true,
+    "ScreenInsets": "None"
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "Background",
+     "props": {
+      "Size": [
+       1,
+       0,
+       1,
+       0
+      ],
+      "BackgroundColor3": "#FFFFFF"
+     },
+     "children": [
+      {
+       "ClassName": "UIGradient",
+       "Name": "Gradient",
+       "props": {
+        "Color": [
+         [
+          0,
+          "#1B1F3B"
+         ],
+         [
+          0.55,
+          "#2A2F6B"
+         ],
+         [
+          1,
+          "#6A3FD1"
+         ]
+        ],
+        "Rotation": 135
+       }
+      },
+      {
+       "ClassName": "ImageLabel",
+       "Name": "Rays",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0.5
+        ],
+        "Position": [
+         0.5,
+         0,
+         0.42,
+         0
+        ],
+        "Size": [
+         0,
+         900,
+         0,
+         900
+        ],
+        "BackgroundTransparency": 1,
+        "Image": "assets/ui-resources/Effects/Sunbursts/0034_Sunburst.png",
+        "ImageTransparency": 0.9
+       },
+       "children": [
+        {
+         "ClassName": "UIAspectRatioConstraint",
+         "Name": "Aspect",
+         "props": {
+          "AspectRatio": 1
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "ClassName": "TextLabel",
+     "Name": "Title",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.4,
+       0
+      ],
+      "Size": [
+       0,
+       900,
+       0,
+       120
+      ],
+      "BackgroundTransparency": 1,
+      "Text": "PET LEGENDS",
+      "TextSize": 96,
+      "TextColor3": "#FFFFFF",
+      "FontFace": {
+       "family": "LuckiestGuy",
+       "weight": "Regular",
+       "style": "Normal"
+      }
+     },
+     "children": [
+      {
+       "ClassName": "UIStroke",
+       "Name": "Outline",
+       "props": {
+        "Thickness": 6,
+        "Color": "#14123A"
+       }
+      },
+      {
+       "ClassName": "UIGradient",
+       "Name": "Gradient",
+       "props": {
+        "Color": [
+         [
+          0,
+          "#FFF3B0"
+         ],
+         [
+          1,
+          "#FFB020"
+         ]
+        ],
+        "Rotation": 90
+       }
+      }
+     ]
+    },
+    {
+     "ClassName": "TextLabel",
+     "Name": "Subtitle",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.52,
+       0
+      ],
+      "Size": [
+       0,
+       600,
+       0,
+       30
+      ],
+      "BackgroundTransparency": 1,
+      "Text": "Hatch · Collect · Evolve",
+      "TextSize": 24,
+      "TextColor3": "#C9C6FF",
+      "FontFace": {
+       "family": "BuilderSans",
+       "weight": "Bold",
+       "style": "Normal"
+      }
+     }
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "Progress",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.78,
+       0
+      ],
+      "Size": [
+       0,
+       560,
+       0,
+       14
+      ],
+      "BackgroundColor3": "#FFFFFF",
+      "BackgroundTransparency": 0.85
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0.5,
+         0
+        ]
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Fill",
+       "props": {
+        "Size": [
+         0.68,
+         0,
+         1,
+         0
+        ],
+        "BackgroundColor3": "#FFFFFF"
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0.5,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#7FDBFF"
+           ],
+           [
+            1,
+            "#B07CFF"
+           ]
+          ],
+          "Rotation": 0
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "ClassName": "TextLabel",
+     "Name": "Status",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.78,
+       18
+      ],
+      "Size": [
+       0,
+       560,
+       0,
+       24
+      ],
+      "BackgroundTransparency": 1,
+      "Text": "Loading pets…  68 %",
+      "TextSize": 18,
+      "TextColor3": "#E6E4FF",
+      "FontFace": {
+       "family": "BuilderSans",
+       "weight": "Medium",
+       "style": "Normal"
+      }
+     }
+    },
+    {
+     "ClassName": "TextLabel",
+     "Name": "Tip",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       1
+      ],
+      "Position": [
+       0.5,
+       0,
+       1,
+       -28
+      ],
+      "Size": [
+       0,
+       760,
+       0,
+       24
+      ],
+      "BackgroundTransparency": 1,
+      "Text": "TIP: Rebirth to multiply every coin you earn.",
+      "TextSize": 18,
+      "TextColor3": "#A9A6E6",
+      "FontFace": {
+       "family": "BuilderSans",
+       "weight": "Medium",
+       "style": "Normal"
+      }
+     }
+    },
+    {
+     "ClassName": "TextButton",
+     "Name": "Skip",
+     "props": {
+      "AnchorPoint": [
+       1,
+       1
+      ],
+      "Position": [
+       1,
+       -28,
+       1,
+       -24
+      ],
+      "Size": [
+       0,
+       110,
+       0,
+       40
+      ],
+      "BackgroundColor3": "#FFFFFF",
+      "BackgroundTransparency": 0.88,
+      "Text": "Skip",
+      "TextSize": 18,
+      "TextColor3": "#FFFFFF",
+      "FontFace": {
+       "family": "BuilderSans",
+       "weight": "Bold",
+       "style": "Normal"
+      },
+      "AutoButtonColor": false
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0,
+         8
+        ]
+       }
+      },
+      {
+       "ClassName": "UIStroke",
+       "Name": "Stroke",
+       "props": {
+        "Thickness": 1,
+        "Color": "#FFFFFF",
+        "Transparency": 0.7,
+        "ApplyStrokeMode": "Border"
+       }
+      }
+     ],
+     "buttonFx": {
+      "hover": 1.04,
+      "press": 0.95
+     }
+    }
+   ]
+  }
+ ]
+}

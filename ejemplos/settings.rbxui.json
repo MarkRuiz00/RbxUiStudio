@@ -1,0 +1,1270 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "SettingsScreen",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "SettingsScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "night"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling"
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "SettingsWindow",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.54,
+       0
+      ],
+      "Size": [
+       0,
+       520,
+       0,
+       470
+      ],
+      "BackgroundColor3": "#16181D",
+      "BackgroundTransparency": 0.08
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0,
+         12
+        ]
+       }
+      },
+      {
+       "ClassName": "UIStroke",
+       "Name": "Stroke",
+       "props": {
+        "Thickness": 1,
+        "Color": "#FFFFFF",
+        "Transparency": 0.86
+       }
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Title",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Position": [
+         0,
+         24,
+         0,
+         18
+        ],
+        "Size": [
+         1,
+         -100,
+         0,
+         34
+        ],
+        "Text": "Settings",
+        "TextSize": 28,
+        "TextColor3": "#F2F3F5",
+        "TextXAlignment": "Left",
+        "FontFace": {
+         "family": "BuilderSans",
+         "weight": "Bold",
+         "style": "Normal"
+        }
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Close",
+       "props": {
+        "AnchorPoint": [
+         1,
+         0
+        ],
+        "Position": [
+         1,
+         -16,
+         0,
+         16
+        ],
+        "Size": [
+         0,
+         36,
+         0,
+         36
+        ],
+        "BackgroundColor3": "#23262D",
+        "Text": "✕",
+        "TextSize": 18,
+        "TextColor3": "#C9CDD6",
+        "FontFace": {
+         "family": "BuilderSans",
+         "weight": "Bold",
+         "style": "Normal"
+        },
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           8
+          ]
+         }
+        }
+       ],
+       "interactions": [
+        {
+         "trigger": "click",
+         "action": "close"
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Rows",
+       "props": {
+        "Position": [
+         0,
+         24,
+         0,
+         70
+        ],
+        "Size": [
+         1,
+         -48,
+         1,
+         -150
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Vertical",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           4
+          ]
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Music",
+         "props": {
+          "LayoutOrder": 1,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundTransparency": 1
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             24
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Text": "Music",
+            "TextSize": 18,
+            "TextColor3": "#F2F3F5",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Bold",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Hint",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             18
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             30
+            ],
+            "Text": "Background soundtrack",
+            "TextSize": 14,
+            "TextColor3": "#9AA0AA",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Medium",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextButton",
+           "Name": "Toggle",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0.5
+            ],
+            "Position": [
+             1,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             52,
+             0,
+             28
+            ],
+            "BackgroundColor3": "#3B82F6",
+            "Text": "",
+            "AutoButtonColor": false
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Knob",
+             "props": {
+              "AnchorPoint": [
+               1,
+               0.5
+              ],
+              "Position": [
+               1,
+               -3,
+               0.5,
+               0
+              ],
+              "Size": [
+               0,
+               22,
+               0,
+               22
+              ],
+              "BackgroundColor3": "#FFFFFF"
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0.5,
+                 0
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Divider",
+           "props": {
+            "AnchorPoint": [
+             0,
+             1
+            ],
+            "Position": [
+             0,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             1
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.92,
+            "BorderSizePixel": 0
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Sounds",
+         "props": {
+          "LayoutOrder": 2,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundTransparency": 1
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             24
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Text": "Sound effects",
+            "TextSize": 18,
+            "TextColor3": "#F2F3F5",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Bold",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Hint",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             18
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             30
+            ],
+            "Text": "Clicks, coins and pets",
+            "TextSize": 14,
+            "TextColor3": "#9AA0AA",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Medium",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextButton",
+           "Name": "Toggle",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0.5
+            ],
+            "Position": [
+             1,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             52,
+             0,
+             28
+            ],
+            "BackgroundColor3": "#3B82F6",
+            "Text": "",
+            "AutoButtonColor": false
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Knob",
+             "props": {
+              "AnchorPoint": [
+               1,
+               0.5
+              ],
+              "Position": [
+               1,
+               -3,
+               0.5,
+               0
+              ],
+              "Size": [
+               0,
+               22,
+               0,
+               22
+              ],
+              "BackgroundColor3": "#FFFFFF"
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0.5,
+                 0
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Divider",
+           "props": {
+            "AnchorPoint": [
+             0,
+             1
+            ],
+            "Position": [
+             0,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             1
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.92,
+            "BorderSizePixel": 0
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Volume",
+         "props": {
+          "LayoutOrder": 3,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundTransparency": 1
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             24
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Text": "Master volume",
+            "TextSize": 18,
+            "TextColor3": "#F2F3F5",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Bold",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Hint",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             18
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             30
+            ],
+            "Text": "70 %",
+            "TextSize": 14,
+            "TextColor3": "#9AA0AA",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Medium",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Slider",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0.5
+            ],
+            "Position": [
+             1,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             180,
+             0,
+             6
+            ],
+            "BackgroundColor3": "#3A3F4B"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Fill",
+             "props": {
+              "Size": [
+               0.7,
+               0,
+               1,
+               0
+              ],
+              "BackgroundColor3": "#3B82F6"
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0.5,
+                 0
+                ]
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextButton",
+             "Name": "Handle",
+             "props": {
+              "AnchorPoint": [
+               0.5,
+               0.5
+              ],
+              "Position": [
+               0.7,
+               0,
+               0.5,
+               0
+              ],
+              "Size": [
+               0,
+               20,
+               0,
+               20
+              ],
+              "BackgroundColor3": "#FFFFFF",
+              "Text": "",
+              "AutoButtonColor": false
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0.5,
+                 0
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Divider",
+           "props": {
+            "AnchorPoint": [
+             0,
+             1
+            ],
+            "Position": [
+             0,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             1
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.92,
+            "BorderSizePixel": 0
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Graphics",
+         "props": {
+          "LayoutOrder": 4,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundTransparency": 1
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             24
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Text": "Graphics quality",
+            "TextSize": 18,
+            "TextColor3": "#F2F3F5",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Bold",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Hint",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             18
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             30
+            ],
+            "Text": "Auto adapts to your device",
+            "TextSize": 14,
+            "TextColor3": "#9AA0AA",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Medium",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Quality",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0.5
+            ],
+            "Position": [
+             1,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             210,
+             0,
+             32
+            ],
+            "BackgroundColor3": "#23262D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0,
+               8
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 1,
+              "Color": "#FFFFFF",
+              "Transparency": 0.88
+             }
+            },
+            {
+             "ClassName": "UIListLayout",
+             "Name": "List",
+             "props": {
+              "FillDirection": "Horizontal",
+              "SortOrder": "LayoutOrder",
+              "HorizontalFlex": "Fill"
+             }
+            },
+            {
+             "ClassName": "UIPadding",
+             "Name": "Padding",
+             "props": {
+              "PaddingTop": [
+               0,
+               3
+              ],
+              "PaddingRight": [
+               0,
+               3
+              ],
+              "PaddingBottom": [
+               0,
+               3
+              ],
+              "PaddingLeft": [
+               0,
+               3
+              ]
+             }
+            },
+            {
+             "ClassName": "TextButton",
+             "Name": "Low",
+             "props": {
+              "LayoutOrder": 0,
+              "Size": [
+               0,
+               60,
+               1,
+               0
+              ],
+              "BackgroundColor3": "#3B82F6",
+              "BackgroundTransparency": 1,
+              "Text": "Low",
+              "TextSize": 15,
+              "TextColor3": "#9AA0AA",
+              "FontFace": {
+               "family": "BuilderSans",
+               "weight": "Bold",
+               "style": "Normal"
+              },
+              "AutoButtonColor": false
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0,
+                 6
+                ]
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextButton",
+             "Name": "Auto",
+             "props": {
+              "LayoutOrder": 1,
+              "Size": [
+               0,
+               60,
+               1,
+               0
+              ],
+              "BackgroundColor3": "#3B82F6",
+              "BackgroundTransparency": 0,
+              "Text": "Auto",
+              "TextSize": 15,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "BuilderSans",
+               "weight": "Bold",
+               "style": "Normal"
+              },
+              "AutoButtonColor": false
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0,
+                 6
+                ]
+               }
+              }
+             ]
+            },
+            {
+             "ClassName": "TextButton",
+             "Name": "High",
+             "props": {
+              "LayoutOrder": 2,
+              "Size": [
+               0,
+               60,
+               1,
+               0
+              ],
+              "BackgroundColor3": "#3B82F6",
+              "BackgroundTransparency": 1,
+              "Text": "High",
+              "TextSize": 15,
+              "TextColor3": "#9AA0AA",
+              "FontFace": {
+               "family": "BuilderSans",
+               "weight": "Bold",
+               "style": "Normal"
+              },
+              "AutoButtonColor": false
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0,
+                 6
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Divider",
+           "props": {
+            "AnchorPoint": [
+             0,
+             1
+            ],
+            "Position": [
+             0,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             1
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.92,
+            "BorderSizePixel": 0
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "ReduceMotion",
+         "props": {
+          "LayoutOrder": 5,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundTransparency": 1
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             24
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Text": "Reduce motion",
+            "TextSize": 18,
+            "TextColor3": "#F2F3F5",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Bold",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Hint",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             -140,
+             0,
+             18
+            ],
+            "Position": [
+             0,
+             0,
+             0,
+             30
+            ],
+            "Text": "Fewer bounces and spins",
+            "TextSize": 14,
+            "TextColor3": "#9AA0AA",
+            "TextXAlignment": "Left",
+            "FontFace": {
+             "family": "BuilderSans",
+             "weight": "Medium",
+             "style": "Normal"
+            }
+           }
+          },
+          {
+           "ClassName": "TextButton",
+           "Name": "Toggle",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0.5
+            ],
+            "Position": [
+             1,
+             0,
+             0.5,
+             0
+            ],
+            "Size": [
+             0,
+             52,
+             0,
+             28
+            ],
+            "BackgroundColor3": "#3A3F4B",
+            "Text": "",
+            "AutoButtonColor": false
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "Frame",
+             "Name": "Knob",
+             "props": {
+              "AnchorPoint": [
+               0,
+               0.5
+              ],
+              "Position": [
+               0,
+               3,
+               0.5,
+               0
+              ],
+              "Size": [
+               0,
+               22,
+               0,
+               22
+              ],
+              "BackgroundColor3": "#FFFFFF"
+             },
+             "children": [
+              {
+               "ClassName": "UICorner",
+               "Name": "Corner",
+               "props": {
+                "CornerRadius": [
+                 0.5,
+                 0
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Divider",
+           "props": {
+            "AnchorPoint": [
+             0,
+             1
+            ],
+            "Position": [
+             0,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             1
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.92,
+            "BorderSizePixel": 0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Save",
+       "props": {
+        "AnchorPoint": [
+         1,
+         1
+        ],
+        "Position": [
+         1,
+         -24,
+         1,
+         -20
+        ],
+        "Size": [
+         0,
+         140,
+         0,
+         44
+        ],
+        "BackgroundColor3": "#3B82F6",
+        "Text": "Save",
+        "TextSize": 18,
+        "TextColor3": "#FFFFFF",
+        "FontFace": {
+         "family": "BuilderSans",
+         "weight": "Bold",
+         "style": "Normal"
+        },
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           8
+          ]
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.03,
+        "press": 0.95
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Reset",
+       "props": {
+        "AnchorPoint": [
+         1,
+         1
+        ],
+        "Position": [
+         1,
+         -176,
+         1,
+         -20
+        ],
+        "Size": [
+         0,
+         120,
+         0,
+         44
+        ],
+        "BackgroundColor3": "#23262D",
+        "Text": "Reset",
+        "TextSize": 18,
+        "TextColor3": "#C9CDD6",
+        "FontFace": {
+         "family": "BuilderSans",
+         "weight": "Bold",
+         "style": "Normal"
+        },
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           8
+          ]
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 1,
+          "Color": "#FFFFFF",
+          "Transparency": 0.86,
+          "ApplyStrokeMode": "Border"
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.03,
+        "press": 0.95
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

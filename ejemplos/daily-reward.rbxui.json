@@ -1,0 +1,1387 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "DailyRewardScreen",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "DailyRewardScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "sky"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling"
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "DailyRewardWindow",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.55,
+       0
+      ],
+      "Size": [
+       0,
+       700,
+       0,
+       430
+      ],
+      "BackgroundColor3": "#FFF8EC"
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0,
+         24
+        ]
+       }
+      },
+      {
+       "ClassName": "UIStroke",
+       "Name": "Stroke",
+       "props": {
+        "Thickness": 4,
+        "Color": "#4A2F27"
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Ribbon",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0.5
+        ],
+        "Position": [
+         0.5,
+         0,
+         0,
+         2
+        ],
+        "Size": [
+         0,
+         380,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF"
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FF9BC0"
+           ],
+           [
+            1,
+            "#FF5D8F"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 4,
+          "Color": "#4A2F27"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Title",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "Daily Rewards",
+          "TextSize": 38,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3.5,
+            "Color": "#4A2F27"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Close",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0.5
+        ],
+        "Position": [
+         1,
+         -8,
+         0,
+         8
+        ],
+        "Size": [
+         0,
+         50,
+         0,
+         50
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0.5,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FF8A8A"
+           ],
+           [
+            1,
+            "#F0485A"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 4,
+          "Color": "#4A2F27",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "X",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "✕",
+          "TextSize": 24,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#4A2F27"
+           }
+          }
+         ]
+        }
+       ],
+       "interactions": [
+        {
+         "trigger": "click",
+         "action": "close"
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.08,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Streak",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "Come back every day — the 7th day gives a Rare Egg!",
+        "TextSize": 20,
+        "TextColor3": "#8A6B5E",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "Position": [
+         0,
+         0,
+         0,
+         52
+        ],
+        "Size": [
+         1,
+         0,
+         0,
+         26
+        ]
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Days",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0
+        ],
+        "Position": [
+         0.5,
+         0,
+         0,
+         94
+        ],
+        "Size": [
+         0,
+         640,
+         0,
+         228
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIGridLayout",
+         "Name": "Grid",
+         "props": {
+          "CellSize": [
+           0,
+           148,
+           0,
+           108
+          ],
+          "CellPadding": [
+           0,
+           16,
+           0,
+           12
+          ],
+          "SortOrder": "LayoutOrder",
+          "HorizontalAlignment": "Center"
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day1",
+         "props": {
+          "LayoutOrder": 1,
+          "BackgroundColor3": "#E9E1D3"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#E3CBA8"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 1",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🪙",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "500",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Claimed",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.35
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0,
+               16
+              ]
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Check",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Text": "✔",
+              "TextSize": 40,
+              "TextColor3": "#4CB944",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day2",
+         "props": {
+          "LayoutOrder": 2,
+          "BackgroundColor3": "#E9E1D3"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#E3CBA8"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 2",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "💎",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "25",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Claimed",
+           "props": {
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "BackgroundColor3": "#FFFFFF",
+            "BackgroundTransparency": 0.35
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0,
+               16
+              ]
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Check",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Text": "✔",
+              "TextSize": 40,
+              "TextColor3": "#4CB944",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ]
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day3",
+         "props": {
+          "LayoutOrder": 3,
+          "BackgroundColor3": "#FFFFFF"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FFE680"
+             ],
+             [
+              1,
+              "#FFC23A"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#C47A00"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 3",
+            "TextSize": 18,
+            "TextColor3": "#4A2F27",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Burst",
+           "props": {
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             120,
+             0,
+             120
+            ],
+            "BackgroundTransparency": 1,
+            "Image": "assets/ui-resources/Effects/Sunbursts/0034_Sunburst.png",
+            "ImageColor3": "#FFFFFF",
+            "ImageTransparency": 0.35
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🪙",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "1,000",
+            "TextSize": 18,
+            "TextColor3": "#4A2F27",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day4",
+         "props": {
+          "LayoutOrder": 4,
+          "BackgroundColor3": "#FFFFFF"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#E3CBA8"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 4",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🧪",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Potion",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day5",
+         "props": {
+          "LayoutOrder": 5,
+          "BackgroundColor3": "#FFFFFF"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#E3CBA8"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 5",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "💎",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "50",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day6",
+         "props": {
+          "LayoutOrder": 6,
+          "BackgroundColor3": "#FFFFFF"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#E3CBA8"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 6",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🪙",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "5,000",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Day7",
+         "props": {
+          "LayoutOrder": 7,
+          "BackgroundColor3": "#FFFFFF"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#E3CBA8"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Day",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Day 7",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             0,
+             0,
+             6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🥚",
+            "TextSize": 40,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             0.5,
+             0,
+             0.52,
+             0
+            ],
+            "Size": [
+             0,
+             60,
+             0,
+             50
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Amount",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Rare Egg",
+            "TextSize": 18,
+            "TextColor3": "#8A6B5E",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             1
+            ],
+            "Position": [
+             0.5,
+             0,
+             1,
+             -6
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Claim",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         1
+        ],
+        "Position": [
+         0.5,
+         0,
+         1,
+         -22
+        ],
+        "Size": [
+         0,
+         260,
+         0,
+         62
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0.5,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#8EE86A"
+           ],
+           [
+            1,
+            "#4CB944"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 4,
+          "Color": "#4A2F27",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Label",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "CLAIM!",
+          "TextSize": 34,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3,
+            "Color": "#4A2F27"
+           }
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.07,
+        "press": 0.9
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

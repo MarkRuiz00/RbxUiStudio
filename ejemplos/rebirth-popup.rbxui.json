@@ -1,0 +1,1202 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "RebirthScreen",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "RebirthScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "grass"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling",
+    "DisplayOrder": 10
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "RebirthPopup",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.54,
+       0
+      ],
+      "Size": [
+       0,
+       520,
+       0,
+       420
+      ],
+      "BackgroundColor3": "#FFFFFF"
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0,
+         16
+        ]
+       }
+      },
+      {
+       "ClassName": "UIGradient",
+       "Name": "Gradient",
+       "props": {
+        "Color": [
+         [
+          0,
+          "#2B2F3A"
+         ],
+         [
+          1,
+          "#1E212A"
+         ]
+        ],
+        "Rotation": 90
+       }
+      },
+      {
+       "ClassName": "UIStroke",
+       "Name": "Stroke",
+       "props": {
+        "Thickness": 4,
+        "Color": "#0B0C10"
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Header",
+       "props": {
+        "Size": [
+         1,
+         0,
+         0,
+         64
+        ],
+        "BackgroundColor3": "#FFFFFF"
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           16
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#D59BFF"
+           ],
+           [
+            1,
+            "#8A3CFF"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "ImageLabel",
+         "Name": "Studs",
+         "props": {
+          "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+          "ScaleType": "Tile",
+          "TileSize": [
+           0,
+           52,
+           0,
+           52
+          ],
+          "ImageTransparency": 0.84,
+          "BackgroundTransparency": 1,
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             16
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Title",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "REBIRTH?",
+          "TextSize": 40,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3.5,
+            "Color": "#2E0F5C"
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Close",
+         "props": {
+          "AnchorPoint": [
+           1,
+           0.5
+          ],
+          "Position": [
+           1,
+           -10,
+           0.5,
+           0
+          ],
+          "Size": [
+           0,
+           44,
+           0,
+           44
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FF7A7A"
+             ],
+             [
+              1,
+              "#E8263B"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#5C0A12",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "X",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "X",
+            "TextSize": 28,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 3,
+              "Color": "#5C0A12"
+             }
+            }
+           ]
+          }
+         ],
+         "interactions": [
+          {
+           "trigger": "click",
+           "action": "close",
+           "target": "RebirthPopup"
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.08,
+          "press": 0.88
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Stats",
+       "props": {
+        "Position": [
+         0,
+         24,
+         0,
+         84
+        ],
+        "Size": [
+         1,
+         -48,
+         0,
+         196
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Vertical",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           10
+          ]
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Coins",
+         "props": {
+          "LayoutOrder": 1,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundColor3": "#1E212A"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 2,
+            "Color": "#0B0C10"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Coins",
+            "TextSize": 22,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             16,
+             0,
+             0
+            ],
+            "Size": [
+             0.4,
+             0,
+             1,
+             0
+            ],
+            "TextXAlignment": "Left"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "From",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "1.2M",
+            "TextSize": 24,
+            "TextColor3": "#AEB4C2",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             0.66,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0.25,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Arrow",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "➜",
+            "TextSize": 24,
+            "TextColor3": "#AEB4C2",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0
+            ],
+            "Position": [
+             0.72,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             30,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "To",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "0",
+            "TextSize": 26,
+            "TextColor3": "#FF7A7A",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -16,
+             0,
+             0
+            ],
+            "Size": [
+             0.22,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Multiplier",
+         "props": {
+          "LayoutOrder": 2,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundColor3": "#1E212A"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 2,
+            "Color": "#0B0C10"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Multiplier",
+            "TextSize": 22,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             16,
+             0,
+             0
+            ],
+            "Size": [
+             0.4,
+             0,
+             1,
+             0
+            ],
+            "TextXAlignment": "Left"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "From",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "x3",
+            "TextSize": 24,
+            "TextColor3": "#AEB4C2",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             0.66,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0.25,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Arrow",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "➜",
+            "TextSize": 24,
+            "TextColor3": "#AEB4C2",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0
+            ],
+            "Position": [
+             0.72,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             30,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "To",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "x4",
+            "TextSize": 26,
+            "TextColor3": "#9BFF5C",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -16,
+             0,
+             0
+            ],
+            "Size": [
+             0.22,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Rebirths",
+         "props": {
+          "LayoutOrder": 3,
+          "Size": [
+           1,
+           0,
+           0,
+           56
+          ],
+          "BackgroundColor3": "#1E212A"
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 2,
+            "Color": "#0B0C10"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "Rebirths",
+            "TextSize": 22,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Position": [
+             0,
+             16,
+             0,
+             0
+            ],
+            "Size": [
+             0.4,
+             0,
+             1,
+             0
+            ],
+            "TextXAlignment": "Left"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "From",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "2",
+            "TextSize": 24,
+            "TextColor3": "#AEB4C2",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             0.66,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0.25,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Arrow",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "➜",
+            "TextSize": 24,
+            "TextColor3": "#AEB4C2",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             0.5,
+             0
+            ],
+            "Position": [
+             0.72,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             30,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "To",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "3",
+            "TextSize": 26,
+            "TextColor3": "#D59BFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -16,
+             0,
+             0
+            ],
+            "Size": [
+             0.22,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#0B0C10"
+             }
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Warning",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "You keep your pets. Coins reset.",
+        "TextSize": 18,
+        "TextColor3": "#AEB4C2",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "Position": [
+         0,
+         0,
+         0,
+         288
+        ],
+        "Size": [
+         1,
+         0,
+         0,
+         24
+        ]
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Buttons",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         1
+        ],
+        "Position": [
+         0.5,
+         0,
+         1,
+         -22
+        ],
+        "Size": [
+         1,
+         -48,
+         0,
+         60
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Horizontal",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           14
+          ],
+          "HorizontalFlex": "Fill"
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cancel",
+         "props": {
+          "Size": [
+           0,
+           100,
+           1,
+           0
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "Text": "",
+          "AutoButtonColor": false,
+          "LayoutOrder": 1
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FF7A7A"
+             ],
+             [
+              1,
+              "#E8263B"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#5C0A12",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.86,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0,
+               10
+              ]
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "CANCEL",
+            "TextSize": 26,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 3,
+              "Color": "#5C0A12"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.06,
+          "press": 0.9
+         },
+         "interactions": [
+          {
+           "trigger": "click",
+           "action": "close",
+           "target": "RebirthPopup"
+          }
+         ]
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Confirm",
+         "props": {
+          "Size": [
+           0,
+           100,
+           1,
+           0
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "Text": "",
+          "AutoButtonColor": false,
+          "LayoutOrder": 2
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#D59BFF"
+             ],
+             [
+              1,
+              "#8A3CFF"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#2E0F5C",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "ImageLabel",
+           "Name": "Studs",
+           "props": {
+            "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+            "ScaleType": "Tile",
+            "TileSize": [
+             0,
+             48,
+             0,
+             48
+            ],
+            "ImageTransparency": 0.86,
+            "BackgroundTransparency": 1,
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0,
+               10
+              ]
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Label",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "REBIRTH",
+            "TextSize": 28,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 3,
+              "Color": "#2E0F5C"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.06,
+          "press": 0.9
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

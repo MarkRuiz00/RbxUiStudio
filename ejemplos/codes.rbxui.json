@@ -1,0 +1,581 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "CodesScreen",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "CodesScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "grass"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling"
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "CodesWindow",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.54,
+       0
+      ],
+      "Size": [
+       0,
+       500,
+       0,
+       300
+      ],
+      "BackgroundColor3": "#FFFFFF"
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0,
+         14
+        ]
+       }
+      },
+      {
+       "ClassName": "UIGradient",
+       "Name": "Gradient",
+       "props": {
+        "Color": [
+         [
+          0,
+          "#2B2F3A"
+         ],
+         [
+          1,
+          "#1E212A"
+         ]
+        ],
+        "Rotation": 90
+       }
+      },
+      {
+       "ClassName": "UIStroke",
+       "Name": "Stroke",
+       "props": {
+        "Thickness": 4,
+        "Color": "#0B0C10"
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Header",
+       "props": {
+        "Size": [
+         1,
+         0,
+         0,
+         60
+        ],
+        "BackgroundColor3": "#FFFFFF"
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           14
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#7FDBFF"
+           ],
+           [
+            1,
+            "#1F7CFF"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "ImageLabel",
+         "Name": "Studs",
+         "props": {
+          "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+          "ScaleType": "Tile",
+          "TileSize": [
+           0,
+           52,
+           0,
+           52
+          ],
+          "ImageTransparency": 0.84,
+          "BackgroundTransparency": 1,
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             14
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Title",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "CODES",
+          "TextSize": 38,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3.5,
+            "Color": "#0A2B66"
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Close",
+         "props": {
+          "AnchorPoint": [
+           1,
+           0.5
+          ],
+          "Position": [
+           1,
+           -10,
+           0.5,
+           0
+          ],
+          "Size": [
+           0,
+           44,
+           0,
+           44
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          },
+          {
+           "ClassName": "UIGradient",
+           "Name": "Gradient",
+           "props": {
+            "Color": [
+             [
+              0,
+              "#FF7A7A"
+             ],
+             [
+              1,
+              "#E8263B"
+             ]
+            ],
+            "Rotation": 90
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 3,
+            "Color": "#5C0A12",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "X",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "X",
+            "TextSize": 28,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 3,
+              "Color": "#5C0A12"
+             }
+            }
+           ]
+          }
+         ],
+         "interactions": [
+          {
+           "trigger": "click",
+           "action": "close"
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.08,
+          "press": 0.88
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Hint",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "Follow the group for new codes!",
+        "TextSize": 20,
+        "TextColor3": "#AEB4C2",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "Position": [
+         0,
+         0,
+         0,
+         74
+        ],
+        "Size": [
+         1,
+         0,
+         0,
+         26
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 2,
+          "Color": "#0B0C10"
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "TextBox",
+       "Name": "Input",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0
+        ],
+        "Position": [
+         0.5,
+         0,
+         0,
+         112
+        ],
+        "Size": [
+         1,
+         -60,
+         0,
+         58
+        ],
+        "BackgroundColor3": "#14161C",
+        "Text": "",
+        "PlaceholderText": "Enter code…",
+        "PlaceholderColor3": "#6B7283",
+        "TextColor3": "#FFFFFF",
+        "TextSize": 26,
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "ClearTextOnFocus": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           10
+          ]
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 3,
+          "Color": "#0B0C10",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "UIPadding",
+         "Name": "Padding",
+         "props": {
+          "PaddingTop": [
+           0,
+           0
+          ],
+          "PaddingRight": [
+           0,
+           16
+          ],
+          "PaddingBottom": [
+           0,
+           0
+          ],
+          "PaddingLeft": [
+           0,
+           16
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Redeem",
+       "props": {
+        "Size": [
+         0,
+         220,
+         0,
+         58
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false,
+        "AnchorPoint": [
+         0.5,
+         1
+        ],
+        "Position": [
+         0.5,
+         0,
+         1,
+         -42
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           10
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#9BFF5C"
+           ],
+           [
+            1,
+            "#2DBA3C"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 3,
+          "Color": "#0F4A16",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "ImageLabel",
+         "Name": "Studs",
+         "props": {
+          "Image": "assets/ui-resources/Textures/Stud/0090_Stud_texture.png",
+          "ScaleType": "Tile",
+          "TileSize": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "ImageTransparency": 0.86,
+          "BackgroundTransparency": 1,
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             10
+            ]
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Label",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "REDEEM",
+          "TextSize": 30,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3,
+            "Color": "#0F4A16"
+           }
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.06,
+        "press": 0.9
+       }
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Status",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "✔ Code redeemed: +5,000 coins",
+        "TextSize": 18,
+        "TextColor3": "#7CF05A",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "AnchorPoint": [
+         0.5,
+         1
+        ],
+        "Position": [
+         0.5,
+         0,
+         1,
+         -12
+        ],
+        "Size": [
+         1,
+         0,
+         0,
+         22
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 2,
+          "Color": "#0B0C10"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
