@@ -32,13 +32,18 @@ function validateDoc(doc, label, { snippet = false } = {}) {
 
 async function server() { try { return (await fetch(URL0 + '/api/scenes')).ok; } catch { return false; } }
 async function importAndRender(doc, renderTo) {
-  const r = await fetch(URL0 + '/api/rbxui/import?open=0', { method: 'POST', body: JSON.stringify(doc) }).then((x) => x.json());
+  // scratch=1: the server imports into temporary «__check_*» scenes (never the user's own screens) and we delete them afterwards
+  const r = await fetch(URL0 + '/api/rbxui/import?open=0&scratch=1', { method: 'POST', body: JSON.stringify(doc) }).then((x) => x.json());
   if (r.error) return { errs: ['import: ' + r.error], warns: [] };
   const warns = (r.warn || []).map((w) => 'rbxui: ' + w);
-  if (renderTo) for (const name of r.names) {
-    const png = await fetch(`${URL0}/api/render?name=${encodeURIComponent(name)}`);
-    if (png.ok) { fs.mkdirSync(path.dirname(renderTo), { recursive: true }); fs.writeFileSync(r.names.length > 1 ? renderTo.replace(/\.png$/, `-${name}.png`) : renderTo, Buffer.from(await png.arrayBuffer())); }
-    else warns.push(`render ${name}: HTTP ${png.status}`);
+  try {
+    if (renderTo) for (const name of r.names) {
+      const png = await fetch(`${URL0}/api/render?name=${encodeURIComponent(name)}`), plain = name.replace(/^__check_/, '');
+      if (png.ok) { fs.mkdirSync(path.dirname(renderTo), { recursive: true }); fs.writeFileSync(r.names.length > 1 ? renderTo.replace(/\.png$/, `-${plain}.png`) : renderTo, Buffer.from(await png.arrayBuffer())); }
+      else warns.push(`render ${plain}: HTTP ${png.status}`);
+    }
+  } finally {
+    for (const name of r.names) await fetch(`${URL0}/api/scene?name=${encodeURIComponent(name)}`, { method: 'DELETE' }).catch(() => {});
   }
   return { errs: [], warns, names: r.names };
 }

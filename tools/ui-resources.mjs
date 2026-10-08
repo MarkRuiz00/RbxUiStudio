@@ -5,12 +5,13 @@
 //   node tools/ui-resources.mjs index                 -> rewrite estilos/resources.md from the live catalog
 //   node tools/ui-resources.mjs fetch 90 33 1217      -> download those ids into <root>/assets/ui-resources/...
 //   node tools/ui-resources.mjs fetch --examples      -> download every resource used by ejemplos/*.rbxui.json
-//   options: --root <dir>  (default: tool/ — the RbxUI Studio folder, so the editor can show them)
+//   options: --root <dir>  (default: the RbxUI Studio data folder — RBXUI_DATA or tool/.rbxui-data, else tool/ — so the editor can show them)
 //
 // Local file name = assets/ui-resources/<Category>/<Tag>/<id padded to 4>_<Title>.<ext>  (same scheme RbxUI Studio uses)
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const API = 'https://ui-resources.com/api/resources';
@@ -103,7 +104,7 @@ async function fetchIds(ids, root) {
 
 const [cmd, ...rest] = process.argv.slice(2);
 const ri = rest.indexOf('--root');
-const root = ri >= 0 ? path.resolve(rest[ri + 1]) : path.join(REPO, 'tool');
+const root = ri >= 0 ? path.resolve(rest[ri + 1]) : createRequire(import.meta.url)(path.join(REPO, 'tool', 'studio', 'paths.cjs')).DATA;
 if (cmd === 'index') await writeIndex();
 else if (cmd === 'fetch') await fetchIds(rest.includes('--examples') ? idsFromExamples() : rest.filter((x, i) => /^\d+$/.test(x) && rest[i - 1] !== '--root').map(Number), root);
 else console.log('usage: node tools/ui-resources.mjs index | fetch <ids...> [--examples] [--root <dir>]');

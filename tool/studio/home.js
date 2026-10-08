@@ -20,7 +20,8 @@
   const post = (body) => api('/api/projects', { method: 'POST', body: JSON.stringify(body) });
   const MASCOT = { empty: 'brand/mascot_empty.png', search: 'brand/mascot_search.png', error: 'brand/mascot_error.png' };
   const COLORS = ['#7b6bff', '#2fd6ff', '#9cf01e', '#ffc21e', '#ff4fb4', '#ff7a3d', '#c2c8d4'];
-  const S = { db: { folders: [], projects: [], loose: [] }, view: 'all', q: '' };
+  const S = { db: { folders: [], projects: [], loose: [] }, view: 'all', q: '', templates: [] };
+  const REPO = 'https://github.com/MarkRuiz00/RbxUiStudio';
   try { S.view = localStorage.getItem('hm-view') || 'all'; } catch { /* sin almacenamiento */ }
 
   // ---------------------------------------------------------------- avisos
@@ -79,6 +80,50 @@
       try { const r = await post({ action: 'create', name: name.value, folder: fs.value || null, scene: scene.value.replace(/[^\w-]/g, '') }); openProject(r.project); }
       catch (e) { toast(e.message, 'err'); }
     } }, 'Crear y abrir')]);
+  }
+  // plantilla -> proyecto nuevo con esa pantalla (las texturas que falten se descargan solas)
+  function useTemplate(t) {
+    const name = h('input', { type: 'text', id: 'dlg-name', value: t.title, maxlength: 60 });
+    const fs = folderSelect(S.view.startsWith('f_') ? S.view : '');
+    dialog('Nuevo proyecto desde plantilla', 'template', [
+      t.render ? h('img', { src: t.render, alt: '', style: 'width:100%;border-radius:10px;display:block;aspect-ratio:16/9;object-fit:cover' }) : null,
+      h('p', {}, t.purpose || ''), h('label', {}, 'Nombre del proyecto', name), h('label', {}, 'Carpeta', fs)].filter(Boolean),
+    [h('button', { class: 'hm-btn primary', onclick: async (e) => {
+      e.currentTarget.disabled = true;
+      try { const r = await api('/api/templates', { method: 'POST', body: JSON.stringify({ name: t.name, newProject: { name: name.value, folder: fs.value || null } }) }); openProject(r.project, r.names[0]); }
+      catch (err) { e.currentTarget.disabled = false; toast(err.message, 'err'); }
+    } }, 'Crear y abrir')]);
+  }
+  function allTemplates() {
+    closeLayer();
+    const back = h('div', { class: 'hm-back', onmousedown: (e) => { if (e.target === back) closeLayer(); } },
+      h('div', { class: 'hm-dlg hm-dlg-wide', role: 'dialog', 'aria-label': 'Plantillas' },
+        h('header', {}, h('span', { class: 'st-wicon', innerHTML: SVGI('template', 16) }), 'Plantillas', h('small', {}, `${S.templates.length} UIs completas con notas de diseño`),
+          h('button', { class: 'hm-ib', style: 'margin-left:auto', title: 'Cerrar', innerHTML: SVGI('x', 16), onclick: closeLayer })),
+        h('div', { class: 'body' }, h('div', { class: 'hm-tpls all' }, ...S.templates.map((t, i) => tplCard(t, i))))));
+    $('#hm-layer').append(back);
+  }
+  const tplCard = (t, i) => h('button', { class: 'hm-tpl', style: `animation-delay:${Math.min(i, 14) * 30}ms`, title: t.purpose, onclick: () => useTemplate(t) },
+    h('div', { class: 'hm-tplimg' }, t.render ? h('img', { src: t.render, alt: '', loading: 'lazy' }) : null, t.style ? h('span', {}, t.style) : null),
+    h('div', { class: 'hm-tplb' }, h('b', {}, t.title), h('small', {}, t.from ? 'Patrones de ' + t.from : 'Ejemplo de ' + (t.style || 'RbxUI'))));
+  function renderHero() {
+    const hero = $('#hm-hero'); hero.innerHTML = '';
+    if (S.view !== 'all' || S.q) { hero.hidden = true; return; }
+    hero.hidden = false;
+    hero.append(
+      h('div', { class: 'hm-welcome' },
+        h('div', { class: 'hm-wtext' },
+          h('span', { class: 'hm-kicker' }, 'RbxUI Studio'),
+          h('h2', {}, 'Diseña la UI de tu juego de Roblox ', h('em', {}, 'como en Figma')),
+          h('p', {}, 'Instances reales (Frame, UIStroke, UIGradient…), vista previa exacta, comprobación contra la API oficial y una IA que diseña contigo por MCP.'),
+          h('div', { class: 'hm-wacts' },
+            h('button', { class: 'hm-btn primary', innerHTML: SVGI('plus', 14) + '<span>Nuevo proyecto</span>', onclick: newProject }),
+            S.templates.length ? h('button', { class: 'hm-btn', innerHTML: SVGI('template', 14) + `<span>Desde plantilla</span>`, onclick: allTemplates }) : null,
+            h('a', { class: 'hm-btn ghost', href: REPO, target: '_blank', rel: 'noopener', innerHTML: SVGI('external', 14) + '<span>Guía y skill en GitHub</span>' }))),
+        h('img', { class: 'hm-wmascot', src: 'brand/mascot_ok.png', alt: '' })),
+      S.templates.length ? h('div', { class: 'hm-tplhead' }, h('h3', {}, 'Empieza con una plantilla'), h('span', { class: 'n' }, 'inspiradas en los juegos más jugados'),
+        h('button', { class: 'hm-btn sm', onclick: allTemplates }, `Ver las ${S.templates.length}`)) : null,
+      S.templates.length ? h('div', { class: 'hm-tpls' }, ...S.templates.slice(0, 6).map((t, i) => tplCard(t, i))) : null);
   }
   function renameProject(pr) {
     const name = h('input', { type: 'text', id: 'dlg-name', value: pr.name, maxlength: 60 });
@@ -173,6 +218,7 @@
   }
   function render() {
     renderSide();
+    renderHero();
     const head = $('#hm-head'), grid = $('#hm-grid'); head.innerHTML = ''; grid.innerHTML = '';
     const q = S.q.toLowerCase();
     const f = S.view.startsWith('f_') ? folderOf(S.view) : null;
@@ -187,7 +233,7 @@
       grid.append(list.length ? box : state('search', 'Sin resultados', `Ninguna pantalla se llama «${S.q}».`));
       return;
     }
-    const title = S.view === 'none' ? 'Sin carpeta' : f ? f.name : 'Todos los proyectos';
+    const title = S.view === 'none' ? 'Sin carpeta' : f ? f.name : S.q ? 'Resultados' : 'Tus proyectos';
     let list = S.db.projects.filter((p) => (S.view === 'all' ? true : S.view === 'none' ? !p.folder : p.folder === S.view));
     if (q) list = list.filter((p) => (p.name + ' ' + p.scenes.join(' ')).toLowerCase().includes(q));
     head.append(...[f ? h('i', { style: `width:12px;height:12px;border-radius:4px;background:${f.color}` }) : null, h('h1', {}, title),
@@ -207,7 +253,7 @@
     if (!q) grid.append(h('button', { class: 'hm-card hm-new', onclick: newProject, innerHTML: SVGI('plus', 22) + '<span>Nuevo proyecto</span>' }));
   }
   async function load() {
-    try { S.db = await api('/api/projects'); render(); }
+    try { S.db = await api('/api/projects'); if (!S.templates.length) S.templates = await api('/api/templates').catch(() => []); render(); }
     catch (e) { $('#hm-grid').innerHTML = ''; $('#hm-grid').append(state('error', 'No se pudo cargar', 'El servidor del editor no responde: abre «RbxUI Studio.bat». ' + e.message)); }
   }
 

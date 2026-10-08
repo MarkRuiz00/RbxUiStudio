@@ -470,6 +470,52 @@ function imageSize(b) {
   return null;
 }
 const readBody = (req) => new Promise((ok, ko) => { let b = ''; req.on('data', (c) => (b += c)); req.on('end', () => ok(b)); req.on('error', ko); });
+// ---------------------------------------------------------------- plantillas: los ejemplos del repo (../ejemplos/*.rbxui.json + render + notas .md)
+const TEMPLATES = path.join(CODE, '..', 'ejemplos');
+function templateList() {
+  if (!fs.existsSync(TEMPLATES)) return [];
+  return fs.readdirSync(TEMPLATES).filter((f) => f.endsWith('.rbxui.json')).sort().map((f) => {
+    const name = f.slice(0, -11), md = path.join(TEMPLATES, name + '.md');
+    const txt = fs.existsSync(md) ? fs.readFileSync(md, 'utf8') : '';
+    const title = (/^# (.+)$/m.exec(txt) || [])[1] || name;
+    const purpose = ((/\*\*Purpose:\*\* ([^\n]+)/.exec(txt) || [])[1] || '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+    const style = (/Style: \[([^\]]+)\]/.exec(txt) || [])[1] || '';
+    const from = ((/Patterns from: (.+)$/m.exec(txt) || [])[1] || '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+    const render = fs.existsSync(path.join(TEMPLATES, 'renders', name + '.png')) ? `/templates/renders/${name}.png` : null;
+    return { name, title, purpose: purpose.charAt(0).toUpperCase() + purpose.slice(1), style, from, render };
+  }).sort((a, b) => (!a.from - !b.from) || a.title.localeCompare(b.title));   // primero las inspiradas en juegos famosos
+}
+// crea las escenas de una plantilla con nombres libres (nunca pisa una pantalla del usuario) y las mete en un proyecto
+async function useTemplate(b) {
+  const file = path.join(TEMPLATES, safe(b.name) + '.rbxui.json');
+  if (!fs.existsSync(file)) throw new Error('no existe la plantilla ' + b.name);
+  const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const { scenes, warn } = R.docToScenes(doc);
+  const taken = new Set(sceneFiles()), names = [];
+  for (const sc of scenes) {
+    let name = safe(sc.name) || 'Screen';
+    for (let i = 2; taken.has(name); i++) name = (safe(sc.name) || 'Screen').replace(/\d*$/, '') + i;
+    taken.add(name); sc.name = name;
+    fs.writeFileSync(path.join(SCREENS, name + '.scene.json'), JSON.stringify(sc, null, 1));
+    fs.writeFileSync(path.join(SCREENS, name + '.scene.html'), sceneHtml(sc));
+    names.push(name);
+  }
+  let project = null;
+  if (b.project) { addToProject(b.project, names); project = loadProjects().projects.find((x) => x.id === b.project) || null; }
+  else if (b.newProject) {
+    const db = loadProjects();
+    project = { id: pid('p'), name: String(b.newProject.name || '').trim().slice(0, 60) || 'Proyecto', folder: db.folders.some((x) => x.id === b.newProject.folder) ? b.newProject.folder : null,
+      scenes: names, created: Date.now() };
+    db.projects.push(project); saveProjects(db);
+  }
+  // texturas de ui-resources.com que use la plantilla y falten en local: se descargan en segundo plano
+  const ids = [...new Set([...JSON.stringify(doc).matchAll(/assets\/ui-resources\/[^"]*?\/(\d+)_[^"/]*\.(?:png|jpe?g|webp)/g)]
+    .filter((m) => !fs.existsSync(resolveFile('/' + m[0]))).map((m) => m[1]))];
+  if (ids.length) runNode(['../tools/ui-resources.mjs', 'fetch', ...ids, '--root', ROOT]).then((r) => { if (r.ok) broadcast({ type: 'scenes', names, open: false, by: 'ui-resources' }); });
+  broadcast({ type: 'projects' });
+  return { names, project, warn, fetching: ids.length };
+}
+
 const runNode = (args) => new Promise((ok) =>
   execFile(process.execPath, [path.join(CODE, args[0]), ...args.slice(1)], { cwd: ROOT, maxBuffer: 1 << 24 }, (err, out, errOut) => ok({ ok: !err, out: (out + errOut).trim() })));
 
@@ -521,6 +567,16 @@ const server = http.createServer(async (req, res) => {
     }
     if (p === '/' || p === '/studio' || p === '/home') { res.writeHead(302, { Location: '/studio/home.html' }); return res.end(); }
 
+    if (p === '/api/templates') {
+      if (req.method === 'POST') return json(res, 200, await useTemplate(JSON.parse(await readBody(req))));
+      return json(res, 200, templateList());
+    }
+    if (p.startsWith('/templates/renders/')) {               // miniaturas de las plantillas (../ejemplos/renders, fuera de tool/)
+      const fp = path.join(TEMPLATES, 'renders', path.basename(p));
+      if (!/\.png$/.test(fp) || !fs.existsSync(fp)) { res.writeHead(404); return res.end(); }
+      res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': 'max-age=300' });
+      return fs.createReadStream(fp).pipe(res);
+    }
     if (p === '/api/projects') {
       if (req.method === 'POST') { const r = projectAction(JSON.parse(await readBody(req))); broadcast({ type: 'projects' }); return json(res, 200, r); }
       return json(res, 200, projectsView());
@@ -546,6 +602,11 @@ const server = http.createServer(async (req, res) => {
         if (!fs.existsSync(file)) return json(res, 404, { error: 'no existe' });
         res.writeHead(200, { 'Content-Type': MIME['.json'], 'Cache-Control': 'no-store' });
         return res.end(fs.readFileSync(file));
+      }
+      if (req.method === 'DELETE') {                     // solo escenas temporales de validación
+        if (!name.startsWith('__check_')) return json(res, 403, { error: 'solo se borran escenas __check_' });
+        for (const ext of ['.scene.json', '.scene.html']) fs.rmSync(path.join(SCREENS, name + ext), { force: true });
+        return json(res, 200, { ok: true });
       }
       if (req.method === 'POST') {
         const scene = JSON.parse(await readBody(req));
@@ -577,14 +638,16 @@ const server = http.createServer(async (req, res) => {
     }
     if (p === '/api/rbxui/import' && req.method === 'POST') {
       const origin = u.searchParams.get('origin');
+      // scratch=1 (tools/validate.mjs): escenas temporales «__check_<nombre>», nunca pisan las del usuario ni entran en proyectos
+      const scratch = u.searchParams.get('scratch') === '1';
       const { scenes, warn } = R.docToScenes(await readBody(req));
       const bak = path.join(SCREENS, 'ds_backup');
       const names = [];
       for (const sc of scenes) {
-        const name = safe(sc.name) || 'Screen';
+        const name = (scratch ? '__check_' : '') + (safe(sc.name) || 'Screen');
         sc.name = name;
         const f = path.join(SCREENS, name + '.scene.json');
-        if (fs.existsSync(f) && !JSON.parse(fs.readFileSync(f, 'utf8')).native) {
+        if (!scratch && fs.existsSync(f) && !JSON.parse(fs.readFileSync(f, 'utf8')).native) {
           fs.mkdirSync(bak, { recursive: true });
           fs.renameSync(f, path.join(bak, name + '.scene.json'));
         }
@@ -592,7 +655,7 @@ const server = http.createServer(async (req, res) => {
         fs.writeFileSync(path.join(SCREENS, name + '.scene.html'), sceneHtml(sc));
         names.push(name);
       }
-      addToProject(u.searchParams.get('project') || (origin === 'mcp' ? editorState?.project : null), names);
+      if (!scratch) addToProject(u.searchParams.get('project') || (origin === 'mcp' ? editorState?.project : null), names);
       if (origin === 'mcp') broadcast({ type: 'scenes', names, open: u.searchParams.get('open') === '1', by: u.searchParams.get('client') || 'MCP' });
       return json(res, 200, { names, warn });
     }

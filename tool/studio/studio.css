@@ -602,3 +602,170 @@ body.st #st-icongrid button:hover { background: #4a4e58; }
 .st-tex-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; max-height: 170px; overflow: auto; padding: 4px 2px; }
 .st-tex { aspect-ratio: 1; border: 0; border-radius: 6px; background: #6f7686 center/cover no-repeat; cursor: pointer; box-shadow: inset 0 0 0 1px var(--st-line); }
 .st-tex:hover { box-shadow: inset 0 0 0 2px var(--st-accent); }
+
+/* =====================================================================================================
+   RbxUI Studio 2 — paneles flotantes, dock de herramientas, paleta de comandos (Ctrl+K), plantillas, rejilla
+   (va al final: sobrescribe tokens y la distribución de escritorio; el móvil conserva su diseño de cajones)
+   ===================================================================================================== */
+:root {
+  --st-shell: #0c0d10; --st-canvas: #15161b; --st-panel: #1b1c22; --st-panel-2: #25262e; --st-panel-3: #30313b; --st-line: rgba(255,255,255,.07);
+  --st-input: #24252d; --st-input-h: #2c2d36;
+  --st-text-2: rgba(255,255,255,.68); --st-text-3: rgba(255,255,255,.4);
+  --st-accent: #6d7cff; --st-accent-2: #5a69f0; --st-accent-soft: rgba(109,124,255,.2); --st-accent-text: #b4bcff;
+  --st-guide: #ff4f7a;
+  --st-dot: rgba(255,255,255,.075);
+  --st-float: 0 12px 32px -14px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.055);
+  --st-r: 14px;
+}
+[data-theme="light"] {
+  --st-shell: #dcdfe6; --st-canvas: #eceef3; --st-panel: #ffffff; --st-panel-2: #f2f3f7; --st-panel-3: #e5e7ee; --st-line: rgba(10,14,40,.08);
+  --st-input: #f1f2f6; --st-input-h: #e8eaf0;
+  --st-text-2: rgba(10,12,30,.64); --st-text-3: rgba(10,12,30,.4);
+  --st-accent-soft: rgba(109,124,255,.15); --st-accent-text: #4b58e0;
+  --st-dot: rgba(20,24,50,.13);
+  --st-float: 0 12px 30px -16px rgba(20,24,70,.28), 0 0 0 1px rgba(10,14,40,.07);
+}
+
+/* lienzo: rejilla de puntos que sigue al zoom (editor.js pone --gs/--gx/--gy) */
+#st-canvas { background-color: var(--st-canvas);
+  background-image: radial-gradient(circle at 1px 1px, var(--st-dot) 1.1px, transparent 1.4px);
+  background-size: var(--gs, 24px) var(--gs, 24px); background-position: var(--gx, 0) var(--gy, 0); }
+#st-canvas.play { background-image: none; }
+
+/* ---------------- escritorio: todo flota sobre el «shell» con 8 px de aire ---------------- */
+@media (min-width: 761px) {
+  body.st { background: var(--st-shell); grid-template-columns: 256px 1fr 280px; grid-template-rows: 58px 1fr; font-size: 11.5px; }
+  #st-top { margin: 8px 8px 0; height: 50px; border: 0; border-radius: var(--st-r); box-shadow: var(--st-float); padding: 0 8px 0 6px; gap: 12px; }
+  #st-left { margin: 8px 0 8px 8px; border: 0; border-radius: var(--st-r); box-shadow: var(--st-float); }
+  #st-right { margin: 8px 8px 8px 0; border: 0; border-radius: var(--st-r); box-shadow: var(--st-float); }
+  #st-canvas { margin: 8px; border-radius: var(--st-r); box-shadow: inset 0 0 0 1px var(--st-line); }
+  #st-left, #st-right { scrollbar-gutter: stable; }
+}
+
+/* barra superior: [marca · pantalla] [buscar] [conexiones · ver · más · guardar · construir] */
+#st-top { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+.st-brand { margin-right: 2px; }
+body.st #st-scene { font-weight: 600; max-width: 230px; }
+.st-cmd-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.st .st-cmd { width: clamp(220px, 26vw, 380px); height: 34px; justify-content: flex-start; gap: 8px; padding: 0 6px 0 11px; border-radius: 10px;
+  background: var(--st-input); color: var(--st-text-3); font-weight: 500; box-shadow: inset 0 0 0 1px var(--st-line); }
+body.st .st-cmd:hover { background: var(--st-input-h); color: var(--st-text-2); box-shadow: inset 0 0 0 1px rgba(109,124,255,.45); }
+body.st .st-cmd:active { transform: scale(.99); }
+.st-cmd .st-cmd-t { flex: 1; text-align: left; }
+body.st kbd { font: 600 10px/1 Inter, system-ui, sans-serif; padding: 4px 6px; border-radius: 5px; background: var(--st-panel-3); color: var(--st-text-2);
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.35); white-space: nowrap; }
+.st-conn { display: flex; align-items: center; gap: 2px; padding: 2px; border-radius: 11px; background: var(--st-panel-2); box-shadow: inset 0 0 0 1px var(--st-line); }
+body.st .st-conn .st-pill { height: 30px; border-radius: 9px; }
+body.st .st-conn .st-pill:hover { background: var(--st-panel-3); }
+.st-tr { gap: 3px; }
+body.st .st-btn#st-save { background: transparent; box-shadow: inset 0 0 0 1px var(--st-line); }
+body.st .st-btn#st-save:hover { background: var(--st-panel-2); }
+body.st #st-export { height: 34px; border-radius: 10px; padding: 0 14px; }
+body.st #st-more.on { background: var(--st-panel-2); }
+.st-more-wrap { position: relative; }
+.st-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; min-width: 250px; padding: 6px; border-radius: 12px; background: var(--st-panel);
+  box-shadow: var(--st-win-shadow); display: flex; flex-direction: column; gap: 1px; animation: st-win-in .22s var(--st-spring); transform-origin: top right; }
+.st-menu[hidden] { display: none; }
+body.st .st-menu button { width: 100%; height: 32px; justify-content: flex-start; gap: 10px; padding: 0 8px 0 9px; border-radius: 8px; color: var(--st-text); font-weight: 500; }
+body.st .st-menu button:hover { background: var(--st-panel-2); }
+.st-menu button span { flex: 1; text-align: left; }
+.st-menu button .st-i { color: var(--st-text-2); }
+.st-menu hr { border: 0; border-top: 1px solid var(--st-line); margin: 4px 2px; }
+@media (max-width: 1640px) { .st-conn .st-pill > span { display: none; } body.st .st-conn .st-pill { padding: 0 8px; } }
+@media (max-width: 1240px) { .st-cmd-t { display: none; } body.st .st-cmd { width: auto; } }
+@media (max-width: 1180px) { .st-bname { display: none; } body.st #st-scene { max-width: 150px; } }
+
+/* ---------------- dock de herramientas (abajo, centrado, como Figma UI3) ---------------- */
+#st-dock { position: absolute; left: 50%; bottom: 16px; z-index: 6; display: flex; align-items: center; gap: 2px; padding: 5px; translate: -50% 0;
+  background: var(--st-panel); border-radius: 14px; box-shadow: var(--st-float), 0 22px 44px -22px rgba(0,0,0,.75);
+  transition: translate .3s var(--st-ease), opacity .2s; }
+#st-dock .st-toolgrp { padding: 0; gap: 2px; }
+body.st #st-dock button { width: 36px; height: 36px; border-radius: 10px; color: var(--st-text-2); }
+body.st #st-dock button:hover { color: var(--st-text); }
+body.st #st-dock .st-toolgrp button.on { color: #fff; }
+#st-dock .st-sep { height: 22px; margin: 0 5px; }
+#st-dock .st-i { width: 18px; height: 18px; }
+#st-canvas.play #st-dock { translate: -50% 90px; opacity: 0; pointer-events: none; }
+#st-toasts { bottom: 86px; }
+
+/* ---------------- paneles: pestañas como control segmentado, capas más legibles ---------------- */
+.st-tabs { margin: 8px 8px 4px; padding: 3px; gap: 2px; border-radius: 11px; background: var(--st-input); border-bottom: 0; position: sticky; top: 8px; }
+body.st .st-tabs button { height: 28px; border-radius: 8px; color: var(--st-text-2); }
+body.st .st-tabs button.on { background: var(--st-panel); color: var(--st-text); box-shadow: 0 1px 3px rgba(0,0,0,.3), 0 0 0 1px var(--st-line); }
+[data-theme="light"] body.st .st-tabs button.on { box-shadow: 0 1px 3px rgba(20,24,60,.12), 0 0 0 1px var(--st-line); }
+.st-lrow { height: 30px; border-radius: 8px; }
+.st-lrow.sel { background: var(--st-accent-soft); box-shadow: inset 2px 0 0 var(--st-accent); }
+.st-ti.k-text { color: #8fb8ff; } .st-ti.k-image { color: #6fdc9f; } .st-ti.k-button { color: #c4a0ff; } .st-ti.k-scroll { color: #ffc77a; } .st-ti.k-group { color: var(--st-text-3); }
+[data-theme="light"] .st-ti.k-text { color: #2f6fe0; } [data-theme="light"] .st-ti.k-image { color: #1c9a5a; } [data-theme="light"] .st-ti.k-button { color: #7a3ce0; } [data-theme="light"] .st-ti.k-scroll { color: #c07a0a; }
+.st-cgroup { padding: 14px 14px 6px; font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--st-text-3); }
+body.st .st-comp { border-radius: 9px; padding: 8px 10px; }
+body.st .st-comp:hover { background: var(--st-panel-2); box-shadow: inset 0 0 0 1px var(--st-line); }
+.st-sec { padding: 12px 14px 14px; }
+.st-sec h4 { font-size: 11.5px; }
+body.st input, body.st select, body.st textarea { border-radius: 7px; }
+
+/* ---------------- paleta de comandos ---------------- */
+#st-pal { position: fixed; inset: 0; z-index: 60; background: var(--st-back); backdrop-filter: blur(6px) saturate(1.1); animation: st-fade .16s ease-out;
+  display: flex; justify-content: center; align-items: flex-start; padding-top: 12vh; }
+.st-pal-box { width: min(660px, 94vw); max-height: 70vh; display: flex; flex-direction: column; background: var(--st-panel); border-radius: 16px; overflow: hidden;
+  box-shadow: var(--st-win-shadow), 0 0 0 1px rgba(109,124,255,.25); animation: st-win-in .26s var(--st-spring); font: 13px/1.4 Inter, system-ui, sans-serif; color: var(--st-text); }
+.st-pal-in { display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 56px; border-bottom: 1px solid var(--st-line); color: var(--st-text-3); }
+.st-pal-in input { flex: 1; min-width: 0; background: none !important; border: 0 !important; outline: none; font: 500 15px/1 Inter, system-ui, sans-serif !important; color: var(--st-text) !important; height: 40px !important; padding: 0 !important; }
+.st-pal-list { overflow: auto; padding: 6px; flex: 1; }
+.st-pal-g { padding: 10px 10px 4px; font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--st-text-3); }
+.st-pal-it { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: 9px; cursor: pointer; }
+.st-pal-it.on { background: var(--st-accent-soft); }
+.st-pal-it.on .st-pal-ic { color: var(--st-accent-text); }
+.st-pal-ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--st-panel-2); color: var(--st-text-2); flex: none; }
+.st-pal-l { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.st-pal-h { color: var(--st-text-3); font-size: 11.5px; white-space: nowrap; max-width: 40%; overflow: hidden; text-overflow: ellipsis; }
+.st-pal-it kbd, .st-pal-in kbd, .st-pal-foot kbd { font: 600 10px/1 Inter, system-ui, sans-serif; padding: 4px 6px; border-radius: 5px; background: var(--st-panel-3); color: var(--st-text-2); }
+.st-pal-none { padding: 26px 12px; text-align: center; color: var(--st-text-3); }
+.st-pal-foot { display: flex; align-items: center; gap: 14px; padding: 9px 14px; border-top: 1px solid var(--st-line); color: var(--st-text-3); font-size: 11.5px; }
+.st-pal-foot kbd { margin-right: 2px; }
+
+/* ---------------- plantillas ---------------- */
+.st-tplgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+body.st .st-tpl { display: flex; flex-direction: column; align-items: stretch; height: auto; padding: 0; border-radius: 12px; overflow: hidden; text-align: left;
+  background: var(--st-panel-2); box-shadow: inset 0 0 0 1px var(--st-line); animation: st-rise .3s var(--st-ease) backwards; }
+body.st .st-tpl:hover { background: var(--st-panel-2); box-shadow: inset 0 0 0 1px rgba(109,124,255,.55), 0 14px 30px -16px rgba(0,0,0,.7); transform: translateY(-2px); }
+.st-tplimg { position: relative; aspect-ratio: 16 / 9; background: #0f1015; overflow: hidden; }
+.st-tplimg img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s var(--st-ease); }
+.st-tpl:hover .st-tplimg img { transform: scale(1.04); }
+.st-tplimg .st-chip { position: absolute; left: 8px; top: 8px; background: rgba(10,10,18,.72); color: #fff; backdrop-filter: blur(4px); }
+.st-tplbody { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.st-tplbody b { font-size: 13px; }
+.st-tplbody small { color: var(--st-accent-text); font-weight: 500; }
+.st-tplbody p { margin: 2px 0 0; color: var(--st-text-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ---------------- atajos ---------------- */
+.st-keys { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; }
+.st-key { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 2px; border-bottom: 1px solid var(--st-line); color: var(--st-text-2); }
+.st-key > span:last-child { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* ventanas: un poco más redondas */
+.st-win { border-radius: 16px; }
+
+/* móvil: el dock queda sobre la barra inferior, con lo esencial */
+@media (max-width: 760px) {
+  #st-dock { bottom: 10px; padding: 4px; }
+  #st-dock .st-sep, #st-dock-cmd { display: none; }
+  #st-top .st-tc { display: none; }
+  .st-menu { position: fixed; right: 8px; top: 52px; }
+}
+
+/* barra superior: los extremos miden lo que su contenido, el buscador ocupa el centro (nunca recorta «Construir») */
+#st-top { grid-template-columns: auto minmax(0, 1fr) auto; }
+.st-tc { justify-content: center; min-width: 0; }
+body.st .st-cmd { width: min(400px, 100%); min-width: 40px; }
+.st-tl > *, .st-tr > * { flex: none; }
+.st-row > span.st-l { width: 74px; }
+/* el estado («Guardado 12:01», errores) vive abajo a la izquierda del lienzo, como en Figma */
+@media (min-width: 761px) {
+  #st-status { position: fixed; left: 286px; bottom: 26px; z-index: 6; max-width: 360px; margin: 0; padding: 5px 10px; border-radius: 9px;
+    background: var(--st-panel); box-shadow: var(--st-float); font-weight: 500; }
+  #st-status:empty { display: none; }
+}
+@media (max-width: 1440px) { #st-status { display: block; } }
+@media (max-width: 1100px) { #st-status { display: none; } }
+body.st .st-tpl { justify-content: flex-start; }

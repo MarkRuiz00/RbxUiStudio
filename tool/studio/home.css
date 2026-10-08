@@ -105,3 +105,55 @@ body.hm :focus-visible { outline: 2px solid var(--st-accent); outline-offset: 2p
   .hm-main { padding: 16px 12px 40px; }
   .hm-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
 }
+
+/* ---------------- RbxUI Studio 2: bienvenida + plantillas ---------------- */
+body.hm { background: var(--st-shell, var(--st-canvas)); }
+@media (min-width: 761px) {
+  body.hm { grid-template-rows: 60px 1fr; grid-template-columns: 240px 1fr; height: 100vh; overflow: hidden; }
+  .hm-top { margin: 8px 8px 0; border-radius: 14px; border-bottom: 0; box-shadow: var(--st-float); }
+  .hm-side { margin: 8px 0 8px 8px; border-radius: 14px; border-right: 0; box-shadow: var(--st-float); }
+}
+#hm-hero[hidden] { display: none; }
+.hm-welcome { position: relative; display: flex; align-items: center; gap: 24px; padding: 28px 32px; border-radius: 20px; overflow: hidden; margin-bottom: 26px;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(184,77,255,.28), transparent 55%), radial-gradient(120% 140% at 100% 100%, rgba(47,214,255,.2), transparent 55%), var(--st-panel);
+  box-shadow: var(--st-float); animation: st-rise .4s var(--st-ease); }
+.hm-welcome::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.07) 1px, transparent 1.4px); background-size: 22px 22px; mask-image: linear-gradient(90deg, transparent, #000 60%); }
+.hm-wtext { position: relative; z-index: 1; flex: 1; min-width: 0; }
+.hm-kicker { display: inline-block; font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; background: var(--st-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hm-welcome h2 { margin: 6px 0 8px; font-size: 30px; line-height: 1.12; letter-spacing: -.02em; font-weight: 800; }
+.hm-welcome h2 em { font-style: normal; background: var(--st-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hm-welcome p { margin: 0 0 18px; max-width: 620px; color: var(--st-text-2); font-size: 13.5px; line-height: 1.55; }
+.hm-wacts { display: flex; gap: 8px; flex-wrap: wrap; }
+.hm-wacts .hm-btn { height: 38px; padding: 0 16px; border-radius: 10px; }
+.hm-btn.ghost { background: transparent; box-shadow: inset 0 0 0 1px var(--st-line); color: var(--st-text-2); text-decoration: none; }
+.hm-btn.ghost:hover { color: var(--st-text); background: var(--st-panel-2); }
+.hm-btn.sm { height: 28px; padding: 0 10px; font-size: 11.5px; }
+.hm-wmascot { position: relative; z-index: 1; width: 170px; height: auto; flex: none; filter: drop-shadow(0 18px 30px rgba(60,40,200,.45)); animation: st-float 3.4s ease-in-out infinite; }
+.hm-tplhead { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+.hm-tplhead h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.hm-tplhead .n { color: var(--st-text-3); }
+.hm-tplhead .hm-btn { margin-left: auto; }
+.hm-tpls { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-bottom: 30px; }
+.hm-tpls.all { margin: 0; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.hm-tpl { display: flex; flex-direction: column; text-align: left; padding: 0; border-radius: 14px; overflow: hidden; background: var(--st-panel) !important;
+  box-shadow: 0 0 0 1px var(--st-line); animation: st-rise .3s var(--st-ease) backwards; transition: transform .2s var(--st-ease), box-shadow .2s !important; }
+.hm-tpl:hover { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(120,110,255,.55), 0 16px 32px -16px rgba(0,0,0,.7) !important; }
+.hm-tplimg { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #0f1015; }
+.hm-tplimg img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s var(--st-ease); }
+.hm-tpl:hover .hm-tplimg img { transform: scale(1.05); }
+.hm-tplimg span { position: absolute; left: 8px; top: 8px; height: 20px; padding: 0 7px; border-radius: 6px; background: rgba(10,10,18,.72); color: #fff; font-size: 10.5px; font-weight: 600;
+  display: flex; align-items: center; backdrop-filter: blur(4px); }
+.hm-tplb { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.hm-tplb b { font-size: 13px; }
+.hm-tplb small { color: var(--st-text-3); }
+.hm-dlg-wide { width: min(1040px, 100%) !important; max-height: 86vh; display: flex; flex-direction: column; }
+.hm-dlg-wide .body { overflow: auto; }
+.hm-dlg header small { color: var(--st-text-3); font-weight: 500; font-size: 12px; }
+@media (max-width: 760px) {
+  .hm-top, .hm-side { margin: 0; border-radius: 0; box-shadow: none; }
+  .hm-welcome { padding: 20px; } .hm-welcome h2 { font-size: 22px; } .hm-wmascot { display: none; }
+}
+.hm-tpls:not(.all) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (max-width: 1500px) { .hm-tpls:not(.all) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .hm-tpls:not(.all) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

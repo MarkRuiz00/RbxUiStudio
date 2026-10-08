@@ -19,38 +19,39 @@
 <header id="st-top">
   <div class="st-tl">
     <a class="st-brand" href="home.html" title="Proyectos (inicio)"><img src="brand/logo-128.png" alt="RbxUI Studio"><span class="st-bname">RbxUI <b>Studio</b></span></a>
-    <div class="st-toolgrp" id="st-tools">
-      <button data-tool="move" data-icon="move" title="Mover (V)" class="on"></button>
-      <button data-tool="frame" data-icon="frame" title="Frame (F) · arrastra en el lienzo"></button>
-      <button data-tool="text" data-icon="text" title="Texto (T)"></button>
-      <button data-tool="image" data-icon="image" title="Imagen (I)"></button>
-      <button data-tool="button" data-icon="button" title="Botón (B)"></button>
-      <button data-tool="hand" data-icon="hand" title="Mano (H · o mantén Espacio)"></button>
-    </div>
     <span class="st-sep"></span>
-    <button id="st-undo" class="st-ib" data-icon="undo" title="Deshacer (Ctrl+Z)"></button>
-    <button id="st-redo" class="st-ib" data-icon="redo" title="Rehacer (Ctrl+Y)"></button>
-  </div>
-  <div class="st-tc">
     <a id="st-proj" class="st-crumb" href="home.html" hidden><span></span><i>/</i></a>
     <select id="st-scene" title="Pantalla (ScreenGui)"></select>
-    <button id="st-new" class="st-ib" data-icon="plus" title="Nueva escena"></button>
-    <button id="st-import" class="st-ib" data-icon="import" title="Importar pantalla DS"></button>
-    <button id="st-rbxui" class="st-ib" data-icon="code" title="JSON rbxui · prompt para IAs"></button>
-    <span class="st-sep"></span>
-    <button id="st-examples" class="st-pill" data-icon="book" title="Ejemplos para la IA: tus UIs de Figma como referencia"><span>Ejemplos IA</span><b class="st-count" id="st-excount"></b></button>
-    <button id="st-mcp" class="st-pill" data-icon="plug" title="MCP: conecta Claude u otra IA al editor"><span>MCP</span><i class="st-dot" id="st-mcpdot"></i></button>
-    <button id="st-studio" class="st-pill" data-icon="roblox" title="Roblox Studio: plugin RbxUI Connect"><span>Studio</span><i class="st-dot" id="st-studiodot"></i></button>
+    <button id="st-new" class="st-ib" data-icon="plus" title="Nueva pantalla vacía"></button>
+    <button id="st-templates" class="st-ib" data-icon="template" title="Nueva pantalla desde plantilla (UIs completas de ejemplo)"></button>
+  </div>
+  <div class="st-tc">
+    <button id="st-cmd" class="st-cmd" title="Buscar y ejecutar cualquier cosa (Ctrl+K)"><span data-icon="search"></span><span class="st-cmd-t">Buscar acciones, capas, plantillas…</span><kbd>Ctrl K</kbd></button>
   </div>
   <div class="st-tr">
     <span id="st-status"></span>
+    <div class="st-conn" title="Conexiones">
+      <button id="st-examples" class="st-pill" data-icon="book" title="Ejemplos para la IA: tus UIs de Figma como referencia"><span>Ejemplos IA</span><b class="st-count" id="st-excount"></b></button>
+      <button id="st-mcp" class="st-pill" data-icon="plug" title="MCP: conecta Claude u otra IA al editor"><span>MCP</span><i class="st-dot" id="st-mcpdot"></i></button>
+      <button id="st-studio" class="st-pill" data-icon="roblox" title="Roblox Studio: plugin RbxUI Connect"><span>Studio</span><i class="st-dot" id="st-studiodot"></i></button>
+    </div>
+    <span class="st-sep"></span>
     <button id="st-check" class="st-check" title="Comprobación contra la API de Roblox">✓</button>
-    <button id="st-devices" class="st-ib" data-icon="devices" title="Vista por dispositivo: móvil, tablet, PC, TV (D)"></button>
-    <button id="st-phone" class="st-ib" data-icon="phone" title="Ver en el móvil (QR)"></button>
-    <button id="st-theme" class="st-ib" data-icon="moon" title="Tema claro / oscuro"></button>
-    <button id="st-fit" class="st-ib" data-icon="fit" title="Ver todo (Shift+1) · selección (Shift+2)"></button>
-    <button id="st-zoom" class="st-zoom" title="Zoom al 100% (Ctrl+0)">100%</button>
+    <button id="st-devices" class="st-ib" data-icon="devices" title="Vista por dispositivo: móvil, tablet, PC, TV"></button>
     <button id="st-play" class="st-ib" data-icon="play" title="Probar botones y ventanas (P)"></button>
+    <button id="st-zoom" class="st-zoom" title="Zoom al 100% (Ctrl+0)">100%</button>
+    <div class="st-more-wrap">
+      <button id="st-more" class="st-ib" data-icon="more" title="Más opciones" aria-haspopup="menu"></button>
+      <div class="st-menu" id="st-more-menu" role="menu" hidden>
+        <button id="st-rbxui" data-icon="code" role="menuitem"><span>JSON rbxui · prompt para IAs</span></button>
+        <button id="st-import" data-icon="import" role="menuitem"><span>Importar pantalla DS (HTML)</span></button>
+        <button id="st-phone" data-icon="phone" role="menuitem"><span>Ver en el móvil (QR)</span></button>
+        <hr>
+        <button id="st-fit" data-icon="fit" role="menuitem"><span>Ver todo</span><kbd>Shift 1</kbd></button>
+        <button id="st-theme" data-icon="moon" role="menuitem"><span>Tema claro / oscuro</span></button>
+        <button id="st-keys" data-icon="keyboard" role="menuitem"><span>Atajos de teclado</span><kbd>?</kbd></button>
+      </div>
+    </div>
     <button id="st-save" class="st-btn" title="Guardar (Ctrl+S)">Guardar</button>
     <button id="st-export" class="st-btn st-primary">Construir en Roblox</button>
   </div>
@@ -92,7 +93,22 @@
     <div id="st-icongrid"></div>
   </div>
 </aside>
-<main id="st-canvas"><div id="st-world"><div class="stage" id="st-stage"></div><div id="st-overlay"></div></div><div id="st-empty" hidden></div></main>
+<main id="st-canvas"><div id="st-dock" role="toolbar" aria-label="Herramientas">
+    <div class="st-toolgrp" id="st-tools">
+      <button data-tool="move" data-icon="move" title="Mover (V)" class="on"></button>
+      <button data-tool="frame" data-icon="frame" title="Frame (F) · arrastra en el lienzo"></button>
+      <button data-tool="text" data-icon="text" title="Texto (T)"></button>
+      <button data-tool="image" data-icon="image" title="Imagen (I)"></button>
+      <button data-tool="button" data-icon="button" title="Botón (B)"></button>
+      <button data-tool="hand" data-icon="hand" title="Mano (H · o mantén Espacio)"></button>
+    </div>
+    <span class="st-sep"></span>
+    <button id="st-undo" class="st-ib" data-icon="undo" title="Deshacer (Ctrl+Z)"></button>
+    <button id="st-redo" class="st-ib" data-icon="redo" title="Rehacer (Ctrl+Y)"></button>
+    <span class="st-sep"></span>
+    <button id="st-dock-insert" class="st-ib" data-icon="shapes" title="Insertar componente"></button>
+    <button id="st-dock-cmd" class="st-ib" data-icon="command" title="Paleta de comandos (Ctrl+K)"></button>
+  </div><div id="st-world"><div class="stage" id="st-stage"></div><div id="st-overlay"></div></div><div id="st-empty" hidden></div></main>
 <aside id="st-right"><div id="st-props"></div></aside>
 <nav id="st-mnav">
   <button data-m="layers" data-icon="layers"><span>Capas</span></button>

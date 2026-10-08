@@ -136,6 +136,8 @@
   const canvas = $('#st-canvas');
   function applyView() {
     $('#st-world').style.transform = `translate(${S.px}px,${S.py}px) scale(${S.zoom})`;
+    let gs = 24 * S.zoom; while (gs < 14) gs *= 2; while (gs > 56) gs /= 2;               // rejilla de puntos del lienzo
+    canvas.style.setProperty('--gs', gs.toFixed(2) + 'px'); canvas.style.setProperty('--gx', S.px.toFixed(1) + 'px'); canvas.style.setProperty('--gy', S.py.toFixed(1) + 'px');
     $('#st-zoom').textContent = Math.round(S.zoom * 100) + '%';
     drawOverlay();
   }
@@ -1074,6 +1076,9 @@
   const typeIcon = (n) => SVGI(n.rbxClass
     ? (n.rbxClass === 'Frame' && +R.prop(n, 'BackgroundTransparency') >= 1 && n.children?.length ? 'group' : NATIVE_ICON[n.rbxClass] || 'square')
     : ({ text: 'text', image: 'image', html: 'shapes', group: 'group' }[n.type] || (hasTok(n, 'fx') ? 'sparkle' : 'square')), 14);
+  const KIND = { TextLabel: 'text', TextBox: 'text', TextButton: 'button', ImageButton: 'button', ImageLabel: 'image', ScrollingFrame: 'scroll', CanvasGroup: 'scroll' };
+  const kindOf = (n) => (n.rbxClass ? (n.rbxClass === 'Frame' && +R.prop(n, 'BackgroundTransparency') >= 1 && n.children?.length ? 'group' : KIND[n.rbxClass] || 'frame')
+    : { text: 'text', image: 'image', group: 'group' }[n.type] || 'frame');
   const outsideStage = (n) => { const W = S.scene.stage.w, H = S.scene.stage.h; return n.x + n.w <= 0 || n.y + n.h <= 0 || n.x >= W || n.y >= H; };
   const CLS_SHORT = { Frame: 'frm', TextLabel: 'txt', TextButton: 'tbtn', TextBox: 'tbox', ImageLabel: 'img', ImageButton: 'ibtn', ScrollingFrame: 'scrl', CanvasGroup: 'cgrp' };
   // capa generada por una pintura de Figma (pila de rellenos): FigmaFill = posición de la pintura en Figma
@@ -1254,7 +1259,7 @@
       style: `padding-left:${4 + depth * 13}px` },
       h('span', { class: 'st-tw', innerHTML: kids ? SVGI(S.collapsed.has(n.id) ? 'chevronRight' : 'chevronDown', 12) : '',
         onclick: (e) => { e.stopPropagation(); if (S.collapsed.has(n.id)) S.collapsed.delete(n.id); else S.collapsed.add(n.id); renderLayers(); } }),
-      h('span', { class: 'st-ti', innerHTML: typeIcon(n) }),
+      h('span', { class: 'st-ti k-' + kindOf(n), innerHTML: typeIcon(n) }),
       h('span', { class: 'st-tn', ondblclick: (e) => renameInline(e.target, n) }, n.name || n.type),
       depth === 0 && outsideStage(n) ? h('span', { class: 'st-ltag out', title: 'Fuera de la pantalla (del marco)' }, 'fuera') : null,
       n.rbxClass && R.prop(n, 'Visible') === false ? h('span', { class: 'st-ltag inv', title: 'Visible = false: empieza oculta en el juego' }, 'oculta') : null,
@@ -2646,7 +2651,145 @@
     await loadSceneList(name); S.dirty = false; await loadScene(name);
   }
 
+  // ---------------------------------------------------------------- plantillas: UIs completas del repo (ejemplos/*.rbxui.json) como pantalla nueva
+  S.templates = [];
+  async function useTemplate(t) {
+    if (S.dirty && !confirm('Hay cambios sin guardar. ¿Descartarlos y abrir la plantilla?')) return;
+    const tt = toast(`Creando «${t.title}»…`, 'busy', { sticky: true });
+    try {
+      const r = await api('/api/templates', { method: 'POST', body: JSON.stringify({ name: t.name, project: S.projectId || null }) });
+      tt?.close?.();
+      const w = winById('templates'); if (w) closeWin(w);
+      S.dirty = false; await loadSceneList(r.names[0]); await loadScene(r.names[0]);
+      toast(`Plantilla «${t.title}» creada como ${r.names[0]}` + (r.fetching ? ' · descargando texturas…' : ''), 'ok');
+    } catch (e) { tt?.close?.(); toast('No se pudo crear la plantilla: ' + e.message, 'err'); }
+  }
+  function openTemplates() {
+    const w = winById('templates'); if (w) { closeWin(w); return; }
+    const grid = h('div', { class: 'st-tplgrid' });
+    const fill = () => {
+      grid.innerHTML = '';
+      if (!S.templates.length) { grid.append(h('p', { class: 'st-note' }, 'No hay plantillas: falta la carpeta ejemplos/ del repo junto a tool/.')); return; }
+      S.templates.forEach((t, i) => grid.append(h('button', { class: 'st-tpl', style: `animation-delay:${Math.min(i, 14) * 25}ms`, onclick: () => useTemplate(t), title: t.purpose || t.title },
+        h('div', { class: 'st-tplimg' }, t.render ? h('img', { src: t.render, alt: '', loading: 'lazy' }) : null, t.style ? h('span', { class: 'st-chip' }, t.style) : null),
+        h('div', { class: 'st-tplbody' }, h('b', {}, t.title), t.from ? h('small', {}, 'Patrones de ' + t.from) : null, h('p', {}, t.purpose)))));
+    };
+    openWin({ id: 'templates', modal: true, width: 920, icon: 'template', title: 'Plantillas', sub: 'UIs completas con notas de diseño · se crean como pantalla nueva, editable', body: [grid] });
+    fill();
+    if (!S.templates.length) api('/api/templates').then((l) => { S.templates = l; fill(); }).catch(() => {});
+  }
+
+  // ---------------------------------------------------------------- atajos de teclado
+  const KEYS = [['Paleta de comandos', 'Ctrl K'], ['Guardar', 'Ctrl S'], ['Deshacer / Rehacer', 'Ctrl Z · Ctrl Y'], ['Duplicar', 'Ctrl D'], ['Agrupar / Desagrupar', 'Ctrl G · Ctrl Shift G'],
+    ['Adelante / Atrás', 'Ctrl ] · Ctrl ['], ['Seleccionar todo', 'Ctrl A'], ['Borrar', 'Supr'], ['Mover 1 px / 10 px', 'Flechas · Shift'], ['Entrar en la capa', 'Enter'], ['Subir al padre', 'Esc'],
+    ['Seleccionar dentro (profundo)', 'Ctrl clic'], ['Medir distancias', 'Alt'], ['Herramientas', 'V F T I B H'], ['Desplazar la vista', 'Espacio + arrastrar'], ['Zoom', 'Ctrl rueda'],
+    ['Ver todo / selección', 'Shift 1 · Shift 2'], ['Zoom 100 %', 'Ctrl 0'], ['Probar', 'P'], ['Estos atajos', '?']];
+  function openKeys() {
+    const w = winById('keys'); if (w) { closeWin(w); return; }
+    openWin({ id: 'keys', modal: true, width: 560, icon: 'keyboard', title: 'Atajos de teclado', sub: 'Igual que en Figma donde se puede',
+      body: [h('div', { class: 'st-keys' }, ...KEYS.map(([l, k]) => h('div', { class: 'st-key' }, h('span', {}, l), h('span', {}, ...k.split(' · ').map((x) => h('kbd', {}, x))))))] });
+  }
+
+  // ---------------------------------------------------------------- paleta de comandos (Ctrl+K): acciones, herramientas, pantallas, capas, componentes, plantillas
+  const fold = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  function fuzzy(q, s) {
+    if (!q) return 1;
+    s = fold(s);
+    const i = s.indexOf(q);
+    if (i >= 0) return 1000 - i * 4 - s.length + (i === 0 || s[i - 1] === ' ' ? 200 : 0);
+    let j = 0, sc = 0, last = -2;
+    for (const c of q) { const k = s.indexOf(c, j); if (k < 0) return 0; sc += k === last + 1 ? 6 : 1; last = k; j = k + 1; }
+    return sc;
+  }
+  function paletteItems() {
+    const A = (group, icon, label, run, keys, hint) => ({ group, icon, label, run, keys, hint });
+    const nat = isNative(), out = [];
+    out.push(
+      A('Acciones', 'check', 'Guardar', save, 'Ctrl S'),
+      A('Acciones', 'rocket', nat ? 'Construir en Roblox (Luau / plugin)' : 'Exportar a Roblox', doExport),
+      ...(nat ? [A('Acciones', 'play', S.play ? 'Salir de «Probar»' : 'Probar botones y ventanas', () => setPlay(!S.play), 'P')] : []),
+      A('Acciones', 'devices', 'Vista por dispositivo (móvil, tablet, PC, TV)', openDevices),
+      A('Acciones', 'check', 'Comprobar contra la API de Roblox', () => { runCheck(); openCheck(); }),
+      A('Acciones', 'template', 'Nueva pantalla desde plantilla', openTemplates),
+      A('Acciones', 'plus', 'Nueva pantalla vacía', newScene),
+      A('Acciones', 'code', 'JSON rbxui: importar, exportar, prompt para IAs', () => doRbxui('import')),
+      A('Acciones', 'book', 'Ejemplos IA (tus UIs como referencia de estilo)', openExamples),
+      A('Acciones', 'plug', 'Conectar una IA por MCP', openMcp),
+      A('Acciones', 'roblox', 'Roblox Studio: plugin RbxUI Connect', openStudio),
+      A('Acciones', 'phone', 'Ver en el móvil (QR)', openPhone),
+      A('Acciones', 'home', 'Ir a Proyectos (inicio)', () => { location.href = 'home.html'; }),
+      A('Vista', 'fit', 'Ver todo', fitView, 'Shift 1'),
+      A('Vista', 'target', 'Ver la selección', fitSelection, 'Shift 2'),
+      A('Vista', 'zoomIn', 'Zoom al 100 %', () => zoomTo(1), 'Ctrl 0'),
+      A('Vista', document.documentElement.dataset.theme === 'light' ? 'moon' : 'sun', 'Cambiar tema claro / oscuro', () => setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light')),
+      A('Vista', 'keyboard', 'Atajos de teclado', openKeys, '?'),
+      A('Editar', 'undo', 'Deshacer', undo, 'Ctrl Z'), A('Editar', 'redo', 'Rehacer', redo, 'Ctrl Y'),
+      ...(S.sel.length ? [A('Editar', 'duplicate', 'Duplicar la selección', duplicate, 'Ctrl D'), A('Editar', 'group', 'Agrupar la selección', group, 'Ctrl G'),
+        A('Editar', 'trash', 'Borrar la selección', del, 'Supr')] : []),
+      ...[['move', 'Mover', 'V'], ['frame', 'Frame', 'F'], ['text', 'Texto', 'T'], ['image', 'Imagen', 'I'], ['button', 'Botón', 'B'], ['hand', 'Mano', 'H']]
+        .map(([t, l, k]) => A('Herramientas', t, 'Herramienta ' + l, () => setTool(t), k)));
+    for (const t of S.templates) out.push(A('Plantillas', 'template', t.title, () => useTemplate(t), null, t.from || t.style));
+    for (const n of S.sceneNames || []) if (n !== S.name) out.push(A('Pantallas', 'frame', n, () => loadScene(n), null, 'abrir'));
+    if (S.scene) {
+      walk((n) => { if (!isFillLayer(n)) out.push(A('Capas', NATIVE_ICON[n.rbxClass] || 'square', n.name || n.type, () => { setSel([n.id]); fitSelection(); }, null, n.rbxClass || n.type)); });
+      for (const [g, items] of (nat ? NATIVE_COMPONENTS() : COMPONENTS)) for (const [name, , build] of items) out.push(A('Insertar', 'plus', name, () => insertNode(build()), null, g.split(' · ')[0]));
+    }
+    return out;
+  }
+  function openPalette() {
+    if ($('#st-pal')) { $('#st-pal').remove(); return; }
+    const all = paletteItems();
+    const input = h('input', { type: 'text', placeholder: 'Escribe una acción, una capa, una pantalla, una plantilla…', 'aria-label': 'Buscar', autocomplete: 'off', spellcheck: 'false' });
+    const list = h('div', { class: 'st-pal-list', role: 'listbox' });
+    let shown = [], act = 0;
+    const close = () => { back.remove(); };
+    const run = (it) => { close(); setTimeout(() => { try { it.run(); } catch (e) { toast(String(e.message || e), 'err'); } }, 0); };
+    const mark = () => { [...list.querySelectorAll('.st-pal-it')].forEach((el, i) => el.classList.toggle('on', i === act)); list.querySelector('.st-pal-it.on')?.scrollIntoView({ block: 'nearest' }); };
+    const draw = () => {
+      const q = fold(input.value.trim());
+      list.innerHTML = '';
+      if (!q) {
+        const LIM = { Acciones: 99, Vista: 99, Plantillas: 6, Pantallas: 6, Editar: 99, Herramientas: 0, Capas: 0, Insertar: 0 };
+        const by = {};
+        shown = all.filter((it) => { by[it.group] = (by[it.group] || 0) + 1; return by[it.group] <= (LIM[it.group] ?? 4); });
+      } else shown = all.map((it) => ({ it, s: fuzzy(q, it.label) + fuzzy(q, it.group) * 0.15 + (it.hint ? fuzzy(q, it.hint) * 0.1 : 0) }))
+        .filter((x) => x.s > 0).sort((a, b) => b.s - a.s).slice(0, 60).map((x) => x.it);
+      let g = null;
+      shown.forEach((it, i) => {
+        if (it.group !== g && !q) { g = it.group; list.append(h('div', { class: 'st-pal-g' }, g)); }
+        list.append(h('div', { class: 'st-pal-it', role: 'option', onmousemove: () => { if (act !== i) { act = i; mark(); } }, onclick: () => run(it) },
+          h('span', { class: 'st-pal-ic', innerHTML: SVGI(it.icon, 16) }), h('span', { class: 'st-pal-l' }, it.label),
+          q ? h('span', { class: 'st-pal-h' }, it.group + (it.hint ? ' · ' + it.hint : '')) : it.hint ? h('span', { class: 'st-pal-h' }, it.hint) : null,
+          it.keys ? h('kbd', {}, it.keys) : null));
+      });
+      if (!shown.length) list.append(h('div', { class: 'st-pal-none' }, 'Nada coincide. Prueba «botón», «plantilla», «móvil», el nombre de una capa…'));
+      act = 0; mark();
+    };
+    input.addEventListener('input', draw);
+    input.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'ArrowDown') { e.preventDefault(); act = Math.min(shown.length - 1, act + 1); mark(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); act = Math.max(0, act - 1); mark(); }
+      else if (e.key === 'Enter') { e.preventDefault(); if (shown[act]) run(shown[act]); }
+      else if (e.key === 'Escape') { e.preventDefault(); close(); }
+    });
+    const back = h('div', { id: 'st-pal', onmousedown: (e) => { if (e.target === back) close(); } },
+      h('div', { class: 'st-pal-box', role: 'dialog', 'aria-label': 'Paleta de comandos' },
+        h('label', { class: 'st-pal-in' }, h('span', { innerHTML: SVGI('search', 18) }), input, h('kbd', {}, 'Esc')),
+        list, h('div', { class: 'st-pal-foot' }, h('span', {}, h('kbd', {}, '↑'), h('kbd', {}, '↓'), ' moverse'), h('span', {}, h('kbd', {}, 'Enter'), ' ejecutar'),
+          h('span', { style: 'margin-left:auto' }, `${all.length} cosas que puedes hacer`))));
+    document.body.append(back);
+    draw(); input.focus();
+  }
+  // menú «más» de la barra superior
+  function toggleMore(force) {
+    const m = $('#st-more-menu'), open = force ?? m.hidden;
+    m.hidden = !open; $('#st-more').classList.toggle('on', open);
+  }
+
   // ---------------------------------------------------------------- teclado
+  // Ctrl+K = paleta de comandos (también con el foco en un campo)
+  window.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); e.stopPropagation(); openPalette(); } }, true);
   // Alt = medir distancias (como en Figma)
   window.addEventListener('keydown', (e) => { if (e.key === 'Alt' && !S.alt) { S.alt = true; drawOverlay(); e.preventDefault(); } }, true);
   window.addEventListener('keyup', (e) => { if (e.key === 'Alt') { S.alt = false; drawOverlay(); e.preventDefault(); } }, true);
@@ -2658,6 +2801,7 @@
     if (k === 'Escape' && WIN.list.length && (S.winFocus || WIN.list.some((w) => w.modal))) { closeWin(WIN.list.some((w) => w.modal) ? [...WIN.list].reverse().find((w) => w.modal) : topWin()); return; }
     if (WIN.list.some((w) => w.modal)) return;
     if (S.winFocus && !ctrl) return;
+    if (k === '?') { openKeys(); return; }
     if (k === ' ') { S.space = true; canvas.classList.add('pan'); e.preventDefault(); return; }
     if (!S.scene) return;
     if (!ctrl && k.toLowerCase() === 'p' && isNative()) { setPlay(!S.play); return; }
@@ -2711,7 +2855,7 @@
   function setTheme(t) {
     document.documentElement.dataset.theme = t;
     try { localStorage.setItem('st-theme', t); } catch { /* sin almacenamiento: solo esta sesión */ }
-    $('#st-theme').innerHTML = SVGI(t === 'light' ? 'moon' : 'sun', 16);
+    const tb = $('#st-theme'); tb.querySelector('svg.st-i')?.remove(); tb.insertAdjacentHTML('afterbegin', SVGI(t === 'light' ? 'moon' : 'sun', 16));
   }
   $('#st-theme').addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'));
   paintIcons();
@@ -2726,6 +2870,16 @@
   $('#st-check').addEventListener('click', () => { const w = winById('check'); if (w) closeWin(w); else { runCheck(); openCheck(); } });
   $('#st-devices').addEventListener('click', () => { const w = winById('devices'); if (w) closeWin(w); else openDevices(); });
   $('#st-play').addEventListener('click', () => setPlay(!S.play));
+  $('#st-cmd').addEventListener('click', openPalette);
+  $('#st-dock-cmd').addEventListener('click', openPalette);
+  $('#st-templates').addEventListener('click', openTemplates);
+  $('#st-keys').addEventListener('click', openKeys);
+  $('#st-dock-insert').addEventListener('click', () => { if (document.body.clientWidth <= 760) mDrawer('insert'); else switchTab('insert'); });
+  $('#st-more').addEventListener('click', (e) => { e.stopPropagation(); toggleMore(); });
+  $('#st-more-menu').addEventListener('click', () => toggleMore(false));
+  document.addEventListener('mousedown', (e) => { if (!e.target.closest('.st-more-wrap')) toggleMore(false); });
+  // el dock flota sobre el lienzo: sus clics no seleccionan ni desplazan
+  for (const ev of ['mousedown', 'dblclick', 'wheel', 'touchstart', 'touchmove', 'touchend']) $('#st-dock').addEventListener(ev, (e) => e.stopPropagation(), { passive: true });
   $('#st-iconq').addEventListener('input', renderIcons);
   window.addEventListener('resize', () => drawOverlay());
   new ResizeObserver(() => { if (S.needFit && S.scene) fitView(); }).observe(canvas);
@@ -2740,6 +2894,7 @@
     await fetch('/assets/rbx_assets.json').then((r) => (r.ok ? r.json() : {})).then((m) => R.setAssets(m)).catch(() => {});
     api('/api/icons').then((l) => { S.icons = l; renderIcons(); });
     api('/api/resources').then((l) => { S.resources = l; }).catch(() => {});
+    api('/api/templates').then((l) => { S.templates = l; }).catch(() => {});
     api('/api/backgrounds').then((l) => { S.backgrounds = l; if (!S.sel.length) renderProps(); }).catch(() => {});
     await document.fonts.ready;
     let want = new URLSearchParams(location.search).get('scene');
@@ -2752,5 +2907,5 @@
   })().catch((e) => { hideSplash(); status(String(e.message || e), true); showEmpty('error', String(e.message || e)); });
   setTimeout(hideSplash, 8000);
 
-  window.RBXStudio = { S, node, refresh, save, loadScene, openWin, toast, openExamples, openMcp, openStudio, showEmpty, openPhone };   // depuración
+  window.RBXStudio = { S, node, refresh, save, loadScene, openWin, toast, openExamples, openMcp, openStudio, showEmpty, openPhone, openPalette, openTemplates, openKeys };   // depuración
 })();
