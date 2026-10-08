@@ -16,6 +16,12 @@ A Figma-like editor where **AIs and people design Roblox UI as real Instances**.
   - Preview of **9-slice** and **AutomaticSize** (text measured with the real font).
 - **Runtime** (`runtime/RbxUINative.client.luau`): plays `interactions` (open/close/toggle windows with animations) and `buttonFx` (hover/press scale) in the game.
 
+## What's new in RbxUI Studio 2
+
+Floating panels, a tool dock at the bottom of the canvas, a **command palette (Ctrl+K)**, **templates** (the repo's example UIs as new screens),
+a dot-grid canvas that follows zoom, class-colored layer icons, a shortcuts sheet (`?`), and a Home page with "start from a template".
+Guide to the design tools: [../rbxui/editor.md](../rbxui/editor.md).
+
 ## Install
 
 Requires **Node.js 20+** and Google Chrome (or Playwright's Chromium).
