@@ -37,4 +37,17 @@ In practice that's **≥ 44 × 44 px** on a phone-sized viewport (Apple HIG valu
 
 - Studio **Device Emulator** (phones/tablets/console) and **Controller Emulator**.
 - Real phones: text that is crisp at 1440p can be unreadable on a cheap phone — test legibility at arm's length.
-- RbxUI Studio: set the scene size to a phone resolution (e.g. 844×390) in the ScreenGui panel and render again.
+- RbxUI Studio: open the **device view** (top bar) — it re-lays the scene at phone/tablet/PC/TV sizes, marks the thumb zones and flags text under 9 px and tap targets under 44 px.
+
+### The phone math of a scaled design
+
+If the whole UI is scaled with one `UIScale = min(W / 1280, H / 720)` (what RbxUI's runtime does with `autoScale`), a landscape phone
+of 844×390 points gets **×0.54**. Every size in the design shrinks by that factor, so on a 1280×720 canvas:
+
+| You want on the phone | Design it at |
+|---|---|
+| text ≥ 9 px (Roblox's readability floor) | **≥ 17 px** |
+| tap target ≥ 44 px (⚠️ Apple HIG value) | **≥ 82 px** |
+| 8 px between targets | ≥ 15 px |
+
+Small phones (667×375) scale ×0.52 — the same numbers still hold within a pixel.

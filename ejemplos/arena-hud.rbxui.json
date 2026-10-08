@@ -627,7 +627,7 @@
          "props": {
           "BackgroundTransparency": 1,
           "Text": "Win a duel",
-          "TextSize": 16,
+          "TextSize": 17,
           "TextColor3": "#FFFFFF",
           "FontFace": {
            "family": "Montserrat",
@@ -801,7 +801,7 @@
          "props": {
           "BackgroundTransparency": 1,
           "Text": "Get 5 eliminations",
-          "TextSize": 16,
+          "TextSize": 17,
           "TextColor3": "#FFFFFF",
           "FontFace": {
            "family": "Montserrat",
@@ -975,7 +975,7 @@
          "props": {
           "BackgroundTransparency": 1,
           "Text": "Throw a grenade",
-          "TextSize": 16,
+          "TextSize": 17,
           "TextColor3": "#FFFFFF",
           "FontFace": {
            "family": "Montserrat",
@@ -1070,7 +1070,7 @@
          "props": {
           "BackgroundTransparency": 1,
           "Text": "🔑 x3",
-          "TextSize": 16,
+          "TextSize": 17,
           "TextColor3": "#FFD84D",
           "FontFace": {
            "family": "Montserrat",
@@ -1878,7 +1878,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "F",
-              "TextSize": 16,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2077,7 +2077,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Q",
-              "TextSize": 16,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2595,7 +2595,7 @@
            "props": {
             "BackgroundTransparency": 1,
             "Text": "1",
-            "TextSize": 15,
+            "TextSize": 17,
             "TextColor3": "#FFFFFF",
             "FontFace": {
              "family": "Montserrat",
@@ -2604,15 +2604,15 @@
             },
             "Position": [
              0,
-             6,
+             5,
              0,
-             2
+             1
             ],
             "Size": [
              0,
-             16,
+             18,
              0,
-             18
+             20
             ],
             "TextXAlignment": "Left"
            },
@@ -2696,7 +2696,7 @@
            "props": {
             "BackgroundTransparency": 1,
             "Text": "2",
-            "TextSize": 15,
+            "TextSize": 17,
             "TextColor3": "#FFFFFF",
             "FontFace": {
              "family": "Montserrat",
@@ -2705,15 +2705,15 @@
             },
             "Position": [
              0,
-             6,
+             5,
              0,
-             2
+             1
             ],
             "Size": [
              0,
-             16,
+             18,
              0,
-             18
+             20
             ],
             "TextXAlignment": "Left"
            },
@@ -2797,7 +2797,7 @@
            "props": {
             "BackgroundTransparency": 1,
             "Text": "3",
-            "TextSize": 15,
+            "TextSize": 17,
             "TextColor3": "#FFFFFF",
             "FontFace": {
              "family": "Montserrat",
@@ -2806,15 +2806,15 @@
             },
             "Position": [
              0,
-             6,
+             5,
              0,
-             2
+             1
             ],
             "Size": [
              0,
-             16,
+             18,
              0,
-             18
+             20
             ],
             "TextXAlignment": "Left"
            },
@@ -2985,7 +2985,7 @@
          "props": {
           "BackgroundTransparency": 1,
           "Text": "M",
-          "TextSize": 15,
+          "TextSize": 17,
           "TextColor3": "#FFFFFF",
           "FontFace": {
            "family": "Montserrat",

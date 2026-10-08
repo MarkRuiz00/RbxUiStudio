@@ -2907,5 +2907,5 @@
   })().catch((e) => { hideSplash(); status(String(e.message || e), true); showEmpty('error', String(e.message || e)); });
   setTimeout(hideSplash, 8000);
 
-  window.RBXStudio = { S, node, refresh, save, loadScene, openWin, toast, openExamples, openMcp, openStudio, showEmpty, openPhone, openPalette, openTemplates, openKeys };   // depuración
+  window.RBXStudio = { S, node, refresh, save, loadScene, openWin, toast, openExamples, openMcp, openStudio, showEmpty, openPhone, openPalette, openTemplates, openKeys, setSel, fitView, openDevices, switchTab };   // depuración
 })();

@@ -580,9 +580,9 @@
             ],
             "Size": [
              0,
-             20,
+             22,
              0,
-             20
+             22
             ],
             "BackgroundColor3": "#7CF05A"
            },
@@ -602,7 +602,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "✓",
-              "TextSize": 16,
+              "TextSize": 17,
               "TextColor3": "#0B3D12",
               "FontFace": {
                "family": "FredokaOne",
@@ -699,9 +699,9 @@
             ],
             "Size": [
              0,
-             20,
+             22,
              0,
-             20
+             22
             ],
             "BackgroundColor3": "#7CF05A"
            },
@@ -721,7 +721,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "✓",
-              "TextSize": 16,
+              "TextSize": 17,
               "TextColor3": "#0B3D12",
               "FontFace": {
                "family": "FredokaOne",
@@ -818,9 +818,9 @@
             ],
             "Size": [
              0,
-             20,
+             22,
              0,
-             20
+             22
             ],
             "BackgroundColor3": "#7CF05A"
            },
@@ -840,7 +840,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "✓",
-              "TextSize": 16,
+              "TextSize": 17,
               "TextColor3": "#0B3D12",
               "FontFace": {
                "family": "FredokaOne",

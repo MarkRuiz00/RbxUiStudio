@@ -216,7 +216,7 @@
          "props": {
           "BackgroundTransparency": 1,
           "Text": "All fish  162 / 284",
-          "TextSize": 16,
+          "TextSize": 17,
           "TextColor3": "#FFFFFF",
           "FontFace": {
            "family": "Montserrat",
@@ -967,7 +967,7 @@
              1,
              0,
              0,
-             26
+             28
             ],
             "BackgroundColor3": "#9AA3B2"
            },
@@ -988,7 +988,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Reef Darter",
-              "TextSize": 14,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -1119,7 +1119,7 @@
              1,
              0,
              0,
-             26
+             28
             ],
             "BackgroundColor3": "#4FD162"
            },
@@ -1140,7 +1140,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Puff Bun",
-              "TextSize": 14,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -1271,7 +1271,7 @@
              1,
              0,
              0,
-             26
+             28
             ],
             "BackgroundColor3": "#3BA1FF"
            },
@@ -1292,7 +1292,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Ink Lancer",
-              "TextSize": 14,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -1423,7 +1423,7 @@
              1,
              0,
              0,
-             26
+             28
             ],
             "BackgroundColor3": "#B04BFF"
            },
@@ -1444,7 +1444,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Glow Octopus",
-              "TextSize": 14,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -1687,7 +1687,7 @@
              1,
              0,
              0,
-             26
+             28
             ],
             "BackgroundColor3": "#3BA1FF"
            },
@@ -1708,7 +1708,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Tide Shark",
-              "TextSize": 14,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -1951,7 +1951,7 @@
              1,
              0,
              0,
-             26
+             28
             ],
             "BackgroundColor3": "#FFB020"
            },
@@ -1972,7 +1972,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Old Whale",
-              "TextSize": 14,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2370,8 +2370,8 @@
          "Name": "Facts",
          "props": {
           "BackgroundTransparency": 1,
-          "Text": "Best: 5.8 kg  ·  Night  ·  Rain",
-          "TextSize": 14,
+          "Text": "5.8 kg · Night · Rain",
+          "TextSize": 17,
           "TextColor3": "#AEB6C8",
           "FontFace": {
            "family": "Montserrat",
@@ -2455,9 +2455,9 @@
            "props": {
             "CellSize": [
              0,
-             98,
+             100,
              0,
-             28
+             30
             ],
             "CellPadding": [
              0,
@@ -2500,7 +2500,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Ghost",
-              "TextSize": 13,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2559,7 +2559,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Albino",
-              "TextSize": 13,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2617,8 +2617,8 @@
              "Name": "Label",
              "props": {
               "BackgroundTransparency": 1,
-              "Text": "Radioactive",
-              "TextSize": 13,
+              "Text": "Toxic",
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2677,7 +2677,7 @@
              "props": {
               "BackgroundTransparency": 1,
               "Text": "Midnight",
-              "TextSize": 13,
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2735,8 +2735,8 @@
              "Name": "Label",
              "props": {
               "BackgroundTransparency": 1,
-              "Text": "Fairy Dust",
-              "TextSize": 13,
+              "Text": "Fairy",
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",
@@ -2794,8 +2794,8 @@
              "Name": "Label",
              "props": {
               "BackgroundTransparency": 1,
-              "Text": "Gemstone",
-              "TextSize": 13,
+              "Text": "Gem",
+              "TextSize": 17,
               "TextColor3": "#FFFFFF",
               "FontFace": {
                "family": "Montserrat",

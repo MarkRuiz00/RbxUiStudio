@@ -769,3 +769,4 @@ body.st .st-cmd { width: min(400px, 100%); min-width: 40px; }
 @media (max-width: 1440px) { #st-status { display: block; } }
 @media (max-width: 1100px) { #st-status { display: none; } }
 body.st .st-tpl { justify-content: flex-start; }
+body.st .st-dev-issue { justify-content: flex-start; height: auto; min-height: 30px; }

@@ -14,6 +14,7 @@ Run through this before calling a screen done. Render it (`rbxui_render`) at the
 ## Touch & readability
 - [ ] Touch targets **≥ 44 × 44 px** at phone size, ≥ 8 px apart (WCAG ~9 mm guideline; 44 px is the Apple HIG value — ⚠️ not a Roblox constant).
 - [ ] No text below **9 px** (`UITextSizeConstraint.MinTextSize ≥ 9` when `TextScaled`). → [text](roblox-ui/text.md)
+- [ ] With autoscale on a 1280×720 design, **text ≥ 17 px** and **tap targets ≥ 82 px**: an 844×390 phone scales everything by ×0.54 (17 → 9.2 px, 82 → 44 px). RbxUI Studio's **device view** flags both.
 - [ ] Text over textures/gradients has an outline (`UIStroke` Contextual) or a plate.
 - [ ] Contrast ≈ **4.5:1** for small text, **3:1** for large bold text (WCAG).
 - [ ] Labels have ~30 % spare width for translations (or use `AutomaticSize`).
