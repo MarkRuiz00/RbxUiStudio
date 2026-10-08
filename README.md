@@ -24,7 +24,7 @@ A skill (knowledge pack) + <b>RbxUI Studio</b>, a Figma-like editor with an MCP 
 Ask an AI for a Roblox shop and you usually get pixel offsets that break on phones, flat colors, no hierarchy and text nobody can read.
 RbxUiStudio fixes it from both sides:
 
-| | |
+| Part | What it is |
 |---|---|
 | 🧠 **Knowledge** | [`SKILL.md`](SKILL.md) + guides: engine fundamentals checked against [create.roblox.com/docs](https://create.roblox.com/docs), four style families, a final checklist, and **teardowns of 20 hit games** (Grow a Garden, Pet Simulator 99, Adopt Me!, Blox Fruits, RIVALS, DOORS…) with screen maps, sampled palettes and the 16 conventions they all share. |
 | 🎨 **RbxUI Studio** | The AI writes a JSON tree of **real Roblox Instances** (`rbxui`), sees it exactly as Roblox lays it out, iterates on the render and installs it in Studio — images uploaded, no API key. Humans get a Figma-style editor on top of the same file. |
