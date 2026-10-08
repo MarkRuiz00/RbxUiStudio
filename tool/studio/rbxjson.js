@@ -77,10 +77,8 @@
     TitilliumWeb: 'Titillium Web', Ubuntu: 'Ubuntu', AmaticSC: 'Amatic SC', Inconsolata: 'Inconsolata', PatrickHand: 'Patrick Hand',
     JosefinSans: 'Josefin Sans', Fondamento: 'Fondamento', GrenzeGotisch: 'Grenze Gotisch', Balthazar: 'Balthazar', Zekton: 'Oxanium',
     ComicNeueAngular: 'Comic Neue', AccanthisADFStd: 'Merriweather', Guru: 'Nunito', HighwayGothic: 'Oswald', RomanAntique: 'Merriweather' };
-  const FONT_URL = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&family=Fredoka:wght@300..700'
-    + '&family=Luckiest+Guy&family=Bangers&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Roboto:wght@100..900&family=Roboto+Mono'
-    + '&family=Oswald:wght@200..700&family=Nunito:wght@200..1000&family=Arimo:wght@400..700&family=Press+Start+2P&family=Creepster&family=Denk+One'
-    + '&family=Permanent+Marker&family=Titillium+Web:wght@200..900&family=Ubuntu:wght@300..700&family=Amatic+SC:wght@400;700&family=Jura:wght@300..700&display=swap';
+  // todas las familias de CSS_FAMILY (editor, render del servidor y visor usan esta misma lista)
+  const FONT_URL = 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&family=Fredoka:wght@300..700&family=Luckiest+Guy&family=Bangers&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Roboto:wght@100..900&family=Roboto+Mono&family=Oswald:wght@200..700&family=Nunito:wght@200..1000&family=Arimo:wght@400..700&family=Press+Start+2P&family=Creepster&family=Denk+One&family=Permanent+Marker&family=Titillium+Web:wght@200..900&family=Ubuntu:wght@300..700&family=Amatic+SC:wght@400;700&family=Jura:wght@300..700&family=Patrick+Hand&family=Kalam&family=Indie+Flower&family=Merriweather&family=Michroma&family=Special+Elite&family=Josefin+Sans&family=Oxanium&family=Comic+Neue&family=Inconsolata&family=Roboto+Condensed&family=Sarpanch&family=Fondamento&family=Grenze+Gotisch&family=Balthazar&display=swap';
   // Fuentes de la Creator Store de Roblox (FontFamily por id): Font.new("rbxassetid://ID"). id -> nombre de Google Fonts
   const ASSET_FONTS = { 12187371840: 'Silkscreen', 12187607722: 'Damion', 12187370000: 'Bungee Inline', 12187375716: 'Finger Paint', 12187372629: 'Mulish',
     12187377099: 'Cairo', 11702779517: 'Montserrat', 12187372382: 'Eater', 11322590111: 'Fuzzy Bubbles', 12187377325: 'Nosifer', 12187376545: 'Tangerine',

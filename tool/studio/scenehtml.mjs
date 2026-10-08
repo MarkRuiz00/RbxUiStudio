@@ -1,12 +1,14 @@
 // Página exportable de una escena: la misma que ve el editor, con data-rbx para export.mjs.
 // Escenas nativas (rbxui): carga rbxjson.js + fuentes de Roblox y pinta las Instances tal cual.
+import { createRequire } from 'module';
+const { FONT_URL } = createRequire(import.meta.url)('./rbxjson.js');
 const safe = (s) => String(s || '').replace(/[^\w-]/g, '');
 
 export function sceneHtml(scene) {
   const name = safe(scene.name);
   const data = JSON.stringify(scene).replace(/</g, '\\u003c');
   const fonts = scene.native
-    ? 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&family=Fredoka:wght@300..700&family=Luckiest+Guy&family=Bangers&family=Source+Sans+3:wght@200..900&family=Roboto:wght@100..900&family=Oswald:wght@200..700&family=Nunito:wght@200..1000&family=Arimo:wght@400..700&family=Press+Start+2P&display=swap'
+    ? FONT_URL
     : 'https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap';
   return `<!doctype html>
 <html><head><meta charset="utf-8"><title>${name} (RbxUI Studio)</title>

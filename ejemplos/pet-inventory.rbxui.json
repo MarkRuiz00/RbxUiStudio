@@ -1,0 +1,4132 @@
+{
+ "format": "rbxui",
+ "version": 1,
+ "name": "PetInventoryScreen",
+ "screens": [
+  {
+   "ClassName": "ScreenGui",
+   "Name": "PetInventoryScreen",
+   "design": {
+    "width": 1280,
+    "height": 720,
+    "autoScale": true,
+    "background": "grass"
+   },
+   "props": {
+    "ResetOnSpawn": false,
+    "ZIndexBehavior": "Sibling"
+   },
+   "children": [
+    {
+     "ClassName": "Frame",
+     "Name": "Gift",
+     "props": {
+      "Position": [
+       0,
+       18,
+       0,
+       74
+      ],
+      "Size": [
+       0,
+       70,
+       0,
+       74
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "TextLabel",
+       "Name": "Icon",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "🎁",
+        "TextSize": 46,
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "TextColor3": "#FFFFFF",
+        "Size": [
+         1,
+         0,
+         0,
+         52
+        ]
+       }
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Timer",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "03:52",
+        "TextSize": 18,
+        "TextColor3": "#FFFFFF",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "Position": [
+         0,
+         0,
+         0,
+         50
+        ],
+        "Size": [
+         1,
+         0,
+         0,
+         22
+        ]
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 2.5,
+          "Color": "#1D2340"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "Currencies",
+     "props": {
+      "AnchorPoint": [
+       0,
+       0.5
+      ],
+      "Position": [
+       0,
+       18,
+       0.5,
+       0
+      ],
+      "Size": [
+       0,
+       220,
+       0,
+       100
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "UIListLayout",
+       "Name": "List",
+       "props": {
+        "FillDirection": "Vertical",
+        "SortOrder": "LayoutOrder",
+        "Padding": [
+         0,
+         6
+        ]
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Coins",
+       "props": {
+        "LayoutOrder": 1,
+        "Size": [
+         1,
+         0,
+         0,
+         46
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Horizontal",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           8
+          ],
+          "VerticalAlignment": "Center"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🪙",
+          "TextSize": 34,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "LayoutOrder": 1,
+          "Size": [
+           0,
+           40,
+           0,
+           40
+          ]
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Amount",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "7.59k",
+          "TextSize": 34,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "LayoutOrder": 2,
+          "Size": [
+           0,
+           160,
+           1,
+           0
+          ],
+          "TextXAlignment": "Left"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Diamonds",
+       "props": {
+        "LayoutOrder": 2,
+        "Size": [
+         1,
+         0,
+         0,
+         46
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Horizontal",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           8
+          ],
+          "VerticalAlignment": "Center"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "💎",
+          "TextSize": 34,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "LayoutOrder": 1,
+          "Size": [
+           0,
+           40,
+           0,
+           40
+          ]
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Amount",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "73,748",
+          "TextSize": 34,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "LayoutOrder": 2,
+          "Size": [
+           0,
+           160,
+           1,
+           0
+          ],
+          "TextXAlignment": "Left"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "Quests",
+     "props": {
+      "AnchorPoint": [
+       1,
+       0
+      ],
+      "Position": [
+       1,
+       -18,
+       0,
+       74
+      ],
+      "Size": [
+       0,
+       280,
+       0,
+       300
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "UIListLayout",
+       "Name": "List",
+       "props": {
+        "FillDirection": "Vertical",
+        "SortOrder": "LayoutOrder",
+        "Padding": [
+         0,
+         6
+        ],
+        "HorizontalAlignment": "Right"
+       }
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Rank",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "Rebirth 2 · Rank 6 - Pro",
+        "TextSize": 18,
+        "TextColor3": "#FFD84D",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "LayoutOrder": 0,
+        "Size": [
+         1,
+         0,
+         0,
+         22
+        ],
+        "TextXAlignment": "Right"
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 2.5,
+          "Color": "#1D2340"
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Q1",
+       "props": {
+        "LayoutOrder": 1,
+        "Size": [
+         1,
+         0,
+         0,
+         48
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "TextLabel",
+         "Name": "Title",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "Earn 500 Diamonds",
+          "TextSize": 20,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           0,
+           24
+          ],
+          "TextXAlignment": "Right"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Progress",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "101 / 500 💎",
+          "TextSize": 20,
+          "TextColor3": "#5FE3FF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Position": [
+           0,
+           0,
+           0,
+           24
+          ],
+          "Size": [
+           1,
+           0,
+           0,
+           24
+          ],
+          "TextXAlignment": "Right"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Q2",
+       "props": {
+        "LayoutOrder": 2,
+        "Size": [
+         1,
+         0,
+         0,
+         48
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "TextLabel",
+         "Name": "Title",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "Break 500 Breakables",
+          "TextSize": 20,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           0,
+           24
+          ],
+          "TextXAlignment": "Right"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Progress",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "0 / 500",
+          "TextSize": 20,
+          "TextColor3": "#5FE3FF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Position": [
+           0,
+           0,
+           0,
+           24
+          ],
+          "Size": [
+           1,
+           0,
+           0,
+           24
+          ],
+          "TextXAlignment": "Right"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Q3",
+       "props": {
+        "LayoutOrder": 3,
+        "Size": [
+         1,
+         0,
+         0,
+         48
+        ],
+        "BackgroundTransparency": 1
+       },
+       "children": [
+        {
+         "ClassName": "TextLabel",
+         "Name": "Title",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "Collect 16 Potions",
+          "TextSize": 20,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           0,
+           24
+          ],
+          "TextXAlignment": "Right"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Progress",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "0 / 16",
+          "TextSize": 20,
+          "TextColor3": "#5FE3FF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Position": [
+           0,
+           0,
+           0,
+           24
+          ],
+          "Size": [
+           1,
+           0,
+           0,
+           24
+          ],
+          "TextXAlignment": "Right"
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Rewards",
+       "props": {
+        "LayoutOrder": 4,
+        "Size": [
+         0,
+         180,
+         0,
+         50
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           14
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#A6FF4D"
+           ],
+           [
+            1,
+            "#4CCB14"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Label",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🎁 Rewards",
+          "TextSize": 26,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 3,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.05,
+        "press": 0.92
+       }
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "InventoryWindow",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       0.5
+      ],
+      "Position": [
+       0.5,
+       0,
+       0.53,
+       0
+      ],
+      "Size": [
+       0,
+       700,
+       0,
+       430
+      ],
+      "BackgroundColor3": "#FFFFFF"
+     },
+     "children": [
+      {
+       "ClassName": "UICorner",
+       "Name": "Corner",
+       "props": {
+        "CornerRadius": [
+         0,
+         20
+        ]
+       }
+      },
+      {
+       "ClassName": "UIStroke",
+       "Name": "Stroke",
+       "props": {
+        "Thickness": 4,
+        "Color": "#1D2340"
+       }
+      },
+      {
+       "ClassName": "ImageLabel",
+       "Name": "Pattern",
+       "props": {
+        "Size": [
+         1,
+         0,
+         1,
+         0
+        ],
+        "BackgroundTransparency": 1,
+        "Image": "assets/ui-resources/Textures/SVG/1003_Outline_Hexagon_Pattern.png",
+        "ScaleType": "Tile",
+        "TileSize": [
+         0,
+         72,
+         0,
+         72
+        ],
+        "ImageColor3": "#9AA3C4",
+        "ImageTransparency": 0.9
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "TitleIcon",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0.5
+        ],
+        "Position": [
+         0,
+         18,
+         0,
+         0
+        ],
+        "Size": [
+         0,
+         86,
+         0,
+         86
+        ],
+        "Rotation": -8,
+        "BackgroundColor3": "#FFFFFF",
+        "ZIndex": 2
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           22
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#7FE7FF"
+           ],
+           [
+            1,
+            "#3B6CF6"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 4,
+          "Color": "#1D2340"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🎒",
+          "TextSize": 50,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ],
+          "ZIndex": 2
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Title",
+       "props": {
+        "BackgroundTransparency": 1,
+        "Text": "Inventory!",
+        "TextSize": 46,
+        "TextColor3": "#FFFFFF",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "AnchorPoint": [
+         0,
+         0.5
+        ],
+        "Position": [
+         0,
+         66,
+         0,
+         0
+        ],
+        "Size": [
+         0,
+         250,
+         0,
+         56
+        ],
+        "TextXAlignment": "Left",
+        "ZIndex": 2
+       },
+       "children": [
+        {
+         "ClassName": "UIStroke",
+         "Name": "Outline",
+         "props": {
+          "Thickness": 4,
+          "Color": "#1D2340"
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Filter",
+       "props": {
+        "AnchorPoint": [
+         0,
+         0.5
+        ],
+        "Position": [
+         0,
+         318,
+         0,
+         0
+        ],
+        "Size": [
+         0,
+         138,
+         0,
+         42
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "ZIndex": 2
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0.5,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Stroke",
+         "props": {
+          "Thickness": 3,
+          "Color": "#1D2340"
+         }
+        },
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Horizontal",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           0
+          ],
+          "HorizontalAlignment": "Center",
+          "VerticalAlignment": "Center"
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Locked",
+         "props": {
+          "LayoutOrder": 0,
+          "Size": [
+           0,
+           42,
+           0,
+           38
+          ],
+          "BackgroundTransparency": 1,
+          "Text": "🔒",
+          "TextSize": 22,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "ZIndex": 2
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pets",
+         "props": {
+          "LayoutOrder": 1,
+          "Size": [
+           0,
+           42,
+           0,
+           38
+          ],
+          "BackgroundTransparency": 1,
+          "Text": "🐾",
+          "TextSize": 22,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "ZIndex": 2
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Items",
+         "props": {
+          "LayoutOrder": 2,
+          "Size": [
+           0,
+           42,
+           0,
+           38
+          ],
+          "BackgroundTransparency": 1,
+          "Text": "🧩",
+          "TextSize": 22,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "ZIndex": 2
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "TextBox",
+       "Name": "Search",
+       "props": {
+        "AnchorPoint": [
+         0,
+         0.5
+        ],
+        "Position": [
+         0,
+         468,
+         0,
+         0
+        ],
+        "Size": [
+         0,
+         160,
+         0,
+         42
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "PlaceholderText": "Search",
+        "PlaceholderColor3": "#9AA0B4",
+        "TextColor3": "#1D2340",
+        "TextSize": 20,
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        },
+        "TextXAlignment": "Left",
+        "ClearTextOnFocus": false,
+        "ZIndex": 2
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0.5,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "UIPadding",
+         "Name": "Padding",
+         "props": {
+          "PaddingTop": [
+           0,
+           0
+          ],
+          "PaddingRight": [
+           0,
+           16
+          ],
+          "PaddingBottom": [
+           0,
+           0
+          ],
+          "PaddingLeft": [
+           0,
+           16
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Close",
+       "props": {
+        "AnchorPoint": [
+         1,
+         0.5
+        ],
+        "Position": [
+         1,
+         14,
+         0,
+         0
+        ],
+        "Size": [
+         0,
+         54,
+         0,
+         54
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false,
+        "ZIndex": 2
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           16
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FF5C8A"
+           ],
+           [
+            1,
+            "#E8174E"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 4,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "X",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "X",
+          "TextSize": 30,
+          "TextColor3": "#FFFFFF",
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         },
+         "children": [
+          {
+           "ClassName": "UIStroke",
+           "Name": "Outline",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#1D2340"
+           }
+          }
+         ]
+        }
+       ],
+       "interactions": [
+        {
+         "trigger": "click",
+         "action": "close",
+         "target": "InventoryWindow"
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.08,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextLabel",
+       "Name": "Team",
+       "props": {
+        "AnchorPoint": [
+         0.5,
+         0
+        ],
+        "Position": [
+         0.5,
+         36,
+         0,
+         36
+        ],
+        "Size": [
+         0,
+         300,
+         0,
+         30
+        ],
+        "BackgroundTransparency": 1,
+        "RichText": true,
+        "Text": "Your Team <font color=\"#26B5E8\">16/20</font>",
+        "TextSize": 24,
+        "TextColor3": "#3A4166",
+        "FontFace": {
+         "family": "FredokaOne",
+         "weight": "Regular",
+         "style": "Normal"
+        }
+       }
+      },
+      {
+       "ClassName": "Frame",
+       "Name": "Categories",
+       "props": {
+        "Position": [
+         0,
+         14,
+         0,
+         40
+        ],
+        "Size": [
+         0,
+         66,
+         1,
+         -54
+        ],
+        "BackgroundColor3": "#EEF1F7"
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           16
+          ]
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 2,
+          "Color": "#D3D8E6",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "UIListLayout",
+         "Name": "List",
+         "props": {
+          "FillDirection": "Vertical",
+          "SortOrder": "LayoutOrder",
+          "Padding": [
+           0,
+           8
+          ],
+          "HorizontalAlignment": "Center"
+         }
+        },
+        {
+         "ClassName": "UIPadding",
+         "Name": "Padding",
+         "props": {
+          "PaddingTop": [
+           0,
+           10
+          ],
+          "PaddingRight": [
+           0,
+           0
+          ],
+          "PaddingBottom": [
+           0,
+           10
+          ],
+          "PaddingLeft": [
+           0,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cat1",
+         "props": {
+          "LayoutOrder": 1,
+          "Size": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "BackgroundColor3": "#FFFFFF",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             12
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Border",
+           "props": {
+            "Thickness": 3,
+            "Color": "#1D2340",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐾",
+            "TextSize": 26,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cat2",
+         "props": {
+          "LayoutOrder": 2,
+          "Size": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "BackgroundColor3": "#F6F7FB",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             12
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Border",
+           "props": {
+            "Thickness": 2,
+            "Color": "#C9CFDE",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🎒",
+            "TextSize": 26,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Badge",
+           "props": {
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             1,
+             -4,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             24,
+             0,
+             24
+            ],
+            "BackgroundColor3": "#F71053",
+            "ZIndex": 3
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Count",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Text": "4",
+              "TextSize": 15,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "ZIndex": 3
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cat3",
+         "props": {
+          "LayoutOrder": 3,
+          "Size": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "BackgroundColor3": "#F6F7FB",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             12
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Border",
+           "props": {
+            "Thickness": 2,
+            "Color": "#C9CFDE",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🧪",
+            "TextSize": 26,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Badge",
+           "props": {
+            "AnchorPoint": [
+             0.5,
+             0.5
+            ],
+            "Position": [
+             1,
+             -4,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             24,
+             0,
+             24
+            ],
+            "BackgroundColor3": "#F71053",
+            "ZIndex": 3
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            },
+            {
+             "ClassName": "TextLabel",
+             "Name": "Count",
+             "props": {
+              "BackgroundTransparency": 1,
+              "Text": "1",
+              "TextSize": 15,
+              "TextColor3": "#FFFFFF",
+              "FontFace": {
+               "family": "FredokaOne",
+               "weight": "Regular",
+               "style": "Normal"
+              },
+              "Size": [
+               1,
+               0,
+               1,
+               0
+              ],
+              "ZIndex": 3
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cat4",
+         "props": {
+          "LayoutOrder": 4,
+          "Size": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "BackgroundColor3": "#F6F7FB",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             12
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Border",
+           "props": {
+            "Thickness": 2,
+            "Color": "#C9CFDE",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "📕",
+            "TextSize": 26,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cat5",
+         "props": {
+          "LayoutOrder": 5,
+          "Size": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "BackgroundColor3": "#F6F7FB",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             12
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Border",
+           "props": {
+            "Thickness": 2,
+            "Color": "#C9CFDE",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🥚",
+            "TextSize": 26,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Cat6",
+         "props": {
+          "LayoutOrder": 6,
+          "Size": [
+           0,
+           48,
+           0,
+           48
+          ],
+          "BackgroundColor3": "#F6F7FB",
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0,
+             12
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Border",
+           "props": {
+            "Thickness": 2,
+            "Color": "#C9CFDE",
+            "ApplyStrokeMode": "Border"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🔒",
+            "TextSize": 26,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ]
+           }
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.05,
+          "press": 0.92
+         }
+        }
+       ]
+      },
+      {
+       "ClassName": "ScrollingFrame",
+       "Name": "Pets",
+       "props": {
+        "BackgroundTransparency": 1,
+        "BorderSizePixel": 0,
+        "ScrollBarThickness": 6,
+        "ScrollingDirection": "Y",
+        "AutomaticCanvasSize": "Y",
+        "CanvasSize": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "Position": [
+         0,
+         96,
+         0,
+         72
+        ],
+        "Size": [
+         1,
+         -110,
+         1,
+         -84
+        ],
+        "ScrollBarImageColor3": "#C9CFDE"
+       },
+       "children": [
+        {
+         "ClassName": "UIGridLayout",
+         "Name": "Grid",
+         "props": {
+          "CellSize": [
+           0,
+           68,
+           0,
+           68
+          ],
+          "CellPadding": [
+           0,
+           8,
+           0,
+           6
+          ],
+          "SortOrder": "LayoutOrder"
+         }
+        },
+        {
+         "ClassName": "UIPadding",
+         "Name": "Padding",
+         "props": {
+          "PaddingTop": [
+           0,
+           4
+          ],
+          "PaddingRight": [
+           0,
+           4
+          ],
+          "PaddingBottom": [
+           0,
+           4
+          ],
+          "PaddingLeft": [
+           0,
+           4
+          ]
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet1",
+         "props": {
+          "LayoutOrder": 1,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐶",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "42.2k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Star",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "⭐",
+            "TextSize": 18,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Position": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             22,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Equipped",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -2,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             16,
+             0,
+             16
+            ],
+            "BackgroundColor3": "#38E25D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet2",
+         "props": {
+          "LayoutOrder": 2,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐱",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "42.2k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Star",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "⭐",
+            "TextSize": 18,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Position": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             22,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Equipped",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -2,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             16,
+             0,
+             16
+            ],
+            "BackgroundColor3": "#38E25D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet3",
+         "props": {
+          "LayoutOrder": 3,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🦊",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "42.2k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Star",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "⭐",
+            "TextSize": 18,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Position": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             22,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Equipped",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -2,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             16,
+             0,
+             16
+            ],
+            "BackgroundColor3": "#38E25D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet4",
+         "props": {
+          "LayoutOrder": 4,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐲",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "38.9k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Star",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "⭐",
+            "TextSize": 18,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Position": [
+             0,
+             0,
+             0,
+             0
+            ],
+            "Size": [
+             0,
+             22,
+             0,
+             22
+            ]
+           }
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Equipped",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -2,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             16,
+             0,
+             16
+            ],
+            "BackgroundColor3": "#38E25D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet5",
+         "props": {
+          "LayoutOrder": 5,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🦄",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "38.9k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Equipped",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -2,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             16,
+             0,
+             16
+            ],
+            "BackgroundColor3": "#38E25D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet6",
+         "props": {
+          "LayoutOrder": 6,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐼",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "34.4k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          },
+          {
+           "ClassName": "Frame",
+           "Name": "Equipped",
+           "props": {
+            "AnchorPoint": [
+             1,
+             0
+            ],
+            "Position": [
+             1,
+             -2,
+             0,
+             4
+            ],
+            "Size": [
+             0,
+             16,
+             0,
+             16
+            ],
+            "BackgroundColor3": "#38E25D"
+           },
+           "children": [
+            {
+             "ClassName": "UICorner",
+             "Name": "Corner",
+             "props": {
+              "CornerRadius": [
+               0.5,
+               0
+              ]
+             }
+            },
+            {
+             "ClassName": "UIStroke",
+             "Name": "Stroke",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#FFFFFF"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet7",
+         "props": {
+          "LayoutOrder": 7,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐸",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "12k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet8",
+         "props": {
+          "LayoutOrder": 8,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐯",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "9.8k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet9",
+         "props": {
+          "LayoutOrder": 9,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐧",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "7.5k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet10",
+         "props": {
+          "LayoutOrder": 10,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐙",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "7.1k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet11",
+         "props": {
+          "LayoutOrder": 11,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🦁",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "5.6k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet12",
+         "props": {
+          "LayoutOrder": 12,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐰",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "2.2k",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet13",
+         "props": {
+          "LayoutOrder": 13,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐵",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "980",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet14",
+         "props": {
+          "LayoutOrder": 14,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐝",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "640",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet15",
+         "props": {
+          "LayoutOrder": 15,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐢",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "420",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        },
+        {
+         "ClassName": "TextButton",
+         "Name": "Pet16",
+         "props": {
+          "LayoutOrder": 16,
+          "BackgroundTransparency": 1,
+          "Text": "",
+          "AutoButtonColor": false
+         },
+         "children": [
+          {
+           "ClassName": "TextLabel",
+           "Name": "Icon",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "🐨",
+            "TextSize": 54,
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "TextColor3": "#FFFFFF",
+            "Size": [
+             1,
+             0,
+             1,
+             -8
+            ]
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Value",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "???",
+            "TextSize": 19,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "AnchorPoint": [
+             1,
+             1
+            ],
+            "Position": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "Size": [
+             1,
+             0,
+             0,
+             22
+            ],
+            "TextXAlignment": "Right"
+           },
+           "children": [
+            {
+             "ClassName": "UIStroke",
+             "Name": "Outline",
+             "props": {
+              "Thickness": 2.5,
+              "Color": "#1D2340"
+             }
+            }
+           ]
+          }
+         ],
+         "buttonFx": {
+          "hover": 1.1,
+          "press": 0.92
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "ClassName": "Frame",
+     "Name": "MainMenu",
+     "props": {
+      "AnchorPoint": [
+       0.5,
+       1
+      ],
+      "Position": [
+       0.5,
+       0,
+       1,
+       -14
+      ],
+      "Size": [
+       0,
+       520,
+       0,
+       76
+      ],
+      "BackgroundTransparency": 1
+     },
+     "children": [
+      {
+       "ClassName": "UIListLayout",
+       "Name": "List",
+       "props": {
+        "FillDirection": "Horizontal",
+        "SortOrder": "LayoutOrder",
+        "Padding": [
+         0,
+         14
+        ],
+        "HorizontalAlignment": "Center",
+        "VerticalAlignment": "Center"
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Menu1",
+       "props": {
+        "LayoutOrder": 1,
+        "Size": [
+         0,
+         70,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FFFFFF"
+           ],
+           [
+            1,
+            "#DCE3F2"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🎒",
+          "TextSize": 40,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         }
+        },
+        {
+         "ClassName": "Frame",
+         "Name": "Badge",
+         "props": {
+          "AnchorPoint": [
+           0.5,
+           0.5
+          ],
+          "Position": [
+           1,
+           -4,
+           0,
+           4
+          ],
+          "Size": [
+           0,
+           28,
+           0,
+           28
+          ],
+          "BackgroundColor3": "#F71053",
+          "ZIndex": 3
+         },
+         "children": [
+          {
+           "ClassName": "UICorner",
+           "Name": "Corner",
+           "props": {
+            "CornerRadius": [
+             0.5,
+             0
+            ]
+           }
+          },
+          {
+           "ClassName": "UIStroke",
+           "Name": "Stroke",
+           "props": {
+            "Thickness": 2.5,
+            "Color": "#FFFFFF"
+           }
+          },
+          {
+           "ClassName": "TextLabel",
+           "Name": "Count",
+           "props": {
+            "BackgroundTransparency": 1,
+            "Text": "5",
+            "TextSize": 15,
+            "TextColor3": "#FFFFFF",
+            "FontFace": {
+             "family": "FredokaOne",
+             "weight": "Regular",
+             "style": "Normal"
+            },
+            "Size": [
+             1,
+             0,
+             1,
+             0
+            ],
+            "ZIndex": 3
+           }
+          }
+         ]
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.1,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Menu2",
+       "props": {
+        "LayoutOrder": 2,
+        "Size": [
+         0,
+         70,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FFFFFF"
+           ],
+           [
+            1,
+            "#DCE3F2"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🧺",
+          "TextSize": 40,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.1,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Menu3",
+       "props": {
+        "LayoutOrder": 3,
+        "Size": [
+         0,
+         70,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FFFFFF"
+           ],
+           [
+            1,
+            "#DCE3F2"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🏅",
+          "TextSize": 40,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.1,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Menu4",
+       "props": {
+        "LayoutOrder": 4,
+        "Size": [
+         0,
+         70,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FFFFFF"
+           ],
+           [
+            1,
+            "#DCE3F2"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🔁",
+          "TextSize": 40,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.1,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Menu5",
+       "props": {
+        "LayoutOrder": 5,
+        "Size": [
+         0,
+         70,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FFFFFF"
+           ],
+           [
+            1,
+            "#DCE3F2"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "🛡️",
+          "TextSize": 40,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.1,
+        "press": 0.88
+       }
+      },
+      {
+       "ClassName": "TextButton",
+       "Name": "Menu6",
+       "props": {
+        "LayoutOrder": 6,
+        "Size": [
+         0,
+         70,
+         0,
+         70
+        ],
+        "BackgroundColor3": "#FFFFFF",
+        "Text": "",
+        "AutoButtonColor": false
+       },
+       "children": [
+        {
+         "ClassName": "UICorner",
+         "Name": "Corner",
+         "props": {
+          "CornerRadius": [
+           0,
+           20
+          ]
+         }
+        },
+        {
+         "ClassName": "UIGradient",
+         "Name": "Gradient",
+         "props": {
+          "Color": [
+           [
+            0,
+            "#FFFFFF"
+           ],
+           [
+            1,
+            "#DCE3F2"
+           ]
+          ],
+          "Rotation": 90
+         }
+        },
+        {
+         "ClassName": "UIStroke",
+         "Name": "Border",
+         "props": {
+          "Thickness": 3.5,
+          "Color": "#1D2340",
+          "ApplyStrokeMode": "Border"
+         }
+        },
+        {
+         "ClassName": "TextLabel",
+         "Name": "Icon",
+         "props": {
+          "BackgroundTransparency": 1,
+          "Text": "⚙️",
+          "TextSize": 40,
+          "FontFace": {
+           "family": "FredokaOne",
+           "weight": "Regular",
+           "style": "Normal"
+          },
+          "TextColor3": "#FFFFFF",
+          "Size": [
+           1,
+           0,
+           1,
+           0
+          ]
+         }
+        }
+       ],
+       "buttonFx": {
+        "hover": 1.1,
+        "press": 0.88
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

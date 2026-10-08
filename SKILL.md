@@ -1,6 +1,6 @@
 ---
 name: rbxui-studio
-description: Design high-quality Roblox game UI (shops, inventories, HUDs, settings menus, loading screens, reward popups) and build it as real Roblox Instances with RbxUI Studio, a "Figma for AI" editor. Use whenever the user asks to make, redesign, review or fix a Roblox interface, a ScreenGui, a menu or a button style, wants "simulator / cartoony / stud style" UI, mentions rbxui, RbxUI Studio, UDim2, AnchorPoint, UIListLayout, UIGradient or 9-slice, or wants a design pasted from Figma turned into Roblox UI.
+description: Design high-quality Roblox game UI (shops, inventories, HUDs, settings menus, loading screens, reward popups) and build it as real Roblox Instances with RbxUI Studio, a "Figma for AI" editor. Use whenever the user asks to make, redesign, review or fix a Roblox interface, a ScreenGui, a menu or a button style, wants "simulator / cartoony / stud style" UI, mentions rbxui, RbxUI Studio, UDim2, AnchorPoint, UIListLayout, UIGradient or 9-slice, wants a design pasted from Figma turned into Roblox UI, or asks for UI "like" a hit game (Grow a Garden, Pet Simulator 99, Adopt Me, Blox Fruits, Steal a Brainrot, RIVALS, DOORS, Brookhaven, Dress to Impress, Anime Vanguards, Fisch, 99 Nights, BedWars, Blade Ball, MM2).
 ---
 
 # RbxUI Studio — Roblox UI skill
@@ -18,12 +18,14 @@ Everything here was checked against the official Roblox docs (create.roblox.com/
 6. **Text stays readable**: `TextScaled` + `UITextSizeConstraint`, never below 9 px. → [roblox-ui/text.md](roblox-ui/text.md)
 7. **One style per game**: one palette, one corner radius, one stroke width, one font family. → [estilos/](estilos/README.md)
 8. **Textures are reused, color is separate**: one grayscale/alpha texture asset tinted with `ImageColor3` / `UIGradient`. → [roblox-ui/images.md](roblox-ui/images.md)
-9. **Look before you ship**: render, compare, run the [checklist](checklist.md).
+9. **Follow genre conventions**: players already know where the top games put money, menus, close and the hotbar. → [juegos/](juegos/README.md)
+10. **Look before you ship**: render, compare, run the [checklist](checklist.md).
 
 ## Workflow
 
 1. **Understand** the screen: who uses it, on what device (phone first), what is the one main action.
-2. **Pick a style** from [estilos/](estilos/README.md) (or the user's own examples via `rbxui_design_guide`).
+2. **Pick a style** from [estilos/](estilos/README.md) (or the user's own examples via `rbxui_design_guide`), and read how the
+   hit game of that genre lays it out in [juegos/](juegos/README.md). Asked for "like <game>"? Copy the **pattern**, never the art.
 3. **Read** [rbxui/format.md](rbxui/format.md) once, then write the scene as one `rbxui` document.
 4. **Save + preview** with the MCP: `rbxui_put_scene` → `rbxui_render` → look at the PNG → fix → repeat.
 5. **Check** with [checklist.md](checklist.md) (phone size, safe area, contrast, 44 px touch targets).
@@ -38,6 +40,7 @@ No MCP? Write the JSON and let the user paste it into the editor (Ctrl+V) — se
 | [roblox-ui/](roblox-ui/README.md) | Engine fundamentals: UDim2, AnchorPoint, constraints, layouts, modifiers, 9-slice, images, safe area, ZIndex, text, responsive |
 | [estilos/](estilos/README.md) | Style guides of top games (simulator, cartoony, stud, minimal) + curated textures/sunbursts from ui-resources.com |
 | [rbxui/](rbxui/README.md) | How to do each thing in rbxui (format, MCP tools, interactions, images, Figma import) + common mistakes |
-| [ejemplos/](ejemplos/README.md) | Complete, tested UIs in rbxui format with design notes and renders |
+| [juegos/](juegos/README.md) | Teardowns of 20 top Roblox games' UIs (screen maps, sampled palettes, signature components) + 16 shared conventions |
+| [ejemplos/](ejemplos/README.md) | 15 complete, tested UIs in rbxui format with design notes and renders (6 inspired by hit games) |
 | [checklist.md](checklist.md) | Final verification list |
 | [tool/](tool/README.md) | RbxUI Studio itself (editor, MCP server, Studio plugin) |
