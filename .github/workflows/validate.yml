@@ -1,0 +1,20 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Example UIs against the official Roblox API
+        run: node tools/validate.mjs examples --offline
+      - name: JSON snippets in the docs
+        run: node tools/validate.mjs docs --offline
+      - name: Syntax of the tool
+        run: for f in tool/studio/*.js tool/studio/*.mjs tool/studio/*.cjs tools/*.mjs; do node --check "$f" || exit 1; done

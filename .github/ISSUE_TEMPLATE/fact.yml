@@ -1,0 +1,24 @@
+name: Wrong or missing fact
+description: Something in the skill disagrees with the official Roblox docs (or a ⚠️ unverified item can be confirmed).
+labels: [docs]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: File and line
+      placeholder: roblox-ui/text.md, line 18
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: What it should say
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Official source
+      description: A create.roblox.com/docs page (or Roblox/creator-docs file) that proves it.
+    validations:
+      required: true

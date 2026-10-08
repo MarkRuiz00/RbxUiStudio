@@ -1,0 +1,22 @@
+name: Bug in RbxUI Studio
+description: The editor, the MCP server, the Studio plugin or a tool script does something wrong.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got. Screenshots help a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: rbxui
+    attributes:
+      label: rbxui JSON (if a screen is involved)
+      description: Editor → JSON rbxui → Exportar, or the smallest snippet that shows the problem.
+      render: json
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: Windows 11 · Node 20 · Chrome 130 · Claude Code / Cursor

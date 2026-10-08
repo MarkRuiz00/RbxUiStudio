@@ -1,0 +1,21 @@
+name: Game teardown request / contribution
+description: Propose (or contribute) a UI teardown of a popular Roblox game for juegos/.
+labels: [juegos]
+body:
+  - type: input
+    id: game
+    attributes:
+      label: Game
+      placeholder: e.g. Jailbreak
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: Player numbers with a dated source, or the UI pattern it is known for.
+  - type: textarea
+    id: screens
+    attributes:
+      label: Where to see real gameplay screenshots
+      description: Links to guides/wikis with real captures (not fan redesigns). Don't attach game art you don't own.
