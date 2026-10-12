@@ -15,6 +15,8 @@ import { decodeFig, parseClipboardHtml } from './figkiwi.mjs';
 const require = createRequire(import.meta.url);
 const RJ = require('./rbxjson.js');
 const FL = require('./fills.js');
+const FX = require('./figfx.js');   // fórmulas del renderer de Figma (fusiones, ajustes, blur, ruido)
+const FIGFX_SRC = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), 'figfx.js'), 'utf8');   // se inyecta en la página de horneado
 const { DATA: ROOT } = require('./paths.cjs');   // imágenes y caché van a los datos del usuario
 const IMG_DIR = path.join(ROOT, 'assets', 'figma');
 export const IMG_REL = 'assets/figma';
@@ -164,9 +166,7 @@ function uiGradient(p, extraAlpha = 1) {
 }
 const avgColor = (p) => { const s = p.stops || []; if (!s.length) return { r: 1, g: 1, b: 1, a: 1 }; const m = (k) => s.reduce((t, x) => t + x.color[k], 0) / s.length; return { r: m('r'), g: m('g'), b: m('b'), a: m('a') }; };
 const rgbaCss = (c, a = 1) => `rgba(${Math.round(clamp01(c.r) * 255)},${Math.round(clamp01(c.g) * 255)},${Math.round(clamp01(c.b) * 255)},${r4(clamp01((c.a ?? 1) * a))})`;
-const BLEND = { MULTIPLY: 'multiply', SCREEN: 'screen', OVERLAY: 'overlay', DARKEN: 'darken', LIGHTEN: 'lighten', COLOR_DODGE: 'color-dodge',
-  COLOR_BURN: 'color-burn', HARD_LIGHT: 'hard-light', SOFT_LIGHT: 'soft-light', DIFFERENCE: 'difference', EXCLUSION: 'exclusion', HUE: 'hue',
-  SATURATION: 'saturation', COLOR: 'color', LUMINOSITY: 'luminosity', LINEAR_BURN: 'multiply', LINEAR_DODGE: 'plus-lighter' };
+const BLEND = FX.CSS_BLEND;   // ojo: el soft-light de CSS es el de W3C; el de Figma tiene las ramas cambiadas (ver figfx.js)
 const isIdentity = (t) => !t || (Math.abs(t.m00 - 1) < 1e-3 && Math.abs(t.m11 - 1) < 1e-3 && Math.abs(t.m01) < 1e-3 && Math.abs(t.m10) < 1e-3 && Math.abs(t.m02) < 1e-3 && Math.abs(t.m12) < 1e-3);
 export const imageHashes = (message) => {
   const out = new Set();
@@ -190,15 +190,12 @@ export function imageDims(b) {
 }
 
 // una pintura de Figma como capa CSS (para hornear piezas con fusiones / texturas)
-// ajustes de imagen de Figma (exposición, contraste, saturación) -> filtro CSS
-function imgFilterCss(f) {
-  if (!f) return '';
-  let filt = '';
-  if (f.exposure) filt += `brightness(${r4(Math.pow(2, f.exposure))}) `;
-  if (f.contrast) filt += `contrast(${r4(1 + f.contrast)}) `;
-  if (f.saturation) filt += `saturate(${r4(1 + f.saturation)}) `;
-  return filt.trim();
-}
+// ajustes de imagen de Figma (exposición, contraste, saturación, temperatura, tinte, luces, sombras): se aplican píxel a píxel
+// con el shader de Figma portado (FX.adjustPixels) al hornear. adjOf = los ajustes no nulos; imgAdjKey = clave JSON ('' = ninguno)
+const ADJ_KEYS = ['exposure', 'contrast', 'saturation', 'temperature', 'tint', 'highlights', 'shadows'];
+const adjOf = (f) => (FX.hasAdjust(f) ? Object.fromEntries(ADJ_KEYS.filter((k) => Math.abs(f[k] || 0) > 1e-4).map((k) => [k, r4(f[k])])) : null);
+const imgAdjKey = (f) => { const a = adjOf(f); return a ? JSON.stringify(a) : ''; };
+const attrJson = (o) => JSON.stringify(o).replace(/"/g, '&quot;');
 function cssPaint(p, W, H, s, images, urlFn) {
   let bg = '', filt = '', inner = '';
   if (p.type === 'SOLID') bg = rgbaCss(p.color);
@@ -234,12 +231,8 @@ function cssPaint(p, W, H, s, images, urlFn) {
         + `transform:matrix(${r4(iv.m00)},${r4(iv.m10 * Hd / Wd)},${r4(iv.m01 * Wd / Hd)},${r4(iv.m11)},${r2(iv.m02 * Wd)},${r2(iv.m12 * Hd)});background:${url} 0 0/100% 100% no-repeat"></div>`;
     } else if (mode === 'STRETCH') bg = `${url} 0 0/100% 100% no-repeat`;
     else bg = `${url} center/cover no-repeat`;
-    const f = p.paintFilter;
-    if (f) {
-      if (f.exposure) filt += `brightness(${r4(Math.pow(2, f.exposure))}) `;
-      if (f.contrast) filt += `contrast(${r4(1 + f.contrast)}) `;
-      if (f.saturation) filt += `saturate(${r4(1 + f.saturation)}) `;
-    }
+    const adj = adjOf(p.paintFilter);
+    if (adj) filt = adj;   // no es CSS: data-figadj, lo aplica la página de horneado (applyFigAdj)
   } else if (p.type === 'NOISE') {
     const nid = 'np' + crypto.createHash('sha1').update(JSON.stringify([p.noiseType, p.density, p.noiseSize, p.color, W, H])).digest('hex').slice(0, 10);
     const F = fxFilter([{ type: 'NOISE', visible: true, noiseType: p.noiseType, density: p.density, noiseSize: p.noiseSize, color: p.color, opacity: 1 }], s, nid, W, H, { noiseOnly: true });
@@ -247,9 +240,10 @@ function cssPaint(p, W, H, s, images, urlFn) {
       + `<defs>${F.svg}</defs><rect width="100%" height="100%" fill="#fff" filter="url(#${F.svg.match(/id="([^"]+)"/)[1]})"/></svg>`;
   } else return null;
   const blend = BLEND[p.blendMode];
-  const common = `${blend ? `mix-blend-mode:${blend};` : ''}${(p.opacity ?? 1) < 1 ? `opacity:${r4(p.opacity)};` : ''}${filt ? `filter:${filt};` : ''}`;
-  if (inner) return `<div style="position:absolute;inset:0;overflow:hidden;${common}">${inner}</div>`;
-  return `<div style="position:absolute;inset:0;background:${bg};${common}"></div>`;
+  const common = `${blend ? `mix-blend-mode:${blend};` : ''}${(p.opacity ?? 1) < 1 ? `opacity:${r4(p.opacity)};` : ''}`;
+  const adjAttr = filt ? ` data-figadj="${attrJson(filt)}"` : '';
+  if (inner) return `<div${adjAttr} style="position:absolute;inset:0;overflow:hidden;${common}">${inner}</div>`;
+  return `<div${adjAttr} style="position:absolute;inset:0;background:${bg};${common}"></div>`;
 }
 
 
@@ -302,20 +296,52 @@ export function networkPaths(bytes, sx = 1, sy = 1) {
 // ---------------------------------------------------------------- efectos de Figma -> filtro SVG
 // Vale para <g filter="url(#id)"> dentro de un SVG y para filter:url(#id) sobre HTML (Chrome). k = escala.
 // Drop/Inner shadow, Layer blur (FOREGROUND_BLUR), Noise, Texture (GRAIN) y Glass. Background blur no existe en Roblox.
-const FE_BLEND = { MULTIPLY: 'multiply', SCREEN: 'screen', OVERLAY: 'overlay', DARKEN: 'darken', LIGHTEN: 'lighten', COLOR_DODGE: 'color-dodge',
-  COLOR_BURN: 'color-burn', HARD_LIGHT: 'hard-light', SOFT_LIGHT: 'soft-light', DIFFERENCE: 'difference', EXCLUSION: 'exclusion', HUE: 'hue',
-  SATURATION: 'saturation', COLOR: 'color', LUMINOSITY: 'luminosity', LINEAR_BURN: 'multiply', LINEAR_DODGE: 'screen' };
+const FE_BLEND = { ...FX.CSS_BLEND, LINEAR_DODGE: 'screen' };   // feBlend no admite plus-lighter
+// PNG RGBA sin dependencias (para las imágenes de ruido de los filtros)
+const CRC_T = Array.from({ length: 256 }, (_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
+const crc32 = zlib.crc32 || ((b) => { let c = 0xffffffff; for (const x of b) c = CRC_T[(c ^ x) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; });   // zlib.crc32: Node >= 22.2
+function pngRGBA(W, H, px) {
+  const raw = Buffer.alloc((W * 4 + 1) * H);
+  for (let y = 0; y < H; y++) Buffer.from(px.buffer, px.byteOffset + y * W * 4, W * 4).copy(raw, y * (W * 4 + 1) + 1);
+  const chunk = (t, d) => { const b = Buffer.alloc(12 + d.length); b.writeUInt32BE(d.length, 0); b.write(t, 4, 'ascii'); d.copy(b, 8); b.writeUInt32BE(crc32(b.subarray(4, 8 + d.length)), 8 + d.length); return b; };
+  const ih = Buffer.alloc(13); ih.writeUInt32BE(W, 0); ih.writeUInt32BE(H, 4); ih[8] = 8; ih[9] = 6;
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', ih), chunk('IDAT', zlib.deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]);
+}
+// ruido de Figma (FX.noiseRGBA / FX.grainMap) como <feImage> que cubre la región del filtro [-m, w+m] (px de salida, k = escala)
+const noiseImgCache = new Map();
+function noiseFeImage(kind, e, k, w, h, m, result) {
+  const W0 = Math.ceil(w + 2 * m), H0 = Math.ceil(h + 2 * m), q = Math.min(1, Math.sqrt(1.5e6 / Math.max(1, W0 * H0)));   // tope 1,5 Mpx
+  const W = Math.max(1, Math.round(W0 * q)), H = Math.max(1, Math.round(H0 * q)), kk = k * q;   // px de imagen por px de diseño
+  const key = JSON.stringify([kind, e.noiseType, e.noiseSize, e.density, e.color, e.secondaryColor, e.seed, e.radius, e.opacity, k, w, h, m]);
+  let hit = noiseImgCache.get(key);
+  if (!hit) {
+    const x0 = -m / k, y0 = -m / k, cx = w / k / 2, cy = h / k / 2;   // origen de la imagen y centro del nodo, px de diseño
+    if (kind === 'grain') { const g = FX.grainMap(e, W, H, kk, x0, y0, cx, cy); hit = { png: pngRGBA(W, H, g.rgba), scale: g.scale / q }; }
+    else {
+      const px = FX.noiseRGBA(e, W, H, kk, x0, y0, cx, cy);
+      if (e.noiseType === 'MULTITONE' && (e.opacity ?? 1) < 1) for (let i = 3; i < px.length; i += 4) px[i] *= e.opacity;
+      hit = { png: pngRGBA(W, H, px), scale: 0 };
+    }
+    hit.href = 'data:image/png;base64,' + hit.png.toString('base64');
+    noiseImgCache.set(key, hit);
+  }
+  return { svg: `<feImage href="${hit.href}" x="${-m}" y="${-m}" width="${W0}" height="${H0}" preserveAspectRatio="none" result="${result}"/>`, scale: hit.scale };
+}
 export function fxFilter(effects, k, id, w, h, opts = {}) {
   const es = (effects || []).filter((e) => e.visible !== false);
   const warns = [];
   let f = '', n = 0, pad = 0, cur = 'SourceGraphic', used = false, noiseRes = null;
   const R = () => `${id}_${n++}`;
   const col = (e, a) => { const c = e || { r: 0, g: 0, b: 0, a: 0.25 }; return `flood-color="${hex(c)}" flood-opacity="${r4(clamp01((c.a ?? 1) * (a ?? 1)))}"`; };
-  // Texture (GRAIN): deforma bordes con ruido
+  // margen de la región del filtro (igual que al final): las imágenes de ruido la cubren entera
+  const regionM = () => Math.ceil(Math.max(pad, ...es.filter((x) => x.type === 'GRAIN').map((x) => (x.radius || 2) * k + 1),
+    ...es.filter((x) => x.type === 'DROP_SHADOW').map((x) => Math.max(Math.abs((x.offset?.x || 0) * k), Math.abs((x.offset?.y || 0) * k)) + (x.radius || 0) * k * 1.3 + Math.max(0, (x.spread || 0) * k) + 1),
+    ...es.filter((x) => x.type === 'FOREGROUND_BLUR').map((x) => (x.radius || 0) * k * 1.3 + 1))) + 4;
+  // Texture (GRAIN): desplaza el contenido con el ruido de Figma (dos campos de ruido × radio)
   for (const e of es.filter((x) => x.type === 'GRAIN')) {
-    const sz = Math.max(0.5, (e.noiseSize?.x || 2) * k), amt = Math.max(0.5, (e.radius || 2) * k), t = R(), o = R();
-    f += `<feTurbulence type="fractalNoise" baseFrequency="${r4(0.5 / sz)}" numOctaves="2" seed="${e.seed || 0}" result="${t}"/>`
-      + `<feDisplacementMap in="${cur}" in2="${t}" scale="${r2(amt * 2)}" xChannelSelector="R" yChannelSelector="G" result="${o}"/>`;
+    const amt = Math.max(0.5, (e.radius || 2) * k), t = R(), o = R();
+    const img = noiseFeImage('grain', { ...e, noiseSize: e.noiseSize || { x: 2, y: 2 } }, k, w, h, regionM(), t);
+    f += img.svg + `<feDisplacementMap in="${cur}" in2="${t}" scale="${r2(img.scale)}" xChannelSelector="R" yChannelSelector="G" result="${o}"/>`;
     cur = o; used = true;
     if (e.clipToShape) { const c2 = R(); f += `<feComposite in="${cur}" in2="SourceAlpha" operator="in" result="${c2}"/>`; cur = c2; } else pad = Math.max(pad, amt + 1);
   }
@@ -326,7 +352,7 @@ export function fxFilter(effects, k, id, w, h, opts = {}) {
   for (const e of es.filter((x) => x.type === 'DROP_SHADOW')) {
     const sp = (e.spread || 0) * k, bl = (e.radius || 0) * k, ox = (e.offset?.x || 0) * k, oy = (e.offset?.y || 0) * k;
     const src = grow(A, sp), b = R(), o = R(), sh = R();          // grow() escribe en f: llamarlo antes del f +=
-    f += `<feGaussianBlur in="${src}" stdDeviation="${r2(bl / 2)}" result="${b}"/><feOffset in="${b}" dx="${r2(ox)}" dy="${r2(oy)}" result="${o}"/>`
+    f += `<feGaussianBlur in="${src}" stdDeviation="${r2(FX.blurSigma(bl))}" result="${b}"/><feOffset in="${b}" dx="${r2(ox)}" dy="${r2(oy)}" result="${o}"/>`
       + `<feFlood ${col(e.color)}/><feComposite in2="${o}" operator="in" result="${sh}"/>`;
     behind.push(sh); used = true;
     pad = Math.max(pad, Math.max(Math.abs(ox), Math.abs(oy)) + bl * 1.3 + Math.max(0, sp) + 1);
@@ -335,30 +361,14 @@ export function fxFilter(effects, k, id, w, h, opts = {}) {
   for (const e of es.filter((x) => x.type === 'INNER_SHADOW')) {
     const sp = (e.spread || 0) * k, bl = (e.radius || 0) * k, ox = (e.offset?.x || 0) * k, oy = (e.offset?.y || 0) * k;
     const src = grow(A, -sp), o = R(), b = R(), m = R(), sh = R();
-    f += `<feOffset in="${src}" dx="${r2(ox)}" dy="${r2(oy)}" result="${o}"/><feGaussianBlur in="${o}" stdDeviation="${r2(bl / 2)}" result="${b}"/>`
+    f += `<feOffset in="${src}" dx="${r2(ox)}" dy="${r2(oy)}" result="${o}"/><feGaussianBlur in="${o}" stdDeviation="${r2(FX.blurSigma(bl))}" result="${b}"/>`
       + `<feComposite in="${A}" in2="${b}" operator="out" result="${m}"/><feFlood ${col(e.color)}/><feComposite in2="${m}" operator="in" result="${sh}"/>`;
     over(sh, FE_BLEND[e.blendMode]);
   }
-  // Noise: granos del color (mono), de dos colores (dúo) o de colores (multi), con densidad
+  // Noise: el ruido de Figma (mono / dúo / multi, banda de densidad), recortado a la forma
   for (const e of es.filter((x) => x.type === 'NOISE')) {
-    const sz = Math.max(0.3, (e.noiseSize?.x || 1) * k), dens = clamp01(e.density ?? 0.5), op = e.opacity ?? 1;
-    const steps = 40, on = Math.max(1, Math.round(dens * steps)), table = (inv) => Array.from({ length: steps }, (_, i) => ((i >= steps - on) !== inv ? 1 : 0)).join(' ');
-    const t = R(), st = R(), d1 = R(), c1 = R(), res = R();
-    f += `<feTurbulence type="fractalNoise" baseFrequency="${r4(1.1 / sz)}" numOctaves="1" seed="${e.seed || 1}" stitchTiles="stitch" result="${t}"/>`
-      + `<feComponentTransfer in="${t}" result="${st}"><feFuncA type="linear" slope="3" intercept="-1"/></feComponentTransfer>`;
-    if (e.noiseType === 'MULTITONE') {
-      f += `<feColorMatrix in="${st}" type="saturate" values="4" result="${c1}"/><feComponentTransfer in="${c1}" result="${d1}"><feFuncA type="discrete" tableValues="${table(false)}"/></feComponentTransfer>`
-        + `<feComposite in="${d1}" in2="${A}" operator="in" result="${res}"/>`;
-    } else {
-      f += `<feComponentTransfer in="${st}" result="${d1}"><feFuncA type="discrete" tableValues="${table(false)}"/></feComponentTransfer>`
-        + `<feFlood ${col(e.color, op)}/><feComposite in2="${d1}" operator="in" result="${c1}"/>`;
-      if (e.noiseType === 'DUOTONE' && e.secondaryColor) {
-        const d2 = R(), c2 = R(), mg = R();
-        f += `<feComponentTransfer in="${st}" result="${d2}"><feFuncA type="discrete" tableValues="${table(true)}"/></feComponentTransfer>`
-          + `<feFlood ${col(e.secondaryColor, op)}/><feComposite in2="${d2}" operator="in" result="${c2}"/><feMerge result="${mg}"><feMergeNode in="${c2}"/><feMergeNode in="${c1}"/></feMerge>`
-          + `<feComposite in="${mg}" in2="${A}" operator="in" result="${res}"/>`;
-      } else f += `<feComposite in="${c1}" in2="${A}" operator="in" result="${res}"/>`;
-    }
+    const t = R(), res = R();
+    f += noiseFeImage('noise', e, k, w, h, regionM(), t).svg + `<feComposite in="${t}" in2="${A}" operator="in" result="${res}"/>`;
     noiseRes = res;
     over(res, FE_BLEND[e.blendMode]);
   }
@@ -379,7 +389,7 @@ export function fxFilter(effects, k, id, w, h, opts = {}) {
   for (const e of es.filter((x) => x.type === 'FOREGROUND_BLUR')) {
     let r = (e.radius || 0) * k;
     if (e.blurOpType === 'PROGRESSIVE') { r = ((e.startRadius || 0) * k + r) / 2; warns.push('Desenfoque progresivo -> desenfoque uniforme medio'); }
-    const b = R(); f += `<feGaussianBlur in="${out}" stdDeviation="${r2(r / 2)}" result="${b}"/>`; out = b; used = true;
+    const b = R(); f += `<feGaussianBlur in="${out}" stdDeviation="${r2(FX.blurSigma(r))}" result="${b}"/>`; out = b; used = true;
     pad = Math.max(pad, r * 1.3 + 1);
   }
   for (const e of es) {
@@ -565,31 +575,30 @@ export async function convertFigma(message, opts = {}) {
   // la fusión va canal a canal, así que el factor es la media de los tres canales de lo que hay debajo
   function nfac1(mode, C) {
     C = Math.min(0.95, Math.max(0.05, C));
-    if (mode === 'split1') return { w: 2 * (Math.sqrt(C) - C) / (1 - C), b: 2 * (1 - C) };
+    if (mode === 'split1') return { w: 2 * C, b: 2 * (softD(C) - C) / C };   // Soft light de Figma (ramas cambiadas respecto a W3C)
     return { w: C < 0.5 ? 2 * C / (1 - C) : 2, b: C < 0.5 ? 2 : 2 * (1 - C) / C };
   }
   const modeOf = (p, lb) => (BLEND[p.blendMode] ? NEUTRAL[p.blendMode] || 'split2' : lb ? NEUTRAL[lb] || 'split2' : null);
+  const exactOf = (p, lb) => (BLEND[p.blendMode] ? p.blendMode : lb && BLEND[lb] ? lb : null);   // modo de Figma real, para el color exacto
   const lumOf = (c) => 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
   // luminosidad media de una pintura (lo que queda «debajo» de las pinturas con fusión)
   // color medio de una pintura (lo que queda «debajo» de las pinturas con fusión)
   const GRAY = { r: 0.5, g: 0.5, b: 0.5 };
   const paintRgb = (p) => (p.type === 'SOLID' ? p.color : p.type.startsWith('GRADIENT') && p.stops?.length ? { ...avgColor(p), all: p.stops.map((x) => x.color), ...(p.type === 'GRADIENT_LINEAR' ? { grad: p } : {}) } : GRAY);
-  const nzOf = (mode, op, bl) => ({ mode, op, base: nzBase(bl), tint: tintOf(mode, bl), bl });
+  const nzOf = (mode, op, bl, ex) => ({ mode, ex, op, base: nzBase(bl), tint: tintOf(mode, bl, ex), bl });
   const nzBase = (bl) => ({ r: r4(bl.r), g: r4(bl.g), b: r4(bl.b), ...(bl.all ? { all: bl.all.map((x) => ({ r: r4(x.r), g: r4(x.g), b: r4(x.b) })) } : {}) });
   // color de relleno visible de una capa (para las hermanas que tiene encima), o null
   const fillRgb = (c) => { const ps = visiblePaints(c.fillPaints).filter((q) => !BLEND[q.blendMode] && (q.type === 'SOLID' || q.type.startsWith('GRADIENT')) && (q.opacity ?? 1) > 0.5); return ps.length ? paintRgb(ps[ps.length - 1]) : null; };
   // Las fusiones son LINEALES en la capa de arriba (T) dentro de cada mitad: sobre un color liso C,
   //   blend(C, T) = mezcla(C, blend(C,1), 2T-1) si T >= 0.5 · mezcla(C, blend(C,0), 1-2T) si T < 0.5
   // => luces = capa de color blend(C,1) y sombras = capa blend(C,0), con alfa = distancia a 0.5·2. Exacto sobre fondo liso.
-  const softD = (C) => (C <= 0.25 ? ((16 * C - 12) * C + 4) * C : Math.sqrt(C));
-  const BLEND_CH = { split2: (C, T) => (C < 0.5 ? 2 * C * T : 1 - 2 * (1 - C) * (1 - T)),
-    split1: (C, T) => (T <= 0.5 ? C - (1 - 2 * T) * C * (1 - C) : C + (2 * T - 1) * (softD(C) - C)),
-    dark: (C, T) => C * T, light: (C, T) => 1 - (1 - C) * (1 - T) };
-  const blendRgb = (mode, B, T) => { const f = BLEND_CH[mode] || BLEND_CH.split2; return { r: clamp01(f(B.r, T.r)), g: clamp01(f(B.g, T.g)), b: clamp01(f(B.b, T.b)) }; };
+  // color de la fusión: modo exacto de Figma si se conoce (OVERLAY, SOFT_LIGHT…), si no el representativo del grupo
+  const GROUP_MODE = { split2: 'OVERLAY', split1: 'SOFT_LIGHT', dark: 'MULTIPLY', light: 'SCREEN' };
+  const blendRgb = (mode, B, T) => FX.blendRgb(GROUP_MODE[mode] || mode, B, T);
   // ¿lo de debajo es (casi) un color liso conocido? tinte exacto; si es desconocido (GRAY) o un degradado muy variado, capa gris neutra
   const tintable = (B) => B !== GRAY && (!B.all || ['r', 'g', 'b'].every((k) => Math.max(...B.all.map((x) => x[k])) - Math.min(...B.all.map((x) => x[k])) < 0.2));
-  const tintOf = (mode, B) => (!(mode === 'split1' || mode === 'split2') ? null
-    : tintable(B) ? { l: hex(blendRgb(mode, B, { r: 1, g: 1, b: 1 })), d: hex(blendRgb(mode, B, { r: 0, g: 0, b: 0 })) }
+  const tintOf = (mode, B, ex) => (!(mode === 'split1' || mode === 'split2') ? null
+    : tintable(B) ? { l: hex(blendRgb(ex || mode, B, { r: 1, g: 1, b: 1 })), d: hex(blendRgb(ex || mode, B, { r: 0, g: 0, b: 0 })) }
     : B.grad ? { l: '#FFFFFF', d: '#FFFFFF', grad: true } : null);
   // debajo hay un degradado lineal: el tinte va en un UIGradient con la misma dirección, blend(color del degradado, 1 ó 0) muestreado
   function tintGrad(mode, B, T, mirror) {
@@ -604,9 +613,9 @@ export async function convertFigma(message, opts = {}) {
     }
     return [{ ClassName: 'UIGradient', Name: 'UIGradient', props: { Color: col, Rotation: mirror ? r2(180 - g.props.Rotation) : g.props.Rotation } }];
   }
-  function neutralColor(col, mode, alpha, base = GRAY) {
+  function neutralColor(col, mode, alpha, base = GRAY, ex = null) {
     const l = lumOf(col), a0 = clamp01((col.a ?? 1) * alpha);
-    if (tintable(base)) return { hex: hex(blendRgb(mode, base, col)), a: r4(a0) };   // color exacto de la fusión
+    if (tintable(base)) return { hex: hex(blendRgb(ex || mode, base, col)), a: r4(a0) };   // color exacto de la fusión
     if (mode === 'dark') return { hex: '#000000', a: r4((1 - l) * a0) };
     if (mode === 'light') return { hex: '#FFFFFF', a: r4(l * a0) };
     const f = nfac(mode, base), d = l - 0.5;
@@ -652,7 +661,7 @@ export async function convertFigma(message, opts = {}) {
     const b = Buffer.from(bytes), d = imageDims(b);
     const k = (p.scale || 1) * s, tw = r2((d.w || p.originalImageWidth || 64) * k), th = r2((d.h || p.originalImageHeight || 64) * k);
     let rel;
-    const filt = imgFilterCss(p.paintFilter), fk = filt ? '_f' + sha(filt).slice(0, 6) : '';
+    const filt = imgAdjKey(p.paintFilter), fk = filt ? '_a' + sha(filt).slice(0, 6) : '';
     if (nz) {
       rel = `${IMG_REL}/${hh}${fk}_${nz.mode}_${Math.round(nz.op * 100)}_${sha(JSON.stringify(nz.base || 0)).slice(0, 8)}${nz.tint ? 't' : ''}_n4.png`;
       if (!savedImages.has(rel)) { savedImages.add(rel); jobs.push({ kind: 'img', data: `data:${d.mime};base64,${b.toString('base64')}`, rel, filter: filt, neutral: { mode: nz.mode, op: nz.op, base: nz.base, tint: nz.tint } }); }
@@ -662,8 +671,8 @@ export async function convertFigma(message, opts = {}) {
     } else rel = saveImage(hh, bytes, false);
     const tile = (name, img, p2, kids) => ({ ClassName: 'ImageLabel', Name: name, props: { Size: [1, 0, 1, 0], BackgroundTransparency: 1, Image: img, ScaleType: 'Tile', TileSize: [0, tw, 0, th],
       ...(!nz && op < 0.999 ? { ImageTransparency: r4(1 - op) } : {}), ...(p2 || {}) }, ...(kids?.length ? { children: kids } : {}), attributes: { FigmaImage: hh } });
-    if (nz?.tint) return [tile('Texture Light', rel, { ImageColor3: nz.tint.l }, tintGrad(nz.mode, nz.bl, 1, mirror)),
-      tile('Texture Shade', darkRel(rel), { ImageColor3: nz.tint.d }, tintGrad(nz.mode, nz.bl, 0, mirror))];
+    if (nz?.tint) return [tile('Texture Light', rel, { ImageColor3: nz.tint.l }, tintGrad(nz.ex || nz.mode, nz.bl, 1, mirror)),
+      tile('Texture Shade', darkRel(rel), { ImageColor3: nz.tint.d }, tintGrad(nz.ex || nz.mode, nz.bl, 0, mirror))];
     return [tile('Texture', rel)];
   }
   // relleno de Figma -> fondo nativo del nodo + capas hijas (colores, degradados, imágenes y texturas separadas y editables)
@@ -676,7 +685,7 @@ export async function convertFigma(message, opts = {}) {
     const nzImage = (name, nz, make, op) => {
       const rel = make(nz);
       if (!rel) return;
-      if (nz?.tint) { image(name + ' Light', rel, { ImageColor3: nz.tint.l }, tintGrad(nz.mode, nz.bl, 1, mirror)); image(name + ' Shade', darkRel(rel), { ImageColor3: nz.tint.d }, tintGrad(nz.mode, nz.bl, 0, mirror)); }
+      if (nz?.tint) { image(name + ' Light', rel, { ImageColor3: nz.tint.l }, tintGrad(nz.ex || nz.mode, nz.bl, 1, mirror)); image(name + ' Shade', darkRel(rel), { ImageColor3: nz.tint.d }, tintGrad(nz.ex || nz.mode, nz.bl, 0, mirror)); }
       else image(name, rel, nz || op >= 0.999 ? {} : { ImageTransparency: r4(1 - op) });
     };
     // cada capa creada por una pintura lleva su origen en Figma (el editor las muestra como la pila «Relleno», no como capas sueltas)
@@ -705,20 +714,18 @@ export async function convertFigma(message, opts = {}) {
         if (crop[0] < 0.002 && crop[1] < 0.002 && crop[2] > 0.996 && crop[3] > 0.996) crop = null;
         mode = 'Stretch';
       }
-      const f = p.paintFilter, filter = f && (f.exposure || f.contrast || f.saturation)
-        ? { ...(f.exposure ? { exposure: r4(f.exposure) } : {}), ...(f.contrast ? { contrast: r4(f.contrast) } : {}), ...(f.saturation ? { saturation: r4(f.saturation) } : {}) } : null;
-      if (f && (f.temperature || f.tint || f.highlights || f.shadows || f.vibrance)) warn.add('Ajustes de imagen de temperatura/tinte/luces/sombras: se ignoran (solo exposición, contraste y saturación)');
+      const filter = adjOf(p.paintFilter);
       return { fill: i + 1, paint: mode === 'Tile' ? 'Texture' : 'Image', blend: BLEND[p.blendMode] ? p.blendMode : lb || 'NORMAL',
         src: saveImage(hh, bytes, false), srcW: d.w || p.originalImageWidth || 64, srcH: d.h || p.originalImageHeight || 64,
         mode, scale: r4(p.scale || 1), k: r4(s), crop, opacity: r4(op), filter, mirror: !!mirror };
     }
     function paintLayer(p, i) {
-      const mode = modeOf(p, lb), op = (p.opacity ?? 1) * leafAlpha;
+      const mode = modeOf(p, lb), ex = exactOf(p, lb), op = (p.opacity ?? 1) * leafAlpha;
       const hh = p.type === 'IMAGE' && p.image?.hash ? Buffer.from(p.image.hash).toString('hex') : '';
       if (p.type === 'SOLID' || p.type === 'GRADIENT_LINEAR') {
         const tp = base ? {} : props, tm = base ? [] : mods;
         if (p.type === 'SOLID') {
-          const nc = mode ? neutralColor(p.color, mode, op, bl) : { hex: hex(p.color), a: clamp01((p.color.a ?? 1) * op) };
+          const nc = mode ? neutralColor(p.color, mode, op, bl, ex) : { hex: hex(p.color), a: clamp01((p.color.a ?? 1) * op) };
           tp.BackgroundColor3 = nc.hex;
           if (1 - nc.a > 0.001 || base) tp.BackgroundTransparency = r4(1 - nc.a);
         } else {
@@ -748,18 +755,18 @@ export async function convertFigma(message, opts = {}) {
           return;
         }
         const bytes = images.get(hh), plain = !p.paintFilter && (isIdentity(p.transform) || !['STRETCH', 'CROP'].includes(p.imageScaleMode));
-        if (p.imageScaleMode === 'TILE') { extra.push(...tileLayer(p, hh, bytes, op, mode ? nzOf(mode, op, bl) : null, mirror)); return; }
+        if (p.imageScaleMode === 'TILE') { extra.push(...tileLayer(p, hh, bytes, op, mode ? nzOf(mode, op, bl, ex) : null, mirror)); return; }
         if (!mode && plain) {
           const node = { ClassName: 'ImageLabel', Name: 'Image', props: { Size: [1, 0, 1, 0], BackgroundTransparency: 1, Image: saveImage(hh, bytes, mirror),
             ScaleType: { FILL: 'Crop', FIT: 'Fit', STRETCH: 'Stretch', CROP: 'Crop' }[p.imageScaleMode] || 'Crop', ...(op < 0.999 ? { ImageTransparency: r4(1 - op) } : {}) },
             children: corner ? withCorner() : undefined, attributes: { FigmaImage: hh } };
           extra.push(node); return;
         }
-        nzImage('Image', mode ? nzOf(mode, op, bl) : null, (nz) => paintPng(c, p, W, H, mirror, nz), op);
+        nzImage('Image', mode ? nzOf(mode, op, bl, ex) : null, (nz) => paintPng(c, p, W, H, mirror, nz), op);
         return;
       }
       // degradado radial / angular / diamante, ruido, patrón: la pintura sola a PNG (neutralizada si lleva fusión)
-      nzImage(p.type.startsWith('GRADIENT') ? 'Gradient' : 'Pattern', mode ? nzOf(mode, op, bl) : null, (nz) => paintPng(c, p, W, H, mirror, nz), op);
+      nzImage(p.type.startsWith('GRADIENT') ? 'Gradient' : 'Pattern', mode ? nzOf(mode, op, bl, ex) : null, (nz) => paintPng(c, p, W, H, mirror, nz), op);
     }
     if (!base) props.BackgroundTransparency = 1;
     return bl;
@@ -966,7 +973,7 @@ export async function convertFigma(message, opts = {}) {
     }
     if (sp.type === 'SOLID' || (sp.type !== 'GRADIENT_LINEAR') || opts.flat) {
       const col = sp.type === 'SOLID' ? sp.color : avgColor(sp);
-      const nc = mode ? neutralColor(col, mode, sp.opacity ?? 1, under) : { hex: hex(col), a: clamp01((col.a ?? 1) * (sp.opacity ?? 1)) };
+      const nc = mode ? neutralColor(col, mode, sp.opacity ?? 1, under, exactOf(sp, lb)) : { hex: hex(col), a: clamp01((col.a ?? 1) * (sp.opacity ?? 1)) };
       props.Color = nc.hex;
       if (1 - nc.a > 0.001) props.Transparency = r4(1 - nc.a);
     } else {
@@ -1802,11 +1809,12 @@ function blobPath(bytes) {
 // Se iguala el cambio de LUMINOSIDAD (lo que se ve como textura/brillo), pesando cada canal por cuánto lo mueve la fusión;
 // la media simple de factores oscurecía/texturizaba de más los colores saturados. Con un solo canal = nfac1.
 const LUMW = [0.2126, 0.7152, 0.0722];
+const softD = (C) => (C <= 0.25 ? ((16 * C - 12) * C + 4) * C : Math.sqrt(C));
 function nfac(mode, B) {
   let nw = 0, dw = 0, nb = 0, db = 0;
   for (const col of B.all?.length ? B.all : [B]) [col.r, col.g, col.b].forEach((x, i) => {
     const C = Math.min(0.97, Math.max(0.03, x)), L = LUMW[i];
-    const gw = mode === 'split1' ? 2 * (Math.sqrt(C) - C) : 2 * Math.min(C, 1 - C), gb = mode === 'split1' ? 2 * C * (1 - C) : 2 * Math.min(C, 1 - C);
+    const gw = mode === 'split1' ? 2 * C * (1 - C) : 2 * Math.min(C, 1 - C), gb = mode === 'split1' ? 2 * (softD(C) - C) : 2 * Math.min(C, 1 - C);   // split1 = Soft light de Figma
     nw += L * gw; dw += L * (1 - C); nb += L * gb; db += L * C;
   });
   return { w: nw / dw, b: nb / db };
@@ -1859,7 +1867,7 @@ async function neutralize(page, rel, nz) {
 // ---------------------------------------------------------------- texturas: máscaras sin color, compartidas (ver fills.js)
 // misma imagen + recorte + ajustes + espejo = mismo PNG para todas las piezas (el color va en ImageColor3/UIGradient)
 export function maskRel(spec, kind) {
-  const f = FL.filterCss(spec.filter), crop = spec.crop || null, m = !!spec.mirror;
+  const f = imgAdjKey(spec.filter), crop = spec.crop || null, m = !!spec.mirror;
   if (kind === 'orig' && !f && !crop && !m) return spec.src;
   const base = path.basename(spec.src).replace(/\.[^.]+$/, '');
   return `${IMG_REL}/${base}_${crypto.createHash('sha1').update(JSON.stringify([f, crop, m])).digest('hex').slice(0, 8)}_${kind}.png`;
@@ -1868,7 +1876,7 @@ export function maskJobs(spec, jobs) {
   const out = {};
   for (const k of FL.kindsOf(spec.blend)) {
     const rel = out[k] = maskRel(spec, k);
-    if (rel !== spec.src) jobs.push({ kind: 'mask', src: spec.src, rel, filter: FL.filterCss(spec.filter), crop: spec.crop || null, mirror: !!spec.mirror, part: k });
+    if (rel !== spec.src) jobs.push({ kind: 'mask', src: spec.src, rel, filter: imgAdjKey(spec.filter), crop: spec.crop || null, mirror: !!spec.mirror, part: k });
   }
   return out;
 }
@@ -1894,8 +1902,33 @@ export async function rasterize(jobs) {
     await page.route('http://img.local/**', (route) => {
       const hh = route.request().url().split('/').pop(), b = store.get(hh);
       if (!b) return route.fulfill({ status: 404, body: '' });
-      return route.fulfill({ status: 200, body: Buffer.from(b), contentType: imageDims(Buffer.from(b)).mime });
+      return route.fulfill({ status: 200, body: Buffer.from(b), contentType: imageDims(Buffer.from(b)).mime, headers: { 'Access-Control-Allow-Origin': '*' } });
     });
+    // fórmulas de Figma en la página (setContent las borra: comprobar antes de cada uso)
+    const ensureFX = async () => { if (!(await page.evaluate(() => !!window.FigFX))) await page.addScriptTag({ content: FIGFX_SRC }); };
+    // pinturas de imagen con ajustes (data-figadj): la imagen se sustituye por la ajustada con el shader de Figma portado
+    const applyFigAdj = async () => {
+      if (!(await page.evaluate(() => !!document.querySelector('[data-figadj]')))) return;
+      await ensureFX();
+      await page.evaluate(async () => {
+        for (const el of document.querySelectorAll('[data-figadj]')) {
+          const f = JSON.parse(el.dataset.figadj);
+          for (const t of [el, ...el.querySelectorAll('*')]) {
+            const m = getComputedStyle(t).backgroundImage.match(/url\("?(.*?)"?\)/);
+            if (!m) continue;
+            try {
+              const im = new Image(); im.crossOrigin = 'anonymous'; im.src = m[1]; await im.decode();
+              const cv = document.createElement('canvas'); cv.width = im.naturalWidth; cv.height = im.naturalHeight;
+              const cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(im, 0, 0);
+              const id = cx.getImageData(0, 0, cv.width, cv.height); window.FigFX.adjustPixels(id.data, f); cx.putImageData(id, 0, 0);
+              const url = URL.createObjectURL(await new Promise((r) => cv.toBlob(r)));
+              await new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = url; });
+              t.style.backgroundImage = `url("${url}")`;
+            } catch { /* imagen ilegible: se queda sin ajustar */ }
+          }
+        }
+      });
+    };
     const loadAll = async () => page.evaluate(async () => {
       await document.fonts.ready;
       const urls = new Set();
@@ -1908,6 +1941,7 @@ export async function rasterize(jobs) {
         const shot = async (html) => {
           await page.setContent(html, { waitUntil: 'networkidle' }).catch(() => {});
           await loadAll();
+          await applyFigAdj();
           return page.screenshot({ clip: { x: j.clip.x, y: j.clip.y, width: Math.max(1, j.clip.w), height: Math.max(1, j.clip.h) }, omitBackground: true });
         };
         const R = await shot(j.html);
@@ -1949,6 +1983,7 @@ export async function rasterize(jobs) {
       if (j.kind !== 'scene') await page.setViewportSize({ width: 1100, height: 1100 });
       if (j.kind === 'mask') {
         const buf = fs.readFileSync(path.join(ROOT, j.src)), d = imageDims(buf);
+        if (j.filter) await ensureFX();
         const b64 = await page.evaluate(async ([src, filter, crop, mirror, part]) => {
           const im = new Image(); im.src = src; await im.decode();
           const W = im.naturalWidth, H = im.naturalHeight;
@@ -1957,8 +1992,8 @@ export async function rasterize(jobs) {
           const cv = document.createElement('canvas'); cv.width = Math.max(1, Math.round(sw * k)); cv.height = Math.max(1, Math.round(sh * k));
           const cx = cv.getContext('2d', { willReadFrequently: true }); cx.imageSmoothingQuality = 'high';
           if (mirror) { cx.translate(cv.width, 0); cx.scale(-1, 1); }
-          if (filter) cx.filter = filter;
           cx.drawImage(im, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
+          if (filter) { const img = cx.getImageData(0, 0, cv.width, cv.height); window.FigFX.adjustPixels(img.data, JSON.parse(filter)); cx.putImageData(img, 0, 0); }
           if (part !== 'orig') {
             const img = cx.getImageData(0, 0, cv.width, cv.height), p = img.data;
             for (let i = 0; i < p.length; i += 4) {
@@ -1974,14 +2009,15 @@ export async function rasterize(jobs) {
         continue;
       }
       if (j.kind === 'img') {
+        if (j.filter) await ensureFX();
         const b64 = await page.evaluate(async ([src, mirror, filter]) => {
           const im = new Image(); im.src = src; await im.decode();
           const k = Math.min(1, 1024 / Math.max(im.naturalWidth, im.naturalHeight));
           const cv = document.createElement('canvas'); cv.width = Math.round(im.naturalWidth * k); cv.height = Math.round(im.naturalHeight * k);
-          const cx = cv.getContext('2d'); cx.imageSmoothingQuality = 'high';
+          const cx = cv.getContext('2d', { willReadFrequently: true }); cx.imageSmoothingQuality = 'high';
           if (mirror) { cx.translate(cv.width, 0); cx.scale(-1, 1); }
-          if (filter) cx.filter = filter;
           cx.drawImage(im, 0, 0, cv.width, cv.height);
+          if (filter) { const img = cx.getImageData(0, 0, cv.width, cv.height); window.FigFX.adjustPixels(img.data, JSON.parse(filter)); cx.putImageData(img, 0, 0); }
           return cv.toDataURL('image/png').split(',')[1];
         }, [j.data, !!j.mirror, j.filter || '']);
         fs.writeFileSync(path.join(ROOT, j.rel), Buffer.from(b64, 'base64'));
@@ -1996,6 +2032,7 @@ export async function rasterize(jobs) {
           for (const el of document.querySelectorAll('*')) for (const m of getComputedStyle(el).backgroundImage.matchAll(/url\("?(.*?)"?\)/g)) urls.add(m[1]);
           await Promise.all([...urls].map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; })));
         });
+        await applyFigAdj();
         await page.locator('#cap').screenshot({ path: path.join(ROOT, j.rel), omitBackground: true });
         if (j.neutral) await neutralize(page, j.rel, j.neutral);
         continue;

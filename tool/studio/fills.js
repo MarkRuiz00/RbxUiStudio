@@ -11,10 +11,9 @@
 
    La receta de Figma viaja en attributes.FigmaSpec (JSON) de cada capa: el editor la edita y pide las máscaras al servidor. */
 (function (root, factory) {
-  const api = factory();
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.RBXFills = api;
-})(typeof self !== 'undefined' ? self : this, function () {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./figfx.js'));
+  else root.RBXFills = factory(root.FigFX);
+})(typeof self !== 'undefined' ? self : this, function (FX) {
   'use strict';
   const GROUP = { NORMAL: null, PASS_THROUGH: null, OVERLAY: 'split2', HARD_LIGHT: 'split2', SOFT_LIGHT: 'split1', MULTIPLY: 'dark', DARKEN: 'dark',
     LINEAR_BURN: 'dark', COLOR_BURN: 'dark', SCREEN: 'light', LIGHTEN: 'light', LINEAR_DODGE: 'light', COLOR_DODGE: 'light', DIFFERENCE: 'split2',
@@ -30,14 +29,11 @@
   const toHex = (c) => '#' + [c.r, c.g, c.b].map((x) => Math.round(clamp01(x) * 255).toString(16).padStart(2, '0')).join('').toUpperCase();
   const fromHex = (h) => { const s = String(h || '#FFFFFF').replace('#', ''); return { r: parseInt(s.slice(0, 2), 16) / 255, g: parseInt(s.slice(2, 4), 16) / 255, b: parseInt(s.slice(4, 6), 16) / 255 }; };
 
-  // blend(C, T) por canal (W3C / Figma)
-  const softD = (C) => (C <= 0.25 ? ((16 * C - 12) * C + 4) * C : Math.sqrt(C));
-  const CH = { split2: (C, T) => (C < 0.5 ? 2 * C * T : 1 - 2 * (1 - C) * (1 - T)),
-    split1: (C, T) => (T <= 0.5 ? C - (1 - 2 * T) * C * (1 - C) : C + (2 * T - 1) * (softD(C) - C)),
-    dark: (C, T) => C * T, light: (C, T) => 1 - (1 - C) * (1 - T) };
-  const blendRgb = (group, B, T) => { const f = CH[group] || CH.split2; return { r: clamp01(f(B.r, T.r)), g: clamp01(f(B.g, T.g)), b: clamp01(f(B.b, T.b)) }; };
+  // blend(C, T) por canal: fórmulas del renderer de Figma (figfx.js). Con el modo exacto si se conoce; si no, la del grupo
+  const GROUP_MODE = { split2: 'OVERLAY', split1: 'SOFT_LIGHT', dark: 'MULTIPLY', light: 'SCREEN' };
+  const blendRgb = (mode, B, T) => FX.blendRgb(GROUP_MODE[mode] || mode, B, T);
 
-  // ajustes de imagen (Figma: exposición, contraste, saturación) -> filtro CSS
+  // ajustes de imagen -> filtro CSS: SOLO vista previa aproximada y clave de caché; el horneado usa FigFX.adjustPixels (exacto)
   function filterCss(f) {
     if (!f) return '';
     let s = '';
@@ -71,7 +67,7 @@
   function tintFor(blend, kind, base) {
     if (kind === 'orig' || kind === 'lum') return { color: '#FFFFFF', gradient: null };
     if (kind === 'inv') return { color: '#000000', gradient: null };
-    const T = kind === 'hi' ? 1 : 0, g = groupOf(blend) || 'split2', TT = { r: T, g: T, b: T };
+    const T = kind === 'hi' ? 1 : 0, g = blend in GROUP ? blend : groupOf(blend) || 'split2', TT = { r: T, g: T, b: T };
     if (!base) return { color: T ? '#FFFFFF' : '#000000', gradient: null };
     if (base.solid) return { color: toHex(blendRgb(g, base.solid, TT)), gradient: null };
     const N = 10, col = [];
@@ -81,8 +77,9 @@
 
   // color T con fusión encima del fondo -> { color, gradient } (null = fondo desconocido)
   function blendOver(blend, base, T) {
-    const g = groupOf(blend), t = typeof T === 'string' ? fromHex(T) : T;
-    if (!g) return { color: toHex(t), gradient: null };
+    const t = typeof T === 'string' ? fromHex(T) : T;
+    if (!groupOf(blend)) return { color: toHex(t), gradient: null };
+    const g = blend;
     if (!base) return null;
     if (base.solid) return { color: toHex(blendRgb(g, base.solid, t)), gradient: null };
     const N = 10, col = [];

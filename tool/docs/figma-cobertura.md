@@ -48,15 +48,15 @@ efecto · **Imagen** = se hornea a PNG (se ve igual, no se edita por partes) · 
 | Degradado radial / angular / diamante | Imagen (capa) | solo esa pintura a PNG, el resto sigue nativo |
 | Imagen Fill / Fit / Crop / Stretch | Nativo | ImageLabel `ScaleType` Crop/Fit/Stretch; recorte o giro de imagen → PNG |
 | Imagen Tile | Nativo | ImageLabel `ScaleType=Tile` + `TileSize` |
-| Ajustes de imagen (exposición, contraste…) | Imagen (capa) | |
+| Ajustes de imagen (exposición, contraste, saturación, temperatura, tinte, luces, sombras) | Imagen (capa) | shader de Figma portado (`figfx.js`), error ≤ 1/255 |
 | **Modos de fusión** (Overlay, Soft light, Multiply, Screen…) | Capas | ver abajo |
 | Trazo interior / centro / exterior | Nativo | UIStroke `BorderStrokePosition` |
 | Trazo con degradado lineal | Nativo | UIStroke + UIGradient |
 | Trazo discontinuo, por lados, con imagen, perfil de anchura | Imagen | |
 | Opacidad de capa | Nativo | transparencias / `GroupTransparency` |
 | Drop shadow nítida | Capas | Frame de sombra detrás |
-| Drop shadow difuminada | Capas | la sombra sola a PNG detrás (la pieza sigue nativa) |
-| Inner shadow, layer blur, noise, texture, glass | Imagen | |
+| Drop shadow difuminada | Capas | la sombra sola a PNG detrás (la pieza sigue nativa); σ = radio / 2,3548 como Figma |
+| Inner shadow, layer blur, noise, texture, glass | Imagen | blur con la σ de Figma; noise y texture con el ruido de Figma portado (mismo grano y densidad; no bit a bit: depende del `sin` de la GPU) |
 | Background blur | No | imposible en Roblox (aviso) |
 
 En el editor, esas capas no salen sueltas en el árbol: se ven en **Relleno** como la pila de Figma (una fila por
@@ -118,3 +118,18 @@ Pinturas sólidas con fusión = el color exacto resultante. "Lo de debajo" = la 
   capas semitransparentes pueden salir distintos sin que el importador esté mal.
 - Test sintético con campos reales del esquema kiwi (`figtest.mjs`): auto-layout, grid, scroll, constraints, prototipos,
   textbox, borde discontinuo, min/max + proporción, máscara con degradado.
+
+## Renderer de Figma (ingeniería inversa)
+
+`studio/figfx.js` lleva las fórmulas sacadas del WASM del editor web de Figma (`compiled_wasm.wasm`: shaders GLSL/WGSL en texto,
+analizado con REA + extracción de cadenas) y comprobadas contra `exportAsync` del propio Figma:
+
+- **Fusiones**: las 17 tal cual (premultiplicado), error ≤ 1,3/255. **Soft light de Figma ≠ W3C/CSS**: tiene las dos ramas
+  cambiadas (capa > 0,5 usa `B·(1−B)`, capa ≤ 0,5 usa `D(B)`). Los tintes de luces/sombras usan la fórmula de Figma; el
+  `mix-blend-mode: soft-light` de Chrome (referencia plana) sigue siendo W3C.
+- **Ajustes de imagen**: pipeline en Lab + curva de exposición propia; el kiwi guarda el contraste ya ×0,3 respecto al panel.
+- **Blur y sombras**: gaussiano de σ = radio / 2,3548 (antes R/2: difuminaba un 18 % de más).
+- **Noise / Texture**: ruido de gradiente fBm de 3 octavas, frecuencia 1/noiseSize, origen en el centro del nodo, banda de
+  densidad, antialias equivalente a supersampling 4×4 (cobertura y % de grises iguales a Figma ±0,01).
+- Pendiente: degradado diamante (CSS lo pinta radial), Glass, remuestreo bicúbico de imágenes.
+
