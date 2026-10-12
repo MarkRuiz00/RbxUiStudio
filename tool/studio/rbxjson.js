@@ -745,5 +745,7 @@ Robux, red = close, no pastels or white backgrounds, little text.`;
 
   return { ASSET_FONTS, ensureFont, GUI, TEXT, IMAGE, BUTTON, DEFAULTS, FORCED, DESIGN_DEF, TOPBAR, FONT_URL, AI_PROMPT, isMod, typeOf, prop, mp, modOf,
     validate, docToScenes, screenToScene, relayout, autoSizePass, sceneToScreen, scenesToDoc, importInto, makeNode, contentBox,
-    setAssets, imageUrl, assetIdFor, nativeEl, fitScaled, hex };
+    setAssets, imageUrl, assetIdFor, nativeEl, fitScaled, hex,
+    // para la exportación a Figma (tofigma.js): misma lectura de fuentes, esquinas, padding y degradados que el render
+    fontOf, CSS_FAMILY, WEIGHTS, TEXT_K, cornerRad, paddingOf, modsOf, miterStroke, seqColor, seqNum, sampleColor, sampleNum, udim };
 });

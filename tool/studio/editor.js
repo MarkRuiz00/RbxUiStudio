@@ -2620,6 +2620,41 @@
     await api('/api/scene?name=' + encodeURIComponent(S.name), { method: 'POST', body: JSON.stringify(S.scene) });
     S.dirty = false; document.title = S.name + ' — RbxUI Studio'; status('Guardado ' + new Date().toLocaleTimeString()); pushState();
   }
+  // ---------------------------------------------------------------- Figma: Ctrl+C -> Ctrl+V en Figma (imágenes dentro) o archivo .fig
+  async function figmaPayload(kind) {
+    const { roots, images, warns } = await window.RBXToFigma.build(S.scene);
+    const r = await fetch('/api/figma/export', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kind, roots, images, name: S.scene.name || S.name || 'RbxUI' }) });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'error ' + r.status);
+    return { r, warns };
+  }
+  async function copyToFigma() {
+    if (!isNative()) return toast('Solo pantallas nativas (rbxui)', 'err');
+    const t = toast('Preparando para Figma…', 'busy', { sticky: true });
+    let warns = [];
+    try {
+      // ClipboardItem con promesa: la escritura empieza dentro del gesto del usuario aunque el trabajo tarde
+      const html = figmaPayload('clipboard').then(async ({ r, warns: w }) => { warns = w || []; return new Blob([(await r.json()).html], { type: 'text/html' }); });
+      await navigator.clipboard.write([new ClipboardItem({ 'text/html': html })]);
+      t.close(); toast('Copiado: pega en Figma con Ctrl+V');
+      // Figma no maqueta al pegar los textos que no traen glifos (derivedTextData): con .fig sí
+      let hasText = false; (function w(l) { for (const n of l || []) { if (window.RBXJson.TEXT.has(n.rbxClass)) hasText = true; w(n.children); } })(S.scene.nodes);
+      if (hasText) toast('Ojo: al pegar, Figma deja los textos vacíos hasta que los editas. Para textos exactos usa «Descargar .fig»', 'warn', { ms: 7000, action: { label: 'Descargar .fig', fn: downloadFig } });
+      for (const w of warns.slice(0, 3)) toast(w, 'warn');
+    } catch (e) { t.close(); toast('No se pudo copiar para Figma: ' + (e.message || e), 'err'); }
+  }
+  async function downloadFig() {
+    if (!isNative()) return toast('Solo pantallas nativas (rbxui)', 'err');
+    const t = toast('Generando .fig…', 'busy', { sticky: true });
+    try {
+      const { r, warns } = await figmaPayload('fig');
+      const a = h('a', { href: URL.createObjectURL(await r.blob()), download: (S.scene.name || 'RbxUI') + '.fig' });
+      document.body.append(a); a.click(); a.remove();
+      t.close(); toast('Listo: arrastra el .fig a Figma (o Archivo › Importar)');
+      for (const w of warns.slice(0, 3)) toast(w, 'warn');
+    } catch (e) { t.close(); toast('No se pudo generar el .fig: ' + (e.message || e), 'err'); }
+  }
+
   async function doExport() {
     if (!S.scene) return;
     if (isNative()) return doBuildNative();
@@ -2712,6 +2747,8 @@
       A('Acciones', 'check', 'Comprobar contra la API de Roblox', () => { runCheck(); openCheck(); }),
       A('Acciones', 'template', 'Nueva pantalla desde plantilla', openTemplates),
       A('Acciones', 'plus', 'Nueva pantalla vacía', newScene),
+      ...(nat ? [A('Acciones', 'figma', 'Copiar para Figma (pegar con Ctrl+V)', copyToFigma, 'Ctrl Shift C'),
+        A('Acciones', 'figma', 'Descargar .fig para Figma', downloadFig)] : []),
       A('Acciones', 'code', 'JSON rbxui: importar, exportar, prompt para IAs', () => doRbxui('import')),
       A('Acciones', 'book', 'Ejemplos IA (tus UIs como referencia de estilo)', openExamples),
       A('Acciones', 'plug', 'Conectar una IA por MCP', openMcp),
@@ -2809,6 +2846,7 @@
     if (ctrl && k.toLowerCase() === 's') { e.preventDefault(); save(); return; }
     if (ctrl && k.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); return; }
     if (ctrl && k.toLowerCase() === 'y') { e.preventDefault(); redo(); return; }
+    if (ctrl && e.shiftKey && k.toLowerCase() === 'c' && isNative()) { e.preventDefault(); copyToFigma(); return; }
     if (ctrl && k.toLowerCase() === 'd') { e.preventDefault(); duplicate(); return; }
     if (ctrl && k.toLowerCase() === 'g') { e.preventDefault(); if (e.shiftKey) ungroup(); else group(); return; }
     if (ctrl && k === ']') { e.preventDefault(); zorder(e.shiftKey ? 9 : 1); return; }

@@ -132,3 +132,101 @@ export function decodeFig(bytes) {
   if (!S.Message) throw new Error('el esquema no tiene Message');
   return { message: readDef(new BB(decompress(chunks[1])), S.Message, S), version };
 }
+
+// ================================================================ codificador (para pegar en Figma)
+class WB {
+  constructor() { this.a = new Uint8Array(1024); this.n = 0; this.f32 = new Float32Array(1); this.u32 = new Uint32Array(this.f32.buffer); }
+  grow(k) { if (this.n + k <= this.a.length) return; let m = this.a.length * 2; while (m < this.n + k) m *= 2; const b = new Uint8Array(m); b.set(this.a.subarray(0, this.n)); this.a = b; }
+  byte(v) { this.grow(1); this.a[this.n++] = v & 255; }
+  raw(b) { this.grow(b.length); this.a.set(b, this.n); this.n += b.length; }
+  uint(v) { v >>>= 0; do { let b = v & 127; v >>>= 7; if (v) b |= 128; this.byte(b); } while (v); }
+  int(v) { v |= 0; this.uint((v << 1) ^ (v >> 31)); }
+  float(v) {
+    this.f32[0] = v; const bits = this.u32[0];
+    if ((bits & 0x7f800000) === 0) { this.byte(0); return; }   // 0 y desnormales -> 0 (como kiwi)
+    const s = ((bits >>> 23) | (bits << 9)) >>> 0;
+    this.byte(s); this.byte(s >>> 8); this.byte(s >>> 16); this.byte(s >>> 24);
+  }
+  string(s) { this.raw(Buffer.from(String(s), 'utf8')); this.byte(0); }
+  bytes(b) { this.uint(b.length); this.raw(b); }
+  uint64(v) { v = BigInt(v); while (v >= 128n) { this.byte(Number(v & 127n) | 128); v >>= 7n; } this.byte(Number(v)); }
+  int64(v) { v = BigInt(v); this.uint64(v < 0n ? ((-v) << 1n) - 1n : v << 1n); }
+  out() { return this.a.slice(0, this.n); }
+}
+function writeOne(wb, type, v, S) {
+  switch (type) {
+    case 'bool': return wb.byte(v ? 1 : 0);
+    case 'byte': return wb.byte(v);
+    case 'int': return wb.int(v);
+    case 'uint': return wb.uint(v);
+    case 'float': return wb.float(v);
+    case 'string': return wb.string(v);
+    case 'int64': return wb.int64(v);
+    case 'uint64': return wb.uint64(v);
+    default: {
+      const d = S[type];
+      if (!d) throw new Error('kiwi: tipo desconocido ' + type);
+      if (d.kind === 'ENUM') {
+        const f = typeof v === 'number' ? { value: v } : d.fields.find((x) => x.name === v);
+        if (!f) throw new Error(`kiwi: valor "${v}" no existe en ${d.name}`);
+        return wb.uint(f.value);
+      }
+      return writeDef(wb, d, v, S);
+    }
+  }
+}
+function writeField(wb, f, v, S) {
+  if (!f.isArray) return writeOne(wb, f.type, v, S);
+  if (f.type === 'byte') return wb.bytes(v);
+  wb.uint(v.length);
+  for (const x of v) writeOne(wb, f.type, x, S);
+}
+function writeDef(wb, d, o, S) {
+  if (d.kind === 'STRUCT') { for (const f of d.fields) writeField(wb, f, o[f.name], S); return; }
+  for (const f of d.fields) {
+    const v = o[f.name];
+    if (v === undefined || v === null) continue;
+    wb.uint(f.value); writeField(wb, f, v, S);
+  }
+  wb.uint(0);
+}
+// esquema (objeto de decodeSchema) -> bytes kiwi
+export function encodeSchema(S) {
+  const defs = Object.values(S), index = new Map(defs.map((d, i) => [d.name, i])), wb = new WB();
+  wb.uint(defs.length);
+  for (const d of defs) {
+    wb.string(d.name); wb.byte(KINDS.indexOf(d.kind)); wb.uint(d.fields.length);
+    for (const f of d.fields) {
+      wb.string(f.name);
+      wb.int(d.kind === 'ENUM' ? 0 : TYPES.includes(f.type) ? ~TYPES.indexOf(f.type) : index.get(f.type));
+      wb.byte(f.isArray ? 1 : 0); wb.uint(f.value);
+    }
+  }
+  return wb.out();
+}
+export const encodeMessage = (S, message) => { const wb = new WB(); writeDef(wb, S.Message, message, S); return wb.out(); };
+// { message } + esquema -> bytes fig-kiwi (trozos en deflate crudo, que Figma acepta igual que zstd)
+export function encodeFig(S, message, version = 106, schemaBytes = null) {
+  const c0 = zlib.deflateRawSync(schemaBytes || encodeSchema(S)), c1 = zlib.deflateRawSync(encodeMessage(S, message));
+  const out = Buffer.alloc(12 + 4 + c0.length + 4 + c1.length);
+  out.write('fig-kiwi', 0, 'latin1'); out.writeUInt32LE(version, 8);
+  out.writeUInt32LE(c0.length, 12); c0.copy(out, 16);
+  out.writeUInt32LE(c1.length, 16 + c0.length); c1.copy(out, 20 + c0.length);
+  return new Uint8Array(out);
+}
+// esquema guardado como JSON [{ name, kind, fields: [[nombre, tipo, esArray, valor]] }] -> objeto como el de decodeSchema
+export function schemaFromDefs(defs) {
+  const S = {};
+  for (const d of defs) {
+    const o = { name: d.name, kind: d.kind, fields: d.fields.map(([name, type, isArray, value]) => ({ name, type, isArray: !!isArray, value })) };
+    if (o.kind === 'ENUM') o.names = Object.fromEntries(o.fields.map((f) => [f.value, f.name]));
+    if (o.kind === 'MESSAGE') o.byValue = Object.fromEntries(o.fields.map((f) => [f.value, f]));
+    S[d.name] = o;
+  }
+  return S;
+}
+// bytes fig-kiwi + metadatos -> text/html del portapapeles, como lo escribe Figma
+export function buildClipboardHtml(bytes, meta) {
+  const m = Buffer.from(JSON.stringify(meta), 'utf8').toString('base64'), b = Buffer.from(bytes).toString('base64');
+  return `<meta charset="utf-8"><span data-metadata="<!--(figmeta)${m}(/figmeta)-->"></span><span data-buffer="<!--(figma)${b}(/figma)-->"></span><span style="white-space:pre-wrap;"></span>`;
+}

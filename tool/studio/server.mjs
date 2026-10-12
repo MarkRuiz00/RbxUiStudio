@@ -43,6 +43,7 @@ import { createRequire } from 'module';
 import { buildLuau, imagesOf, loadAssets } from './rbxbuild.mjs';
 import crypto from 'crypto';
 import { fromClipboardHtml, openFig, convertFigma, listFrames, rasterize, IMG_REL, fillMasks } from './figma.mjs';
+import { toClipboard, toFigFile } from './figexport.mjs';
 import fs from 'fs';
 import path from 'path';
 import { execFile, spawn } from 'child_process';
@@ -689,6 +690,15 @@ const server = http.createServer(async (req, res) => {
       fs.writeFileSync(path.join(FIG_DIR, 'last_paste.html'), html);
       const r = await fromClipboardHtml(html, stageOpts());
       return json(res, 200, r);
+    }
+    // RbxUI -> Figma: la descripción la genera tofigma.js en el editor; aquí se codifica (kiwi) como portapapeles o archivo .fig
+    if (p === '/api/figma/export' && req.method === 'POST') {
+      const { kind, roots, images, name } = JSON.parse(await readBody(req));
+      if (kind === 'fig') {
+        const buf = toFigFile(roots || [], images || {}, { name: String(name || 'RbxUI') });
+        res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Length': buf.length }); return res.end(buf);
+      }
+      return json(res, 200, { html: toClipboard(roots || [], images || {}) });
     }
     if (p === '/api/figma/fig' && req.method === 'POST') {
       const buf = await readRaw(req);
