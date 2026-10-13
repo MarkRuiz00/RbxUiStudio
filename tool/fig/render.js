@@ -83,8 +83,11 @@
   }
   // { fill: [{path, rule}], stroke: [{path, rule}] | null }
   function geometryOf(n, R) {
-    if (n._geo && n._geoKey === R.version) return n._geo;
+    // clave = lo que define la forma (no la versión del documento: mover o recolorear no rehace los Path2D)
     const w = n.size?.x || 0, h = n.size?.y || 0, blobs = R.doc.blobs || [];
+    const key = R.doc.blobs?.length + '|' + w + ',' + h + '|' + radiiOf(n) + '|' + (n.fillGeometry || []).map((g) => g.commandsBlob) + '|' + (n.strokeGeometry || []).map((g) => g.commandsBlob)
+      + '|' + (n.vectorData?.vectorNetworkBlob ?? '') + '|' + (n.arcData ? [n.arcData.startingAngle, n.arcData.endingAngle, n.arcData.innerRadius] : '');
+    if (n._geo && n._geoKey === key) return n._geo;
     const fromBlobs = (arr) => (arr && arr.length ? arr.map((g) => ({ path: blobPath(b64bytes(blobs[g.commandsBlob])), rule: g.windingRule === 'EVENODD' ? 'evenodd' : 'nonzero' })) : null);
     let fill = fromBlobs(n.fillGeometry), stroke = fromBlobs(n.strokeGeometry);
     if (!fill) {
@@ -96,7 +99,7 @@
     }
     const geo = { fill, stroke };
     Object.defineProperty(n, '_geo', { value: geo, writable: true, configurable: true, enumerable: false });
-    Object.defineProperty(n, '_geoKey', { value: R.version, writable: true, configurable: true, enumerable: false });
+    Object.defineProperty(n, '_geoKey', { value: key, writable: true, configurable: true, enumerable: false });
     return geo;
   }
 
@@ -187,15 +190,57 @@
     ctx.drawImage(img, -iw * k / 2, -ih * k / 2, iw * k, ih * k);
   }
 
-  // ---------------------------------------------------------------- capas (lienzos auxiliares del tamaño de la vista)
-  function layer(R) {
-    const pool = R.pool || (R.pool = []); let c = pool.find((x) => !x.busy);
+  // ---------------------------------------------------------------- capas: lienzos auxiliares del tamaño justo
+  // Cada contexto lleva su origen (__ox, __oy) en píxeles de la vista; las matrices M siempre están en píxeles de la vista
+  // y se desplazan al dibujar. Así una capa mide lo que ocupa el nodo (más sombras/desenfoques), no la vista entera.
+  const ox = (ctx) => ctx.__ox || 0, oy = (ctx) => ctx.__oy || 0;
+  const setM = (ctx, M) => ctx.setTransform(M[0], M[1], M[2], M[3], M[4] - ox(ctx), M[5] - oy(ctx));
+  const rectOfCtx = (ctx) => ({ x: ox(ctx), y: oy(ctx), w: ctx.canvas.width, h: ctx.canvas.height });
+  function layer(R, rect) {
+    const w = Math.max(1, rect.w), h = Math.max(1, rect.h);
+    const pool = R.pool || (R.pool = []);
+    let c = pool.find((x) => !x.busy && x.cv.width === w && x.cv.height === h) || pool.find((x) => !x.busy);
     if (!c) { c = { cv: document.createElement('canvas'), busy: false }; pool.push(c); }
     c.busy = true;
-    if (c.cv.width !== R.W || c.cv.height !== R.H) { c.cv.width = R.W; c.cv.height = R.H; }
-    const x = c.cv.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.clearRect(0, 0, R.W, R.H);
-    return { ...c, ctx: x, done: () => { c.busy = false; } };
+    if (c.cv.width !== w || c.cv.height !== h) { c.cv.width = w; c.cv.height = h; }
+    const x = c.cv.getContext('2d');
+    x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.filter = 'none'; x.clearRect(0, 0, w, h);
+    x.__ox = rect.x; x.__oy = rect.y;
+    return { cv: c.cv, ctx: x, ox: rect.x, oy: rect.y, done: () => { c.busy = false; } };
   }
+  // copia de lo que hay en ctx bajo la capa L (para las fusiones contra el fondo real)
+  const backdrop = (L, ctx) => L.ctx.drawImage(ctx.canvas, ox(ctx) - L.ox, oy(ctx) - L.oy);
+  // vuelca la capa L sobre ctx en su sitio
+  const put = (ctx, L) => ctx.drawImage(L.cv, L.ox - ox(ctx), L.oy - oy(ctx));
+  // caja (px de la vista) de n y lo que pinta (bordes, sombras, desenfoques, glifos que se salen; hijos si no recorta)
+  function extent(n, M, R) {
+    const memo = R.ext || (R.ext = new WeakMap()), hit = memo.get(n);
+    if (hit && hit.M.every((v, i) => v === M[i])) return hit.b;
+    const w = n.size?.x || 0, h = n.size?.y || 0, k = Math.hypot(M[0], M[1]) || 1;
+    let m = 1 + (visiblePaints(n.strokePaints).length ? (n.strokeWeight || 0) * 2 : 0);
+    for (const e of liveFx(n)) {
+      if (e.type === 'DROP_SHADOW') m = Math.max(m, Math.abs(e.offset?.x || 0) + Math.abs(e.offset?.y || 0) + (e.radius || 0) * 1.3 + Math.max(0, e.spread || 0) + 1);
+      else if (e.type === 'FOREGROUND_BLUR' || e.type === 'BACKGROUND_BLUR') m = Math.max(m, (e.radius || 0) * 1.3 + 1);
+    }
+    if (n.type === 'TEXT') m += (n.fontSize || 12) * 0.6;
+    const ps = [app(M, 0, 0), app(M, w, 0), app(M, 0, h), app(M, w, h)];
+    let x0 = Math.min(...ps.map((p) => p[0])) - m * k, y0 = Math.min(...ps.map((p) => p[1])) - m * k;
+    let x1 = Math.max(...ps.map((p) => p[0])) + m * k, y1 = Math.max(...ps.map((p) => p[1])) + m * k;
+    if (!clips(n)) for (const c of n.children || []) {
+      if (c.visible === false) continue;
+      const b = extent(c, mul(M, mat(c.transform)), R);
+      x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y); x1 = Math.max(x1, b.x + b.w); y1 = Math.max(y1, b.y + b.h);
+    }
+    const b = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+    memo.set(n, { M, b }); return b;
+  }
+  // caja entera en píxeles, recortada a lo que cubre ctx; null si no se ve
+  function regionIn(b, ctx) {
+    const r = rectOfCtx(ctx), x0 = Math.max(r.x, Math.floor(b.x)), y0 = Math.max(r.y, Math.floor(b.y));
+    const x1 = Math.min(r.x + r.w, Math.ceil(b.x + b.w)), y1 = Math.min(r.y + r.h, Math.ceil(b.y + b.h));
+    return x1 > x0 && y1 > y0 ? { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } : null;
+  }
+
 
   // ---------------------------------------------------------------- texto
   function drawText(ctx, n, R, which) {
@@ -237,7 +282,7 @@
   }
   // pinturas (con sus fusiones contra el fondo real) recortadas a una máscara que dibuja drawMask (trazo, texto…)
   function maskedPaint(ctx, drawMask, paints, w, h, R) {
-    const M = layer(R), P = layer(R);
+    const M = layer(R, rectOfCtx(ctx)), P = layer(R, rectOfCtx(ctx));   // mismo origen que ctx: su transformación vale tal cual
     M.ctx.setTransform(ctx.getTransform()); drawMask(M.ctx);
     P.ctx.drawImage(ctx.canvas, 0, 0); P.ctx.setTransform(ctx.getTransform());
     for (const p of paints) paint(P.ctx, p, w, h, R);
@@ -260,7 +305,7 @@
   const liveFx = (n) => (n.effects || []).filter((e) => e.visible !== false);
   function drawContent(ctx, n, M, R) {
     const w = n.size?.x || 0, h = n.size?.y || 0;
-    ctx.save(); ctx.setTransform(...M);
+    ctx.save(); setM(ctx, M);
     if (n.type === 'TEXT') {
       // contorno: por fuera = debajo del relleno (el relleno tapa la mitad interior); centrado / por dentro = encima
       const st = visiblePaints(n.strokePaints).length && (n.strokeWeight || 0) > 0, outside = (n.strokeAlign || 'OUTSIDE') === 'OUTSIDE';
@@ -270,7 +315,6 @@
       ctx.restore(); return;
     }
     const geo = geometryOf(n, R);
-    // rellenos
     const fills = visiblePaints(n.fillPaints);
     if (fills.length) for (const g of geo.fill) { if (g.open) continue; ctx.save(); ctx.clip(g.path, g.rule); for (const p of fills) paint(ctx, p, w, h, R); ctx.restore(); }
     ctx.restore();
@@ -279,7 +323,7 @@
     const strokes = visiblePaints(n.strokePaints), sw = n.strokeWeight ?? 1;
     if (!strokes.length || !(sw > 0) || n.type === 'TEXT') return;
     const w = n.size?.x || 0, h = n.size?.y || 0, geo = geometryOf(n, R);
-    ctx.save(); ctx.setTransform(...M);
+    ctx.save(); setM(ctx, M);
     if (geo.stroke) {
       // strokeGeometry de Figma = banda de 2× el grosor centrada en el borde (igual para dentro y fuera): se recorta según la alineación
       const al = n.strokeAlign || 'INSIDE', fillP = new Path2D(); for (const g of geo.fill) if (!g.open) fillP.addPath(g.path);
@@ -290,8 +334,7 @@
         for (const p of strokes) paint(ctx, p, w, h, R);
         ctx.restore();
       }
-    }
-    else {
+    } else {
       const al = n.strokeAlign || (n.type === 'LINE' || n.type === 'VECTOR' ? 'CENTER' : 'INSIDE');
       for (const g of geo.fill) {
         ctx.save(); ctx.lineJoin = n.strokeJoin === 'ROUND' ? 'round' : n.strokeJoin === 'BEVEL' ? 'bevel' : 'miter'; ctx.lineCap = n.strokeCap === 'ROUND' ? 'round' : n.strokeCap === 'SQUARE' ? 'square' : 'butt';
@@ -305,25 +348,26 @@
     }
     ctx.restore();
   }
-  // recorte de un frame (su forma) en coordenadas de la vista
+  // recorte de un frame (su forma)
   function clipTo(ctx, n, M, R) {
-    const geo = geometryOf(n, R), p = new Path2D();
-    for (const g of geo.fill) p.addPath(g.path, new DOMMatrix(M));
+    const geo = geometryOf(n, R), p = new Path2D(), D = new DOMMatrix([M[0], M[1], M[2], M[3], M[4] - ox(ctx), M[5] - oy(ctx)]);
+    for (const g of geo.fill) p.addPath(g.path, D);
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clip(p);
   }
 
-  // dibuja n (con sus hijos) sobre ctx; M = matriz de la vista × la del padre
+  // dibuja n (con sus hijos) sobre ctx; M = matriz de la vista × la del padre. Lo que no cae en ctx no se pinta.
   function drawNode(ctx, n, PM, R) {
     if (n.visible === false || n.type === 'SLICE') return;
     const M = mul(PM, mat(n.transform));
+    const reg = regionIn(extent(n, M, R), ctx);
+    if (!reg) return;
     const fx = liveFx(n), op = n.opacity ?? 1;
     const blend = n.blendMode && n.blendMode !== 'PASS_THROUGH' && n.blendMode !== 'NORMAL' ? BLEND[n.blendMode] : null;
-    const needLayer = op < 1 || blend || fx.length;
-    if (!needLayer) { body(ctx, n, M, R); return; }
-    const Lr = layer(R);
+    if (!(op < 1 || blend || fx.length)) { body(ctx, n, M, R); return; }
+    const Lr = layer(R, reg);
     if (!blend && !fx.length) {   // solo opacidad: fondo + nodo, mezclado con el fondo según la opacidad
-      Lr.ctx.drawImage(ctx.canvas, 0, 0); body(Lr.ctx, n, M, R);
-      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = op; ctx.drawImage(Lr.cv, 0, 0); ctx.restore(); Lr.done(); return;
+      backdrop(Lr, ctx); body(Lr.ctx, n, M, R);
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = op; put(ctx, Lr); ctx.restore(); Lr.done(); return;
     }
     body(Lr.ctx, n, M, R);
     composite(ctx, Lr, n, M, fx, op, blend, R);
@@ -348,41 +392,44 @@
     for (let i = 0; i < kids.length; i++) {
       const k = kids[i];
       if (k.mask && k.visible !== false) {
-        const Lr = layer(R), Lm = layer(R);
-        Lr.ctx.drawImage(ctx.canvas, 0, 0);    // fondo: Overlay y demás fusiones de lo enmascarado lo necesitan
-        let j = i + 1; for (; j < kids.length; j++) drawNode(Lr.ctx, kids[j], M, R);
+        const reg = regionIn(extent(k, mul(M, mat(k.transform)), R), ctx);   // lo enmascarado no sale de la máscara
+        if (!reg) return;
+        const Lr = layer(R, reg), Lm = layer(R, reg);
+        backdrop(Lr, ctx);    // fondo: Overlay y demás fusiones de lo enmascarado lo necesitan
+        for (let j = i + 1; j < kids.length; j++) drawNode(Lr.ctx, kids[j], M, R);
         // máscara: alfa (o luminancia) de la forma de la máscara
         const km = { ...k, mask: false, effects: [], opacity: 1 };
         Object.defineProperty(km, '_geo', { value: k._geo, writable: true, configurable: true, enumerable: false });
         drawNode(Lm.ctx, km, M, R);
-        if (k.maskType === 'LUMINANCE') lumToAlpha(Lm.ctx, R);
+        if (k.maskType === 'LUMINANCE') lumToAlpha(Lm.ctx);
         Lr.ctx.setTransform(1, 0, 0, 1, 0, 0); Lr.ctx.globalCompositeOperation = 'destination-in'; Lr.ctx.drawImage(Lm.cv, 0, 0);
         ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.globalCompositeOperation = 'destination-out'; ctx.drawImage(Lm.cv, 0, 0);   // hueco con la forma de la máscara…
-        ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(Lr.cv, 0, 0);      // …relleno con fondo + contenido
+        ctx.globalCompositeOperation = 'destination-out'; put(ctx, Lm);   // hueco con la forma de la máscara…
+        ctx.globalCompositeOperation = 'source-over'; put(ctx, Lr);       // …relleno con fondo + contenido
         ctx.restore();
         Lr.done(); Lm.done(); return;
       }
       drawNode(ctx, k, M, R);
     }
   }
-  function lumToAlpha(x, R) {
-    const d = x.getImageData(0, 0, R.W, R.H), p = d.data;
+  function lumToAlpha(x) {
+    const d = x.getImageData(0, 0, x.canvas.width, x.canvas.height), p = d.data;
     for (let i = 0; i < p.length; i += 4) { const l = (0.2126 * p[i] + 0.7152 * p[i + 1] + 0.0722 * p[i + 2]) / 255; p[i + 3] = Math.round(l * p[i + 3]); }
     x.putImageData(d, 0, 0);
   }
+  const rectOf = (L) => ({ x: L.ox, y: L.oy, w: L.cv.width, h: L.cv.height });
   // extensión de una sombra: dilatar (copias desplazadas en círculo) o erosionar la silueta
   function spread(Lr, s, R) {
     if (Math.abs(s) < 0.25) return Lr;
-    const S = layer(R), x = S.ctx, N = Math.max(8, Math.min(32, Math.ceil(Math.abs(s) * 4)));
+    const S = layer(R, rectOf(Lr)), x = S.ctx, N = Math.max(8, Math.min(32, Math.ceil(Math.abs(s) * 4)));
     if (s > 0) { for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2; x.drawImage(Lr.cv, Math.cos(a) * s, Math.sin(a) * s); } x.drawImage(Lr.cv, 0, 0); }
     else { x.drawImage(Lr.cv, 0, 0); x.globalCompositeOperation = 'destination-in'; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2; x.drawImage(Lr.cv, Math.cos(a) * -s, Math.sin(a) * -s); } }
     return S;
   }
   // silueta opaca de una capa (donde hay algo, alfa 1; los bordes suavizados se conservan)
   function silhouette(Lr, R) {
-    const S = layer(R); S.ctx.drawImage(Lr.cv, 0, 0);
-    const d = S.ctx.getImageData(0, 0, R.W, R.H), p = d.data;
+    const S = layer(R, rectOf(Lr)); S.ctx.drawImage(Lr.cv, 0, 0);
+    const d = S.ctx.getImageData(0, 0, S.cv.width, S.cv.height), p = d.data;
     for (let i = 3; i < p.length; i += 4) if (p[i]) p[i] = Math.min(255, p[i] * 64);
     S.ctx.putImageData(d, 0, 0); return S;
   }
@@ -391,37 +438,37 @@
     let SIL = null; const sil = () => SIL || (SIL = silhouette(Lr, R));
     const k = Math.hypot(M[0], M[1]) || 1;          // escala de la vista (px de pantalla por px de diseño)
     const sigma = (r) => (FX() ? FX().blurSigma(r) : r / 2.3548) * k;
+    const W = Lr.cv.width, H = Lr.cv.height, RR = rectOf(Lr);
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
     // sombras paralelas (detrás)
     for (const e of fx.filter((x) => x.type === 'DROP_SHADOW')) {
-      const S = layer(R), x = S.ctx, o = app(M, e.offset?.x || 0, e.offset?.y || 0), o0 = app(M, 0, 0);
+      const S = layer(R, RR), x = S.ctx, o = app(M, e.offset?.x || 0, e.offset?.y || 0), o0 = app(M, 0, 0);
       const src = spread(Lr, (e.spread || 0) * k, R);
       x.filter = `blur(${sigma(e.radius || 0)}px)`; x.drawImage(src.cv, o[0] - o0[0], o[1] - o0[1]); x.filter = 'none'; if (src !== Lr) src.done();
-      x.globalCompositeOperation = 'source-in'; x.fillStyle = css(e.color || { r: 0, g: 0, b: 0, a: 0.25 }); x.fillRect(0, 0, R.W, R.H);
+      x.globalCompositeOperation = 'source-in'; x.fillStyle = css(e.color || { r: 0, g: 0, b: 0, a: 0.25 }); x.fillRect(0, 0, W, H);
       if (!e.showShadowBehindNode) { x.globalCompositeOperation = 'destination-out'; x.drawImage(sil().cv, 0, 0); }   // oculta bajo la forma
-      ctx.globalAlpha = op; ctx.globalCompositeOperation = BLEND[e.blendMode] || blend || 'source-over'; ctx.drawImage(S.cv, 0, 0); S.done();
+      ctx.globalAlpha = op; ctx.globalCompositeOperation = BLEND[e.blendMode] || blend || 'source-over'; put(ctx, S); S.done();
     }
-    // sombra interior: fuera de la forma, desplazado y difuminado, recortado a la forma
+    // sombra interior = color × (1 − forma desplazada y difuminada), recortado a la forma. Igual que difuminar un «fuera» negro
+    // infinito, pero sin depender de cuánto fuera cabe en la capa.
     for (const e of fx.filter((x) => x.type === 'INNER_SHADOW')) {
-      const S = layer(R), x = S.ctx, o = app(M, e.offset?.x || 0, e.offset?.y || 0), o0 = app(M, 0, 0);
-      x.fillStyle = '#000'; x.fillRect(0, 0, R.W, R.H); x.globalCompositeOperation = 'destination-out';
-      x.filter = 'none'; x.drawImage(Lr.cv, o[0] - o0[0], o[1] - o0[1]);
-      const S2 = layer(R); S2.ctx.filter = `blur(${sigma(e.radius || 0)}px)`; S2.ctx.drawImage(S.cv, 0, 0); S2.ctx.filter = 'none';
-      S2.ctx.globalCompositeOperation = 'source-in'; S2.ctx.fillStyle = css(e.color || { r: 0, g: 0, b: 0, a: 0.25 }); S2.ctx.fillRect(0, 0, R.W, R.H);
-      S2.ctx.globalCompositeOperation = 'destination-in'; S2.ctx.drawImage(Lr.cv, 0, 0);
-      Lr.ctx.setTransform(1, 0, 0, 1, 0, 0); Lr.ctx.globalCompositeOperation = BLEND[e.blendMode] || 'source-atop'; Lr.ctx.drawImage(S2.cv, 0, 0); Lr.ctx.globalCompositeOperation = 'source-over';
-      S.done(); S2.done();
+      const S = layer(R, RR), x = S.ctx, o = app(M, e.offset?.x || 0, e.offset?.y || 0), o0 = app(M, 0, 0);
+      x.filter = `blur(${sigma(e.radius || 0)}px)`; x.drawImage(Lr.cv, o[0] - o0[0], o[1] - o0[1]); x.filter = 'none';
+      x.globalCompositeOperation = 'source-out'; x.fillStyle = css(e.color || { r: 0, g: 0, b: 0, a: 0.25 }); x.fillRect(0, 0, W, H);
+      x.globalCompositeOperation = 'destination-in'; x.drawImage(Lr.cv, 0, 0);
+      Lr.ctx.setTransform(1, 0, 0, 1, 0, 0); Lr.ctx.globalCompositeOperation = BLEND[e.blendMode] || 'source-atop'; Lr.ctx.drawImage(S.cv, 0, 0); Lr.ctx.globalCompositeOperation = 'source-over';
+      S.done();
     }
     // desenfoque de fondo: lo que hay detrás, difuminado y recortado a la silueta del nodo (bajo el nodo)
     for (const e of fx.filter((x) => x.type === 'BACKGROUND_BLUR')) {
-      const S = layer(R); S.ctx.filter = `blur(${sigma(e.radius || 0)}px)`; S.ctx.drawImage(ctx.canvas, 0, 0); S.ctx.filter = 'none';
+      const S = layer(R, RR); S.ctx.filter = `blur(${sigma(e.radius || 0)}px)`; S.ctx.drawImage(ctx.canvas, ox(ctx) - RR.x, oy(ctx) - RR.y); S.ctx.filter = 'none';
       S.ctx.globalCompositeOperation = 'destination-in'; S.ctx.drawImage(sil().cv, 0, 0);
-      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(S.cv, 0, 0); S.done();
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; put(ctx, S); S.done();
     }
     const blur = fx.find((x) => x.type === 'FOREGROUND_BLUR');
     ctx.globalAlpha = op; ctx.globalCompositeOperation = blend || 'source-over';
     if (blur) ctx.filter = `blur(${sigma(blur.radius || 0)}px)`;
-    ctx.drawImage(Lr.cv, 0, 0);
+    put(ctx, Lr);
     ctx.restore();
     if (SIL) SIL.done();
   }
@@ -429,11 +476,12 @@
   // ---------------------------------------------------------------- API
   // R = { doc, W, H, version, onAsset, imageBase, layoutText }; view = [a,b,c,d,e,f] (diseño -> pantalla)
   function renderPage(ctx, page, view, R) {
+    ctx.__ox = 0; ctx.__oy = 0; R.ext = new WeakMap();
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const bg = page.backgroundColor; ctx.fillStyle = bg ? css(bg) : '#1e1e1e'; ctx.fillRect(0, 0, R.W, R.H);
+    const bg = page.backgroundColor; ctx.fillStyle = bg ? css(bg) : '#1e1e1e'; ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.restore();
     for (const n of page.children || []) drawNode(ctx, n, view, R);
   }
-  function renderNodes(ctx, nodes, view, R) { for (const n of nodes) drawNode(ctx, n, view, R); }
+  function renderNodes(ctx, nodes, view, R) { ctx.__ox = ctx.__ox || 0; ctx.__oy = ctx.__oy || 0; R.ext = new WeakMap(); for (const n of nodes) drawNode(ctx, n, view, R); }
   root.FigRender = { isGroup, clips, renderPage, renderNodes, drawNode, mat, mul, inv, app, blobPath, b64bytes, geometryOf, radiiOf, hexOf, imageOf, css, BLEND };
 })(typeof self !== 'undefined' ? self : this);

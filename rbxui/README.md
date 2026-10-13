@@ -9,7 +9,7 @@ How an AI builds Roblox UI with RbxUI Studio. Install/run the tool first: [../to
 | [recipes.md](recipes.md) | How to make each common piece (window, buttons, currency pill, tabs, grid, scroll, progress bar, textures, sunburst…) |
 | [interactions.md](interactions.md) | Opening/closing windows and button effects without code |
 | [images.md](images.md) | Image paths, ui-resources, logos, uploading to Roblox |
-| [figma-import.md](figma-import.md) | Pasting designs from Figma and what they become |
+| [figma-import.md](figma-import.md) | Pasting designs from Figma and what they become; exporting screens back to Figma; Fig |
 | [without-mcp.md](without-mcp.md) | Using rbxui from any chat AI (copy/paste) |
 | [mistakes.md](mistakes.md) | Common errors and how to fix them |
 | [editor.md](editor.md) | Editor tools for checking a design: device preview, Alt measuring, API check, fill stack with blend modes |

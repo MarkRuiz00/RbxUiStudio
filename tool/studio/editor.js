@@ -2637,9 +2637,6 @@
       const html = figmaPayload('clipboard').then(async ({ r, warns: w }) => { warns = w || []; return new Blob([(await r.json()).html], { type: 'text/html' }); });
       await navigator.clipboard.write([new ClipboardItem({ 'text/html': html })]);
       t.close(); toast('Copiado: pega en Figma con Ctrl+V');
-      // Figma no maqueta al pegar los textos que no traen glifos (derivedTextData): con .fig sí
-      let hasText = false; (function w(l) { for (const n of l || []) { if (window.RBXJson.TEXT.has(n.rbxClass)) hasText = true; w(n.children); } })(S.scene.nodes);
-      if (hasText) toast('Ojo: al pegar, Figma deja los textos vacíos hasta que los editas. Para textos exactos usa «Descargar .fig»', 'warn', { ms: 7000, action: { label: 'Descargar .fig', fn: downloadFig } });
       for (const w of warns.slice(0, 3)) toast(w, 'warn');
     } catch (e) { t.close(); toast('No se pudo copiar para Figma: ' + (e.message || e), 'err'); }
   }

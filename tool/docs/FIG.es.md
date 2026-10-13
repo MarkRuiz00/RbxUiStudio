@@ -25,13 +25,24 @@ textos) y las fórmulas del renderer de Figma para fusiones, ajustes de imagen, 
 | Prueba | Error medio por canal |
 |---|---|
 | Ventanas con studs (Overlay, máscaras, sombras interiores) | 1,1 / 255 |
-| Botones con resplandor y studs | 0,9 / 255 |
+| Botones con resplandor y studs | 0,8 / 255 |
 | Frame pegado desde Figma | 0,8 / 255 |
 | Botones creados en Fig por un plugin, pegados en Figma | 1,0 / 255 |
 
 Detalles del formato que importan (y que Fig respeta): un grupo de Figma es un FRAME con `resizeToFit` (no recorta);
 `strokeGeometry` es una banda de 2× el grosor centrada en el borde que se recorta según la alineación; las sombras por
 defecto no se ven detrás de la forma (`showShadowBehindNode`); el Soft light de Figma no es el de CSS.
+
+## Rendimiento
+
+Cada capa auxiliar (opacidad, fusión, efectos, máscaras) mide lo que ocupa el nodo más sus sombras y desenfoques, no la vista
+entera, y lo que cae fuera de la vista no se pinta. La geometría se guarda por forma, así que mover o recolorear no la rehace.
+Pasar el ratón por encima solo repinta el overlay sobre la página ya pintada.
+
+| Documento (lienzo 1420×897) | Antes | Ahora |
+|---|---|---|
+| Ventanas con studs (32 capas con efectos, 4 máscaras) | 270–530 ms | 15–40 ms |
+| Botones con resplandor | 40–170 ms | 12–20 ms |
 
 ## Editar
 

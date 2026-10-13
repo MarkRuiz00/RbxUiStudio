@@ -93,9 +93,12 @@
   A.fitAll = fitAll; A.fitSel = fitSel;
 
   // ---------------------------------------------------------------- render
-  let raf = 0;
-  function render() { if (!raf) raf = requestAnimationFrame(draw); }
-  A.render = render;
+  // render() repinta la página; renderOverlay() solo el overlay (hover…) sobre la última página pintada
+  let raf = 0, full = true, pageKey = '';
+  const page = document.createElement('canvas'), pctx = page.getContext('2d');
+  function render() { full = true; if (!raf) raf = requestAnimationFrame(draw); }
+  function renderOverlay() { if (!raf) raf = requestAnimationFrame(draw); }
+  A.render = render; A.renderOverlay = renderOverlay;
   const RC = { onAsset: render, layoutText: (n) => FL.layoutText(n), imageBase: '/api/fig/image/' };
   FL.setOnFont(() => { A.doc && A.doc.version++; render(); });
   function draw() {
@@ -103,7 +106,14 @@
     Object.assign(RC, { doc: A.doc.d, W: cv.width, H: cv.height, version: A.doc.version });
     A.doc.renderCtx = RC;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    FR.renderPage(ctx, A.doc.page, V(), RC);
+    const key = A.doc.page.id + '|' + A.doc.version + '|' + V() + '|' + cv.width + 'x' + cv.height;
+    if (!full && key === pageKey) { ctx.globalCompositeOperation = 'copy'; ctx.drawImage(page, 0, 0); ctx.globalCompositeOperation = 'source-over'; }
+    else {
+      FR.renderPage(ctx, A.doc.page, V(), RC);
+      if (page.width !== cv.width || page.height !== cv.height) { page.width = cv.width; page.height = cv.height; }
+      pctx.globalCompositeOperation = 'copy'; pctx.drawImage(cv, 0, 0); pageKey = key;
+    }
+    full = false;
     drawOverlay();
   }
   A.renderCtx = RC;
@@ -213,7 +223,7 @@
       const h = A.tool === 'move' && handleAt(sx, sy);
       cv.style.cursor = h ? (h.kind === 'rotate' ? 'alias' : CURSOR[h.h]) : A.tool === 'move' ? 'default' : A.tool === 'hand' ? 'grab' : 'crosshair';
       const t = A.tool === 'move' ? pickAt(x, y, e.ctrlKey || e.metaKey, false) : null, id = t ? t.id : null;
-      if (id !== A.hover) { A.hover = id; render(); A.emit('hover'); }
+      if (id !== A.hover) { A.hover = id; renderOverlay(); A.emit('hover'); }
       if (A.pen) { A.pen.mouse = [x, y]; render(); }
       return;
     }

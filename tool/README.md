@@ -7,6 +7,8 @@ A Figma-like editor where **AIs and people design Roblox UI as real Instances**.
 - **MCP server** (`studio/mcp.mjs`): lets Claude Code, Claude Desktop, Cursor or any MCP client design, render and install UIs.
 - **Roblox Studio plugin** (`plugin/RbxUIConnect.plugin.luau`): installs scenes into `StarterGui`, uploads local images (no API key), pulls existing ScreenGuis back into the editor.
 - **Figma import**: paste (Ctrl+V) frames copied from Figma → editable Instances (auto-layout → UIListLayout, textures → tinted shared images, masks, prototypes → interactions). Coverage: [docs/figma-cobertura.md](docs/figma-cobertura.md).
+- **Figma export**: *Copiar para Figma* (Ctrl+Shift+C) / *Descargar .fig* turn a native screen into Figma layers (auto layout, gradients, images, texts with glyphs). See [../rbxui/figma-import.md](../rbxui/figma-import.md#exporting-to-figma).
+- **Fig** (`http://localhost:5170/fig/`): a separate editor whose document is Figma's own model — lossless copy/paste with Figma, `.fig` files, Figma plugins, renderer checked pixel by pixel against Figma. Guide: [docs/FIG.es.md](docs/FIG.es.md).
 - **Design helpers in the editor:**
   - **Fill stack with blend modes** on any layer: *Relleno → add texture* (tiled studs in Overlay, or any ui-resources texture/effect) or *add color with blend* (Overlay, Soft light, Multiply, Screen…). Roblox has no blend modes, so RbxUI exports shared colorless masks tinted with `ImageColor3`/`UIGradient` (textures) or the exact resulting color (solid fills), and re-tints them when you change the layer's color.
   - **Device preview** (toolbar): phone / small phone / tablet / PC / TV, laid out like Roblox with auto-scale, thumb & top-bar zones, and warnings for touch targets < 44 px and text < 9 px.
@@ -64,7 +66,8 @@ to `~/Documents/Roblox/Plugins/` as `.lua`). Open a place, allow HTTP to `localh
 
 | Path | Content | In git |
 |---|---|---|
-| `studio/` | server, editor, renderer, Figma importer, MCP | ✅ |
+| `studio/` | server, editor, renderer, Figma importer/exporter, MCP | ✅ |
+| `fig/` | Fig editor (Figma model, plugins); its documents live in `out/fig/` | ✅ (docs ❌) |
 | `plugin/`, `runtime/` | Roblox Studio plugin and in-game LocalScript | ✅ |
 | `site/` | product landing page (`/landing`) | ✅ |
 | `ds/`, `export.mjs` | legacy HTML design-system → PNG pipeline | ✅ |

@@ -64,8 +64,8 @@
           else A.select([n.id]);
         });
         row.addEventListener('dblclick', (e) => { e.stopPropagation(); rename(row, n, renderLayers); });
-        row.addEventListener('mouseenter', () => { A.hover = n.id; A.render(); });
-        row.addEventListener('mouseleave', () => { if (A.hover === n.id) { A.hover = null; A.render(); } });
+        row.addEventListener('mouseenter', () => { A.hover = n.id; A.renderOverlay(); });
+        row.addEventListener('mouseleave', () => { if (A.hover === n.id) { A.hover = null; A.renderOverlay(); } });
         row.addEventListener('dragstart', (e) => { dragId = n.id; e.dataTransfer.effectAllowed = 'move'; });
         row.addEventListener('dragover', (e) => {
           if (!dragId || dragId === n.id) return; e.preventDefault();

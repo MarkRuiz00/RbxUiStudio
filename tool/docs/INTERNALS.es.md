@@ -139,6 +139,19 @@ Lo que pinta el editor = lo que crea Roblox (comprobado en "Steal And Grow!": Sh
   **Escala al pegar**: por defecto diseño 1920×1080 (×720/1080), opción por escena (ScreenGui → Figma: 1080p / 1:1 / encajar); si no cabe, se encaja.
   **Fuentes**: si Roblox no la trae integrada, se usa la misma de la Creator Store por id (`rbxassetid://…`, tabla `ASSET_FONTS` en rbxjson.js,
   Inter = 12187365364); el editor la carga de Google Fonts al vuelo. El último pegado se guarda en `out/figma/last_paste.html` para depurar. Probado con .fig reales (formato v101, 449 capas en ~1,7 s).
+- **Hacia Figma** (escenas nativas): «Copiar para Figma» (Ctrl+Shift+C) / «Descargar .fig para Figma». `studio/tofigma.js` (navegador) pinta la escena
+  fuera de pantalla para leer tamaños de TextScaled, anchos reales y RichText resuelto, y produce una descripción de nodos (FRAME/TEXT, auto layout, pinturas,
+  imágenes {sha1: base64}) → POST `/api/figma/export` → `studio/figexport.mjs` la pasa a mensaje kiwi (`figkiwi.mjs` codifica; esquema mínimo en
+  `figschema.json`, Figma lee los campos por nombre) y arma el portapapeles HTML `(figmeta)`/`(figma)` (imágenes en `blobs` + `Image.dataBlob`) o el
+  `.fig` (ZIP: canvas.fig + meta.json + thumbnail.png OBLIGATORIO + images/<sha1>). Textos con glifos ya maquetados (`studio/figtext.mjs`: fuente de Google
+  en caché `out/fonts`, `derivedTextData` + textUserLayoutVersion 5 / textExplicitLayoutVersion 1 / textBidiVersion 1; sin eso Figma deja el texto vacío al pegar).
+  Formato de los blobs de glifo: [0] + comandos 1/2/3/4/0 en em con Y hacia arriba; los de geometría van en px.
+- **Fig** (`fig/`, ruta `/fig/`): editor aparte con el modelo de Figma tal cual (nodos kiwi en JSON, `{$b}` = bytes, `{$n}` = números especiales) — sin nada de
+  Roblox. `studio/figdoc.mjs` importa .fig/portapapeles y exporta (glifos generados desde `__glyphLayout`); documentos en `out/fig/` (NO `fig/` en datos: taparía la ruta).
+  `fig/render.js` = render Canvas2D (fórmulas de `studio/figfx.js`), comprobado contra `exportAsync` de Figma. Capas auxiliares del tamaño justo del nodo
+  (más sombras/desenfoques) con su origen en `ctx.__ox/__oy`, recorte por visibilidad, geometría en caché por forma (no por versión). La sombra interior se
+  calcula como color × (1 − forma desplazada difuminada): no depende de cuánto «fuera» cabe en la capa. Plugins: `fig/plugins.js` (API `figma.*`).
+  Guía: `docs/FIG.es.md`.
 - **Lecciones Roblox (comprobadas)**: UIStroke `LineJoinMode=Miter` + UICorner ⇒ contorno CUADRADO (usar Round en piezas redondas; el editor lo pinta igual) ·
   `Instance.new` da fondo `#A3A2A5` y fuente LegacyArial (el editor usa esos defaults) · el constructor fuerza `BorderSizePixel=0`, `AutoButtonColor=false`, ScreenGui `ResetOnSpawn=false`,
   `ZIndexBehavior=Sibling`, `ScreenInsets=DeviceSafeInsets` · studs nativos = `assets/rbx/stud.png` (versión sombra/brillo de Stud/0092) en mosaico 37 px con ImageTransparency ~0.72.

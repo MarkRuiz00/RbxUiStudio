@@ -119,6 +119,13 @@ Pinturas sólidas con fusión = el color exacto resultante. "Lo de debajo" = la 
 - Test sintético con campos reales del esquema kiwi (`figtest.mjs`): auto-layout, grid, scroll, constraints, prototipos,
   textbox, borde discontinuo, min/max + proporción, máscara con degradado.
 
+## RbxUI → Figma (exportar)
+
+«Copiar para Figma» (Ctrl+Shift+C) y «Descargar .fig para Figma» en el editor (escenas nativas). Frames → FRAME (fondo, UIGradient, UICorner,
+UIStroke, recorte, CanvasGroup), texto → TEXT con el estilo de Figma más cercano y glifos ya maquetados, UIListLayout + UIPadding → auto layout,
+ImageLabel → relleno de imagen (tinte y 9-slice horneados a PNG). Para diseñar fuera de Figma y volver a Figma sin pérdidas está **Fig**
+(`/fig/`, guía en `FIG.es.md`), que guarda el documento con los campos de Figma tal cual.
+
 ## Renderer de Figma (ingeniería inversa)
 
 `studio/figfx.js` lleva las fórmulas sacadas del WASM del editor web de Figma (`compiled_wasm.wasm`: shaders GLSL/WGSL en texto,
