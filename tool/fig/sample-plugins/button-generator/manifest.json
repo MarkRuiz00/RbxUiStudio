@@ -1,0 +1,8 @@
+{
+  "name": "Generador de botones",
+  "id": "fig-sample-button-generator",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"]
+}

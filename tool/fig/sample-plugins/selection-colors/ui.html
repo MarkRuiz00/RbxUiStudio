@@ -1,0 +1,22 @@
+<style>
+  body { font: 12px Inter, system-ui, sans-serif; margin: 0; padding: 10px; background: #2c2c2c; color: #e6e6e6; }
+  .c { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; }
+  .c:hover { background: #383838; }
+  .c span { flex: 1; font-family: ui-monospace, monospace; }
+  .c em { color: #9a9a9a; font-style: normal; }
+  input[type=color] { width: 28px; height: 22px; border: 0; padding: 0; background: none; cursor: pointer; }
+  p { color: #9a9a9a; }
+</style>
+<div id="list"><p>Selecciona capas…</p></div>
+<script>
+  onmessage = (e) => {
+    const m = e.data.pluginMessage; if (!m || m.type !== 'colors') return;
+    const list = document.getElementById('list'); list.innerHTML = m.colors.length ? '' : '<p>La selección no tiene colores sólidos.</p>';
+    for (const [hex, n] of m.colors) {
+      const row = document.createElement('div'); row.className = 'c';
+      row.innerHTML = `<input type="color" value="${hex}"><span>${hex.toUpperCase()}</span><em>×${n}</em>`;
+      row.querySelector('input').onchange = (ev) => parent.postMessage({ pluginMessage: { type: 'replace', from: hex, to: ev.target.value } }, '*');
+      list.append(row);
+    }
+  };
+</script>

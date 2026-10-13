@@ -702,6 +702,33 @@ const server = http.createServer(async (req, res) => {
       const b = fs.readFileSync(f), mime = b[0] === 0xff ? 'image/jpeg' : b[0] === 0x47 ? 'image/gif' : b.slice(0, 4).toString() === 'RIFF' ? 'image/webp' : 'image/png';
       res.writeHead(200, { 'Content-Type': mime, 'Cache-Control': 'max-age=31536000, immutable' }); return res.end(b);
     }
+    // plugins con la API de Figma: los de ejemplo (fig/sample-plugins) + los instalados (DATA/out/fig/plugins)
+    if (p === '/api/fig/plugins' && req.method === 'POST') {
+      const { manifest, code, ui, uiFiles } = JSON.parse(await readBody(req));
+      const id = String(manifest.id || manifest.name || 'plugin').replace(/[^\w.-]+/g, '_').slice(0, 60), dir = path.join(FD.FIG_DIR, 'plugins', id);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, 'plugin.json'), JSON.stringify({ id, name: manifest.name || id, manifest, code, ui, uiFiles }));
+      return json(res, 200, { id });
+    }
+    if (p === '/api/fig/plugins' || p === '/api/fig/plugin') {
+      const dirs = [[path.join(CODE, 'fig', 'sample-plugins'), true], [path.join(FD.FIG_DIR, 'plugins'), false]];
+      const all = [];
+      for (const [d, sample] of dirs) {
+        if (!fs.existsSync(d)) continue;
+        for (const id of fs.readdirSync(d)) {
+          const f = path.join(d, id, 'plugin.json'), m = path.join(d, id, 'manifest.json');
+          try {
+            if (fs.existsSync(f)) all.push({ ...JSON.parse(fs.readFileSync(f, 'utf8')), sample });
+            else if (fs.existsSync(m)) {
+              const manifest = JSON.parse(fs.readFileSync(m, 'utf8')), rd = (x) => (x && fs.existsSync(path.join(d, id, x)) ? fs.readFileSync(path.join(d, id, x), 'utf8') : null);
+              all.push({ id, name: manifest.name || id, manifest, code: rd(manifest.main), ui: typeof manifest.ui === 'string' ? rd(manifest.ui) : null, sample });
+            }
+          } catch { /* plugin roto */ }
+        }
+      }
+      if (p === '/api/fig/plugin') { const q = all.find((x) => x.id === u.searchParams.get('id')); return q ? json(res, 200, q) : json(res, 404, { error: 'no existe' }); }
+      return json(res, 200, all.map(({ id, name, sample }) => ({ id, name, sample })));
+    }
     if (p === '/api/fig/upload' && req.method === 'POST') {   // imagen suelta -> { hash, w, h }
       const buf = await readRaw(req), d = imageDims(buf);
       return json(res, 200, { hash: FD.saveImage(buf), w: d.w || 100, h: d.h || 100 });
