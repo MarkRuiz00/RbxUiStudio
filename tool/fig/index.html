@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Fig</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="../studio/brand/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fig.css">
+</head><body>
+<header id="top">
+  <div class="tb-left">
+    <button id="menu-btn" class="ib" title="Menú"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div id="tools">
+      <button data-tool="move" class="ib on" title="Mover (V)"><svg viewBox="0 0 24 24"><path d="M6 3l13 7-6 1.6L10 18z"/></svg></button>
+      <button data-tool="frame" class="ib" title="Frame (F)"><svg viewBox="0 0 24 24"><path d="M8 3v18M16 3v18M3 8h18M3 16h18"/></svg></button>
+      <button data-tool="rect" class="ib" title="Rectángulo (R)"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1"/></svg></button>
+      <button data-tool="ellipse" class="ib" title="Elipse (O)"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="8"/></svg></button>
+      <button data-tool="line" class="ib" title="Línea (L)"><svg viewBox="0 0 24 24"><path d="M5 19L19 5"/></svg></button>
+      <button data-tool="pen" class="ib" title="Pluma (P)"><svg viewBox="0 0 24 24"><path d="M12 3l6 8-6 10-6-10z"/><circle cx="12" cy="11" r="1.5"/></svg></button>
+      <button data-tool="text" class="ib" title="Texto (T)"><svg viewBox="0 0 24 24"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg></button>
+      <button data-tool="hand" class="ib" title="Mano (H)"><svg viewBox="0 0 24 24"><path d="M8 12V6a1.5 1.5 0 013 0v5m0-6a1.5 1.5 0 013 0v6m0-4a1.5 1.5 0 013 0v7a6 6 0 01-6 6h-1a6 6 0 01-5-3l-2.5-4a1.5 1.5 0 012.5-1.6L8 14"/></svg></button>
+      <span class="sep"></span>
+      <button id="plugins-btn" class="ib" title="Plugins"><svg viewBox="0 0 24 24"><path d="M9 3v4M15 3v4M6 7h12v5a6 6 0 01-12 0zM12 18v3"/></svg></button>
+    </div>
+  </div>
+  <div class="tb-mid"><input id="doc-name" spellcheck="false" value="Sin título"><span id="dirty"></span></div>
+  <div class="tb-right">
+    <button id="share-btn" class="btn">Copiar para Figma</button>
+    <span id="zoom-lab" title="Zoom">100%</span>
+  </div>
+</header>
+<aside id="left">
+  <div class="sect"><div class="sh">Páginas <button id="page-add" class="ib sm" title="Nueva página">+</button></div><div id="pages"></div></div>
+  <div class="sect grow"><div class="sh">Capas</div><div id="layers"></div></div>
+</aside>
+<main id="stage">
+  <canvas id="cv"></canvas>
+  <canvas id="ov"></canvas>
+  <textarea id="text-edit" spellcheck="false"></textarea>
+  <div id="drop-hint">Suelta un .fig o pega (Ctrl+V) desde Figma</div>
+</main>
+<aside id="right"><div id="props"></div></aside>
+<div id="menu" class="pop hidden"></div>
+<div id="toasts"></div>
+<input id="file-in" type="file" accept=".fig,.figdoc.json,image/*" hidden>
+<script src="../studio/figfx.js"></script>
+<script src="render.js"></script>
+<script src="layout.js"></script>
+<script src="model.js"></script>
+<script src="plugins.js"></script>
+<script src="app.js"></script>
+<script src="panels.js"></script>
+</body></html>

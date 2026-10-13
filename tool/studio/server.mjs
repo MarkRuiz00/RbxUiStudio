@@ -42,8 +42,9 @@ import os from 'os';
 import { createRequire } from 'module';
 import { buildLuau, imagesOf, loadAssets } from './rbxbuild.mjs';
 import crypto from 'crypto';
-import { fromClipboardHtml, openFig, convertFigma, listFrames, rasterize, IMG_REL, fillMasks } from './figma.mjs';
+import { fromClipboardHtml, openFig, convertFigma, listFrames, rasterize, IMG_REL, fillMasks, imageDims } from './figma.mjs';
 import { toClipboard, toFigFile } from './figexport.mjs';
+import * as FD from './figdoc.mjs';
 import fs from 'fs';
 import path from 'path';
 import { execFile, spawn } from 'child_process';
@@ -690,6 +691,30 @@ const server = http.createServer(async (req, res) => {
       fs.writeFileSync(path.join(FIG_DIR, 'last_paste.html'), html);
       const r = await fromClipboardHtml(html, stageOpts());
       return json(res, 200, r);
+    }
+    // ---- editor Fig (tool/fig/): documentos con el modelo de Figma
+    if (p === '/api/fig/docs') return json(res, 200, FD.listDocs());
+    if (p === '/api/fig/doc' && req.method === 'POST') return json(res, 200, { name: FD.saveDoc(JSON.parse(await readBody(req))) });
+    if (p === '/api/fig/doc') { const d = FD.loadDoc(u.searchParams.get('name') || ''); return d ? json(res, 200, d) : json(res, 404, { error: 'no existe' }); }
+    if (p.startsWith('/api/fig/image/')) {
+      const h = p.split('/').pop(), f = path.join(FD.IMG_DIR, h);
+      if (!/^[0-9a-f]{40}$/.test(h) || !fs.existsSync(f)) { res.writeHead(404); return res.end(); }
+      const b = fs.readFileSync(f), mime = b[0] === 0xff ? 'image/jpeg' : b[0] === 0x47 ? 'image/gif' : b.slice(0, 4).toString() === 'RIFF' ? 'image/webp' : 'image/png';
+      res.writeHead(200, { 'Content-Type': mime, 'Cache-Control': 'max-age=31536000, immutable' }); return res.end(b);
+    }
+    if (p === '/api/fig/upload' && req.method === 'POST') {   // imagen suelta -> { hash, w, h }
+      const buf = await readRaw(req), d = imageDims(buf);
+      return json(res, 200, { hash: FD.saveImage(buf), w: d.w || 100, h: d.h || 100 });
+    }
+    if (p === '/api/fig/import' && req.method === 'POST') {   // cuerpo: .fig (binario) o HTML del portapapeles de Figma
+      const buf = await readRaw(req);
+      const doc = buf[0] === 0x50 && buf[1] === 0x4b ? await FD.docFromFigFile(buf, u.searchParams.get('name') || 'Importado') : await FD.docFromClipboard(buf.toString('utf8'));
+      return json(res, 200, FD.toJson(doc));
+    }
+    if (p === '/api/fig/export' && req.method === 'POST') {   // { kind: 'clipboard'|'fig', doc, ids? }
+      const { kind, doc: dj, nodes } = JSON.parse(await readBody(req)), doc = FD.fromJson(dj);
+      if (kind === 'fig') { const b = FD.figFileFromDoc(doc); res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Length': b.length }); return res.end(b); }
+      return json(res, 200, { html: await FD.clipboardFromNodes(doc, FD.fromJson(nodes || [])) });
     }
     // RbxUI -> Figma: la descripción la genera tofigma.js en el editor; aquí se codifica (kiwi) como portapapeles o archivo .fig
     if (p === '/api/figma/export' && req.method === 'POST') {
