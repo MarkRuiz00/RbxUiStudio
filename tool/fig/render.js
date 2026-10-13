@@ -379,8 +379,16 @@
     else { x.drawImage(Lr.cv, 0, 0); x.globalCompositeOperation = 'destination-in'; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2; x.drawImage(Lr.cv, Math.cos(a) * -s, Math.sin(a) * -s); } }
     return S;
   }
+  // silueta opaca de una capa (donde hay algo, alfa 1; los bordes suavizados se conservan)
+  function silhouette(Lr, R) {
+    const S = layer(R); S.ctx.drawImage(Lr.cv, 0, 0);
+    const d = S.ctx.getImageData(0, 0, R.W, R.H), p = d.data;
+    for (let i = 3; i < p.length; i += 4) if (p[i]) p[i] = Math.min(255, p[i] * 64);
+    S.ctx.putImageData(d, 0, 0); return S;
+  }
   // capa del nodo -> destino, con sombras, desenfoque, opacidad y fusión
   function composite(ctx, Lr, n, M, fx, op, blend, R) {
+    let SIL = null; const sil = () => SIL || (SIL = silhouette(Lr, R));
     const k = Math.hypot(M[0], M[1]) || 1;          // escala de la vista (px de pantalla por px de diseño)
     const sigma = (r) => (FX() ? FX().blurSigma(r) : r / 2.3548) * k;
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -390,7 +398,7 @@
       const src = spread(Lr, (e.spread || 0) * k, R);
       x.filter = `blur(${sigma(e.radius || 0)}px)`; x.drawImage(src.cv, o[0] - o0[0], o[1] - o0[1]); x.filter = 'none'; if (src !== Lr) src.done();
       x.globalCompositeOperation = 'source-in'; x.fillStyle = css(e.color || { r: 0, g: 0, b: 0, a: 0.25 }); x.fillRect(0, 0, R.W, R.H);
-      if (!e.showShadowBehindNode) { x.globalCompositeOperation = 'destination-out'; for (let q = 0; q < 6; q++) x.drawImage(Lr.cv, 0, 0); }   // oculta bajo la forma
+      if (!e.showShadowBehindNode) { x.globalCompositeOperation = 'destination-out'; x.drawImage(sil().cv, 0, 0); }   // oculta bajo la forma
       ctx.globalAlpha = op; ctx.globalCompositeOperation = BLEND[e.blendMode] || blend || 'source-over'; ctx.drawImage(S.cv, 0, 0); S.done();
     }
     // sombra interior: fuera de la forma, desplazado y difuminado, recortado a la forma
@@ -404,11 +412,18 @@
       Lr.ctx.setTransform(1, 0, 0, 1, 0, 0); Lr.ctx.globalCompositeOperation = BLEND[e.blendMode] || 'source-atop'; Lr.ctx.drawImage(S2.cv, 0, 0); Lr.ctx.globalCompositeOperation = 'source-over';
       S.done(); S2.done();
     }
+    // desenfoque de fondo: lo que hay detrás, difuminado y recortado a la silueta del nodo (bajo el nodo)
+    for (const e of fx.filter((x) => x.type === 'BACKGROUND_BLUR')) {
+      const S = layer(R); S.ctx.filter = `blur(${sigma(e.radius || 0)}px)`; S.ctx.drawImage(ctx.canvas, 0, 0); S.ctx.filter = 'none';
+      S.ctx.globalCompositeOperation = 'destination-in'; S.ctx.drawImage(sil().cv, 0, 0);
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(S.cv, 0, 0); S.done();
+    }
     const blur = fx.find((x) => x.type === 'FOREGROUND_BLUR');
     ctx.globalAlpha = op; ctx.globalCompositeOperation = blend || 'source-over';
     if (blur) ctx.filter = `blur(${sigma(blur.radius || 0)}px)`;
     ctx.drawImage(Lr.cv, 0, 0);
     ctx.restore();
+    if (SIL) SIL.done();
   }
 
   // ---------------------------------------------------------------- API

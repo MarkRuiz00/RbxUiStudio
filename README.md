@@ -90,6 +90,10 @@ npm start
 Open <http://localhost:5170/> → **Desde plantilla** to start from an example. Needs Node.js 20+ and Google Chrome (or `npm run browser` for Playwright's Chromium).
 Textures used by the examples come from [ui-resources.com](https://ui-resources.com) and download on first use (`node tools/ui-resources.mjs fetch --examples` to get them all). Details: [tool/README.md](tool/README.md).
 
+### Fig — a Figma-model editor
+
+The same server also runs **Fig** at <http://localhost:5170/fig/>: a design editor whose document *is* Figma's (kiwi fields kept verbatim). Copy from Figma and paste into Fig, edit, and paste back into Figma without losing anything; open and download `.fig` files; run Figma plugins (`figma.*` API). Guide: [tool/docs/FIG.es.md](tool/docs/FIG.es.md).
+
 ### 2. The skill
 
 **Claude Code** — install the skill and the MCP server:
@@ -134,6 +138,7 @@ Every engine fact links to the official docs; anything unconfirmed is marked **�
 | [ejemplos/](ejemplos/README.md) | 15 example UIs (JSON + design notes + renders) |
 | [checklist.md](checklist.md) | Final verification before shipping a screen |
 | [tool/](tool/README.md) | RbxUI Studio (editor, MCP server, Studio plugin, runtime) |
+| [tool/fig/](tool/docs/FIG.es.md) | Fig: Figma-model editor with lossless Figma copy/paste, `.fig` files and Figma plugins |
 | [tools/](tools/) | `validate.mjs`, `ui-resources.mjs`, `build-roblox-api.mjs` |
 
 ## Contributing
@@ -157,6 +162,7 @@ Roblox API data derived from Roblox/creator-docs (CC BY 4.0). Roblox is a tradem
 - **Instalar la herramienta:** `cd tool && npm install && npm start` → <http://localhost:5170/> → **Desde plantilla**. Requiere Node 20+ y Chrome.
 - **Instalar la skill en Claude Code:** clona el repo en `~/.claude/skills/rbxui-studio` y registra el MCP con `claude mcp add -s user rbxui -- node <ruta>/tool/studio/mcp.mjs` (o con el botón **MCP** del editor).
 - **Claude.ai / otros agentes:** sube la carpeta como skill o apunta tus reglas a `SKILL.md`; sin MCP puedes copiar y pegar el JSON en el editor.
+- **Fig:** en <http://localhost:5170/fig/> hay un editor cuyo documento es el de Figma: copia de Figma, edita y vuelve a pegar en Figma sin perder nada, abre y descarga `.fig` y ejecuta plugins de Figma. Guía: [tool/docs/FIG.es.md](tool/docs/FIG.es.md).
 - **Roblox Studio:** botón **Studio** del editor → instalar el plugin **RbxUI Connect** → la IA instala la UI en `StarterGui` y sube las imágenes sin API key.
 - **Contribuir:** lee [CONTRIBUTING.md](CONTRIBUTING.md). Hechos con enlace a la doc oficial, ejemplos que pasen `node tools/validate.mjs examples` y nada de arte de terceros ni de juegos dentro del repo.
 
