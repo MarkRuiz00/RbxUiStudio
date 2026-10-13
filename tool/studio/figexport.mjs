@@ -16,6 +16,7 @@ import path from 'path';
 import zlib from 'zlib';
 import { fileURLToPath } from 'url';
 import { schemaFromDefs, encodeFig, buildClipboardHtml } from './figkiwi.mjs';
+import { derivedTextData, textStyles } from './figtext.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const S = schemaFromDefs(JSON.parse(fs.readFileSync(path.join(HERE, 'figschema.json'), 'utf8')));
@@ -44,8 +45,10 @@ function paint(p, blobOf) {
   }
   return null;
 }
-// árbol de descripción -> nodeChanges (el padre antes que sus hijos)
-function toChanges(roots, parentGuid, blobOf) {
+// versiones de maquetación de texto de Figma (oct. 2026): con versiones viejas descarta los glifos y no los rehace
+const TEXT_VERSIONS = { textUserLayoutVersion: 5, textExplicitLayoutVersion: 1, textBidiVersion: 1 };
+// árbol de descripción -> nodeChanges (el padre antes que sus hijos). texts = lista donde se apuntan los TEXT con medidas
+function toChanges(roots, parentGuid, blobOf, texts = null) {
   let local = 1;
   const out = [];
   const walk = (d, parent, pos) => {
@@ -65,10 +68,11 @@ function toChanges(roots, parentGuid, blobOf) {
     if (d.type === 'FRAME') n.frameMaskDisabled = !d.clip;
     if (d.text) {
       const t = d.text;
-      Object.assign(n, { textData: { characters: String(t.characters ?? '') }, fontSize: t.size || 14, fontName: { family: t.family || 'Inter', style: t.style || 'Regular', postscript: '' },
+      Object.assign(n, { textData: { characters: String(t.characters ?? ''), ...(textStyles(d) || {}) }, fontSize: t.size || 14, fontName: { family: t.family || 'Inter', style: t.style || 'Regular', postscript: '' },
         textAlignHorizontal: t.alignH || 'LEFT', textAlignVertical: t.alignV || 'TOP', textAutoResize: t.autoResize || 'NONE',
         lineHeight: { value: t.lineHeight || 100, units: 'PERCENT' }, letterSpacing: { value: 0, units: 'PERCENT' } });
       if (t.truncate) Object.assign(n, { textTruncation: 'ENDING', ...(t.maxLines ? { maxLines: t.maxLines } : {}) });
+      if (texts && t.layout) texts.push([n, d]);
     }
     if (d.layout) {
       const L = d.layout, fit = 'RESIZE_TO_FIT_WITH_IMPLICIT_SIZE';
@@ -91,14 +95,20 @@ const DOC = { guid: { sessionID: 0, localID: 0 }, phase: 'CREATED', type: 'DOCUM
 const PAGE = { guid: { sessionID: 0, localID: 1 }, phase: 'CREATED', parentIndex: { guid: { sessionID: 0, localID: 0 }, position: '!' }, type: 'CANVAS', name: 'Page 1',
   visible: true, opacity: 1, transform: ID };
 
-// descripción -> text/html para el portapapeles (Ctrl+V en Figma). images = { sha1hex: base64 } (van dentro, en blobs)
-export function toClipboard(roots, images = {}) {
-  const order = Object.keys(images);
-  const nodes = toChanges(roots, PAGE.guid, (h) => order.indexOf(h));
+// descripción -> text/html para el portapapeles (Ctrl+V en Figma). images = { sha1hex: base64 } (van dentro, en blobs).
+// Los TEXT llevan sus glifos (figtext.mjs): al pegar, Figma no maqueta los textos que no los traen.
+export async function toClipboard(roots, images = {}) {
+  const order = Object.keys(images), texts = [];
+  const nodes = toChanges(roots, PAGE.guid, (h) => order.indexOf(h), texts);
+  const blobs = order.map((h) => ({ bytes: new Uint8Array(Buffer.from(images[h], 'base64')) }));
+  const addBlob = (b) => blobs.push({ bytes: new Uint8Array(b) }) - 1;
+  for (const [n, d] of texts) {
+    const dt = await derivedTextData(d, addBlob).catch(() => null);
+    if (dt) Object.assign(n, { derivedTextData: dt, ...TEXT_VERSIONS });
+  }
   const pasteID = (Math.random() * 2e9) | 0;
   const message = { type: 'NODE_CHANGES', sessionID: 0, ackID: 0, pasteID, pasteFileKey: 'RbxUiStudio', pasteIsPartiallyOutsideEnclosingFrame: false,
-    pastePageId: PAGE.guid, isCut: false, pasteEditorType: 'DESIGN', nodeChanges: [DOC, PAGE, ...nodes],
-    blobs: order.map((h) => ({ bytes: new Uint8Array(Buffer.from(images[h], 'base64')) })) };
+    pastePageId: PAGE.guid, isCut: false, pasteEditorType: 'DESIGN', nodeChanges: [DOC, PAGE, ...nodes], blobs };
   const meta = { fileKey: 'RbxUiStudio', pasteID, dataType: 'scene', editorType: 'design', environment: 'www.figma.com' };
   return buildClipboardHtml(encodeFig(S, message, VERSION), meta);
 }

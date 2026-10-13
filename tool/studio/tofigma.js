@@ -46,6 +46,69 @@
     return { type: 'GRADIENT_LINEAR', stops, transform: [m00, m01, m02, m10, m11, m12] };
   }
 
+  // ---------------------------------------------------------------- texto: posición de cada carácter (para los glifos de figtext.mjs)
+  // Se clona la capa de texto ya pintada (fuente, tamaño de TextScaled, alineación) en una caja sin giros del tamaño del TEXT
+  // y se mide con Range carácter a carácter; la línea base sale de un marcador inline-block de alto 0.
+  function measureText(lay, tw, th) {
+    const box = document.createElement('div');
+    box.style.cssText = `position:fixed;left:-300000px;top:0;width:${tw}px;height:${th}px;`;
+    const L = lay.cloneNode(true);
+    L.style.left = L.style.top = L.style.right = L.style.bottom = '0';
+    box.appendChild(L); document.body.appendChild(box);
+    try {
+      const sp = L.querySelector('span'); if (!sp) return null;
+      const B = box.getBoundingClientRect(), lh = parseFloat(getComputedStyle(sp).lineHeight) || 0;
+      // estilo de cada tramo (texto enriquecido): el del span es el base (id 0)
+      const styleKey = (cs) => [cs.color, cs.fontWeight, cs.fontStyle, cs.fontSize, cs.fontFamily.split(',')[0].replace(/["']/g, '').trim(), cs.textDecorationLine].join('|');
+      const baseKey = styleKey(getComputedStyle(sp)), styles = [], styleIds = new Map([[baseKey, 0]]);
+      const styleOf = (el) => {
+        const cs = getComputedStyle(el), k = styleKey(cs);
+        if (styleIds.has(k)) return styleIds.get(k);
+        const id = styles.length + 1, fam = k.split('|')[4], wt = parseInt(cs.fontWeight, 10) || 400, it = cs.fontStyle === 'italic';
+        const m = /rgba?\(([^)]+)\)/.exec(cs.color), c = m ? m[1].split(',').map((x) => parseFloat(x)) : [0, 0, 0, 1];
+        styles.push({ id, family: fam, style: figStyle(fam, wt, it), weight: wt, italic: it, size: parseFloat(cs.fontSize),
+          color: { r: c[0] / 255, g: c[1] / 255, b: c[2] / 255, a: c[3] ?? 1 }, deco: cs.textDecorationLine });
+        styleIds.set(k, id); return id;
+      };
+      // texto plano en orden: los nodos de texto, con su línea base (marcador inline-block de alto 0 delante de cada uno)
+      const nodes = [];
+      const tw2 = document.createTreeWalker(sp, NodeFilter.SHOW_TEXT);
+      for (let tn = tw2.nextNode(); tn; tn = tw2.nextNode()) nodes.push(tn);
+      const marks = nodes.map((tn) => { const mk = document.createElement('span'); mk.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline;'; tn.parentNode.insertBefore(mk, tn); return mk; });
+      const chars = [], lines = [];
+      let idx = 0, cur = null;
+      nodes.forEach((tn, ni) => {
+        const str = tn.data, sid = tn.parentElement === sp ? 0 : styleOf(tn.parentElement);
+        let off = null;
+        for (let j = 0; j < str.length; j++) {
+          const i = idx + j, c = str[j];
+          if (c === '\n' || c === '\r') { cur = null; continue; }
+          const w = str.codePointAt(j) > 0xffff ? 2 : 1;
+          const r = document.createRange(); r.setStart(tn, j); r.setEnd(tn, j + w);
+          const rs = [...r.getClientRects()], rc = rs.find((x) => x.width > 0) || rs[0];
+          if (w === 2) j++;
+          if (!rc) continue;
+          const top = rc.top - B.top, left = rc.left - B.left;
+          if (off == null) off = marks[ni].getBoundingClientRect().top - rc.top;
+          if (!cur || top > cur.ctop + rc.height * 0.5) {
+            const H = lh || rc.height;
+            cur = { ctop: top, top: top - (H - rc.height) / 2, height: H, base: top + off, x: left, width: 0, first: i, end: i + w };
+            lines.push(cur);
+          }
+          cur.end = i + w;
+          if (c !== ' ') cur.width = Math.max(cur.width, left + rc.width - cur.x);
+          chars.push({ i, x: left, base: cur.base, line: lines.length - 1, s: sid, w: rc.width });
+        }
+        idx += str.length;
+      });
+      if (!chars.length) return null;
+      const r = (v) => Math.round(v * 1000) / 1000;
+      return { chars: chars.map((c) => ({ ...c, x: r(c.x), base: r(c.base), w: r(c.w) })), styles,
+        lines: lines.map((l) => ({ top: r(l.top), height: r(l.height), base: r(l.base), x: r(l.x), width: r(l.width), first: l.first, end: l.end })),
+        w: r(Math.max(...lines.map((l) => l.width))), h: r(lines.length * (lh || lines[0].height)) };
+    } finally { box.remove(); }
+  }
+
   // ---------------------------------------------------------------- imágenes
   async function sha1hex(buf) { const d = await crypto.subtle.digest('SHA-1', buf); return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, '0')).join(''); }
   const b64 = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
@@ -181,6 +244,11 @@
             text: { characters: chars, family: fam, style: figStyle(fam, RJ.WEIGHTS[f.weight] || 400, f.style === 'Italic'), size: r2(size),
               alignH: xa === 'Left' ? 'LEFT' : xa === 'Right' ? 'RIGHT' : 'CENTER', alignV: ya === 'Top' ? 'TOP' : ya === 'Bottom' ? 'BOTTOM' : 'CENTER',
               autoResize: 'NONE', lineHeight: r2(112 * (+p('LineHeight') || 1)) } };
+          const lay = span && span.closest('.rbx-text');
+          if (lay) {
+            const L = measureText(lay, tw, ch), sw = STYLE_W[t.text.style.replace(/\s*Italic$/, '').trim() || 'Regular'] || 400;
+            if (L) t.text.layout = { ...L, weight: sw, italic: /Italic/.test(t.text.style) };
+          }
           if (p('TextTruncate') === 'AtEnd') { t.text.truncate = true; t.text.maxLines = wrap ? Math.max(1, Math.floor(ch / (size * 1.12))) : 1; }
           t.fills.push(grad ? gradientPaint(grad, tc, ta, tw, ch) : { type: 'SOLID', color: tc, opacity: ta });
           const ts = RJ.modsOf(n, 'UIStroke').find((s) => RJ.mp(s, 'ApplyStrokeMode') !== 'Border');

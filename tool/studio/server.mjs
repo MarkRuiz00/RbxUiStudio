@@ -698,7 +698,7 @@ const server = http.createServer(async (req, res) => {
         const buf = toFigFile(roots || [], images || {}, { name: String(name || 'RbxUI') });
         res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Length': buf.length }); return res.end(buf);
       }
-      return json(res, 200, { html: toClipboard(roots || [], images || {}) });
+      return json(res, 200, { html: await toClipboard(roots || [], images || {}) });
     }
     if (p === '/api/figma/fig' && req.method === 'POST') {
       const buf = await readRaw(req);
